@@ -1,5 +1,14 @@
 package mineverse.Aust1n46.chat.database;
 
+import mineverse.Aust1n46.chat.api.MineverseChatAPI;
+import mineverse.Aust1n46.chat.api.SynchronizedMineverseChatPlayer;
+import mineverse.Aust1n46.chat.command.mute.MuteContainer;
+import mineverse.Aust1n46.chat.proxy.VentureChatProxySource;
+import mineverse.Aust1n46.chat.utilities.UUIDFetcher;
+import net.md_5.bungee.config.Configuration;
+import net.md_5.bungee.config.ConfigurationProvider;
+import net.md_5.bungee.config.YamlConfiguration;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,15 +19,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.UUID;
-
-import mineverse.Aust1n46.chat.api.MineverseChatAPI;
-import mineverse.Aust1n46.chat.api.SynchronizedMineverseChatPlayer;
-import mineverse.Aust1n46.chat.command.mute.MuteContainer;
-import mineverse.Aust1n46.chat.proxy.VentureChatProxySource;
-import mineverse.Aust1n46.chat.utilities.UUIDFetcher;
-import net.md_5.bungee.config.Configuration;
-import net.md_5.bungee.config.ConfigurationProvider;
-import net.md_5.bungee.config.YamlConfiguration;
 
 /**
  * Class for reading and writing proxy player data.
@@ -38,7 +38,7 @@ public class ProxyPlayerData {
             for (String uuidString : playerData.getKeys()) {
                 UUID uuid = UUID.fromString(uuidString);
                 if (UUIDFetcher.shouldSkipOfflineUUIDProxy(uuid, source)) {
-                	source.sendConsoleMessage("&8[&eVentureChat&8]&c - Skipping Offline UUID: " + uuid);
+                    source.sendConsoleMessage("&8[&eVentureChat&8]&c - Skipping Offline UUID: " + uuid);
                     continue;
                 }
                 Set<String> listening = new HashSet<String>();
@@ -125,8 +125,8 @@ public class ProxyPlayerData {
             boolean messageToggle = proxyPlayerDataFileConfiguration.getBoolean("messagetoggle");
             smcp = new SynchronizedMineverseChatPlayer(uuid, listening, mutes, ignores, spy, messageToggle);
         } catch (Exception e) {
-        	source.sendConsoleMessage("&8[&eVentureChat&8]&c - Error Loading Data File: " + proxyPlayerDataFile.getName());
-        	source.sendConsoleMessage("&8[&eVentureChat&8]&c - File will be skipped and deleted.");
+            source.sendConsoleMessage("&8[&eVentureChat&8]&c - Error Loading Data File: " + proxyPlayerDataFile.getName());
+            source.sendConsoleMessage("&8[&eVentureChat&8]&c - File will be skipped and deleted.");
             proxyPlayerDataFile.delete();
             return;
         }
@@ -167,7 +167,7 @@ public class ProxyPlayerData {
                 proxyPlayerDataFileConfiguration.set("ignores", ignore);
                 proxyPlayerDataFileConfiguration.set("spy", p.isSpy());
                 proxyPlayerDataFileConfiguration.set("messagetoggle", p.getMessageToggle());
-                
+
                 ConfigurationProvider.getProvider(YamlConfiguration.class).save(proxyPlayerDataFileConfiguration, proxyPlayerDataFile);
             }
         } catch (IOException e) {

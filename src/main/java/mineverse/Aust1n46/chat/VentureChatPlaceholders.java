@@ -1,12 +1,12 @@
 package mineverse.Aust1n46.chat;
 
-import org.bukkit.entity.Player;
-
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import mineverse.Aust1n46.chat.api.MineverseChatAPI;
 import mineverse.Aust1n46.chat.api.MineverseChatPlayer;
 import mineverse.Aust1n46.chat.channel.ChatChannel;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class VentureChatPlaceholders extends PlaceholderExpansion {
     @Override
@@ -45,13 +45,13 @@ public class VentureChatPlaceholders extends PlaceholderExpansion {
                 case "channel_distance":
                     return currentChannel.getDistance() + "";
                 case "channel_prefix":
-                	return currentChannel.getPrefix();
+                    return currentChannel.getPrefix();
             }
         }
         if (identifier.equalsIgnoreCase("notifications")) {
             return mcp.hasNotifications() ? PlaceholderAPIPlugin.booleanTrue() : PlaceholderAPIPlugin.booleanFalse();
         }
-        if (identifier.equalsIgnoreCase("message_toggle")){
+        if (identifier.equalsIgnoreCase("message_toggle")) {
             return mcp.getMessageToggle() ? PlaceholderAPIPlugin.booleanTrue() : PlaceholderAPIPlugin.booleanFalse();
         }
         return null;
@@ -68,17 +68,17 @@ public class VentureChatPlaceholders extends PlaceholderExpansion {
     }
 
     @Override
-    public String getAuthor() {
+    public @NotNull String getAuthor() {
         return "Aust1n46";
     }
 
     @Override
-    public String getIdentifier() {
+    public @NotNull String getIdentifier() {
         return "venturechat";
     }
 
     @Override
-    public String getVersion() {
+    public @NotNull String getVersion() {
         return MineverseChat.getInstance().getDescription().getVersion();
     }
 }

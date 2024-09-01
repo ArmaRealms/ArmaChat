@@ -1,11 +1,10 @@
 package mineverse.Aust1n46.chat.alias;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import mineverse.Aust1n46.chat.MineverseChat;
 import org.bukkit.configuration.ConfigurationSection;
 
-import mineverse.Aust1n46.chat.MineverseChat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Alias {
     private static MineverseChat plugin = MineverseChat.getInstance();

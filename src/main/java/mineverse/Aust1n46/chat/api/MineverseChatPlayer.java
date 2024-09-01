@@ -1,5 +1,12 @@
 package mineverse.Aust1n46.chat.api;
 
+import mineverse.Aust1n46.chat.ChatMessage;
+import mineverse.Aust1n46.chat.channel.ChatChannel;
+import mineverse.Aust1n46.chat.command.mute.MuteContainer;
+import mineverse.Aust1n46.chat.json.JsonFormat;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -8,541 +15,533 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-
-import mineverse.Aust1n46.chat.ChatMessage;
-import mineverse.Aust1n46.chat.channel.ChatChannel;
-import mineverse.Aust1n46.chat.command.mute.MuteContainer;
-import mineverse.Aust1n46.chat.json.JsonFormat;
-
 /**
  * Wrapper for {@link Player}
- * 
+ *
  * @author Aust1n46
  */
 public class MineverseChatPlayer {
-	private UUID uuid;
-	private String name;
-	private ChatChannel currentChannel;
-	private Set<UUID> ignores;
-	private Set<String> listening;
-	private HashMap<String, MuteContainer> mutes;
-	private Set<String> blockedCommands;
-	private boolean host;
-	private UUID party;
-	private boolean filter;
-	private boolean notifications;
-	private boolean online;
-	private Player player;
-	private boolean hasPlayed;
-	private UUID conversation;
-	private boolean spy;
-	private boolean commandSpy;
-	private boolean quickChat;
-	private ChatChannel quickChannel;
-	private UUID replyPlayer;
-	private HashMap<ChatChannel, Long> cooldowns;
-	private boolean partyChat;
-	private HashMap<ChatChannel, List<Long>> spam;
-	private boolean modified;
-	private List<ChatMessage> messages;
-	private String jsonFormat;
-	private boolean editing;
-	private int editHash;
-	private boolean rangedSpy;
-	private boolean messageToggle;
-	private boolean bungeeToggle;
-	
-	@Deprecated
-	public MineverseChatPlayer(UUID uuid, String name, ChatChannel currentChannel, Set<UUID> ignores, Set<String> listening, HashMap<String, MuteContainer> mutes, Set<String> blockedCommands, boolean host, UUID party, boolean filter, boolean notifications, String nickname, String jsonFormat, boolean spy, boolean commandSpy, boolean rangedSpy, boolean messageToggle, boolean bungeeToggle) {
-		this(uuid, name, currentChannel, ignores, listening, mutes, blockedCommands, host, party, filter, notifications, jsonFormat, spy, commandSpy, rangedSpy, messageToggle, bungeeToggle);
-	}
-	
-	public MineverseChatPlayer(UUID uuid, String name, ChatChannel currentChannel, Set<UUID> ignores, Set<String> listening, HashMap<String, MuteContainer> mutes, Set<String> blockedCommands, boolean host, UUID party, boolean filter, boolean notifications, String jsonFormat, boolean spy, boolean commandSpy, boolean rangedSpy, boolean messageToggle, boolean bungeeToggle) {
-		this.uuid = uuid;
-		this.name = name;
-		this.currentChannel = currentChannel;
-		this.ignores = ignores;
-		this.listening = listening;
-		this.mutes = mutes;
-		this.blockedCommands = blockedCommands;
-		this.host = host;
-		this.party = party;
-		this.filter = filter;
-		this.notifications = notifications;
-		this.online = false;
-		this.player = null;
-		this.hasPlayed = false;
-		this.conversation = null;
-		this.spy = spy;
-		this.rangedSpy = rangedSpy;
-		this.commandSpy = commandSpy;
-		this.quickChat = false;
-		this.quickChannel = null;
-		this.replyPlayer = null;
-		this.partyChat = false;
-		this.modified = false;
-		this.messages = new ArrayList<ChatMessage>();
-		this.jsonFormat = jsonFormat;
-		this.cooldowns = new HashMap<ChatChannel, Long>();
-		this.spam = new HashMap<ChatChannel, List<Long>>();
-		this.messageToggle = messageToggle;
-		this.bungeeToggle = bungeeToggle;
-	}
-	
-	public MineverseChatPlayer(UUID uuid, String name) {
-		this.uuid = uuid;
-		this.name = name;
-		this.currentChannel = ChatChannel.getDefaultChannel();
-		this.ignores = new HashSet<UUID>();
-		this.listening = new HashSet<String>();
-		listening.add(currentChannel.getName());
-		this.mutes = new HashMap<String, MuteContainer>();
-		this.blockedCommands = new HashSet<String>();
-		this.host = false;
-		this.party = null;
-		this.filter = true;
-		this.notifications = true;
-		this.online = false;
-		this.player = null;
-		this.hasPlayed = false;
-		this.conversation = null;
-		this.spy = false;
-		this.rangedSpy = false;
-		this.commandSpy = false;
-		this.quickChat = false;
-		this.quickChannel = null;
-		this.replyPlayer = null;
-		this.partyChat = false;
-		this.modified = false;
-		this.messages = new ArrayList<ChatMessage>();
-		this.jsonFormat = "Default";
-		this.cooldowns = new HashMap<ChatChannel, Long>();
-		this.spam = new HashMap<ChatChannel, List<Long>>();
-		this.messageToggle = true;
-		this.bungeeToggle = true;
-	}
-	
-	@Deprecated
-	public String getNickname() {
-		return this.online ? this.player.getDisplayName() : "";
-	}
+    private UUID uuid;
+    private String name;
+    private ChatChannel currentChannel;
+    private Set<UUID> ignores;
+    private Set<String> listening;
+    private HashMap<String, MuteContainer> mutes;
+    private Set<String> blockedCommands;
+    private boolean host;
+    private UUID party;
+    private boolean filter;
+    private boolean notifications;
+    private boolean online;
+    private Player player;
+    private boolean hasPlayed;
+    private UUID conversation;
+    private boolean spy;
+    private boolean commandSpy;
+    private boolean quickChat;
+    private ChatChannel quickChannel;
+    private UUID replyPlayer;
+    private HashMap<ChatChannel, Long> cooldowns;
+    private boolean partyChat;
+    private HashMap<ChatChannel, List<Long>> spam;
+    private boolean modified;
+    private List<ChatMessage> messages;
+    private String jsonFormat;
+    private boolean editing;
+    private int editHash;
+    private boolean rangedSpy;
+    private boolean messageToggle;
+    private boolean bungeeToggle;
 
-	@Deprecated
-	public void setNickname(String nick) {}
+    @Deprecated
+    public MineverseChatPlayer(UUID uuid, String name, ChatChannel currentChannel, Set<UUID> ignores, Set<String> listening, HashMap<String, MuteContainer> mutes, Set<String> blockedCommands, boolean host, UUID party, boolean filter, boolean notifications, String nickname, String jsonFormat, boolean spy, boolean commandSpy, boolean rangedSpy, boolean messageToggle, boolean bungeeToggle) {
+        this(uuid, name, currentChannel, ignores, listening, mutes, blockedCommands, host, party, filter, notifications, jsonFormat, spy, commandSpy, rangedSpy, messageToggle, bungeeToggle);
+    }
 
-	@Deprecated
-	public boolean hasNickname() {
-		return false;
-	}
-	
-	public boolean getBungeeToggle() {
-		return this.bungeeToggle;
-	}
-	
-	public void setBungeeToggle(boolean bungeeToggle) {
-		this.bungeeToggle = bungeeToggle;
-	}
-	
-	public boolean getMessageToggle() {
-		return this.messageToggle;
-	}
-	
-	public void setMessageToggle(boolean messageToggle) {
-		this.messageToggle = messageToggle;
-	}
-	
-	public boolean getRangedSpy() {
-		if(isOnline()) {
-			if(!getPlayer().hasPermission("venturechat.rangedspy")) {
-				setRangedSpy(false);
-				return false;
-			}
-		}
-		return this.rangedSpy;
-	}
-	
-	public void setRangedSpy(boolean rangedSpy) {
-		this.rangedSpy = rangedSpy;
-	}
-	
-	public int getEditHash() {
-		return this.editHash;
-	}
-	
-	public void setEditHash(int editHash) {
-		this.editHash = editHash;
-	}
-	
-	public boolean isEditing() {
-		return this.editing;
-	}
-	
-	public void setEditing(boolean editing) {
-		this.editing = editing;
-	}
+    public MineverseChatPlayer(UUID uuid, String name, ChatChannel currentChannel, Set<UUID> ignores, Set<String> listening, HashMap<String, MuteContainer> mutes, Set<String> blockedCommands, boolean host, UUID party, boolean filter, boolean notifications, String jsonFormat, boolean spy, boolean commandSpy, boolean rangedSpy, boolean messageToggle, boolean bungeeToggle) {
+        this.uuid = uuid;
+        this.name = name;
+        this.currentChannel = currentChannel;
+        this.ignores = ignores;
+        this.listening = listening;
+        this.mutes = mutes;
+        this.blockedCommands = blockedCommands;
+        this.host = host;
+        this.party = party;
+        this.filter = filter;
+        this.notifications = notifications;
+        this.online = false;
+        this.player = null;
+        this.hasPlayed = false;
+        this.conversation = null;
+        this.spy = spy;
+        this.rangedSpy = rangedSpy;
+        this.commandSpy = commandSpy;
+        this.quickChat = false;
+        this.quickChannel = null;
+        this.replyPlayer = null;
+        this.partyChat = false;
+        this.modified = false;
+        this.messages = new ArrayList<ChatMessage>();
+        this.jsonFormat = jsonFormat;
+        this.cooldowns = new HashMap<ChatChannel, Long>();
+        this.spam = new HashMap<ChatChannel, List<Long>>();
+        this.messageToggle = messageToggle;
+        this.bungeeToggle = bungeeToggle;
+    }
 
-	public UUID getUUID() {
-		return this.uuid;
-	}
+    public MineverseChatPlayer(UUID uuid, String name) {
+        this.uuid = uuid;
+        this.name = name;
+        this.currentChannel = ChatChannel.getDefaultChannel();
+        this.ignores = new HashSet<UUID>();
+        this.listening = new HashSet<String>();
+        listening.add(currentChannel.getName());
+        this.mutes = new HashMap<String, MuteContainer>();
+        this.blockedCommands = new HashSet<String>();
+        this.host = false;
+        this.party = null;
+        this.filter = true;
+        this.notifications = true;
+        this.online = false;
+        this.player = null;
+        this.hasPlayed = false;
+        this.conversation = null;
+        this.spy = false;
+        this.rangedSpy = false;
+        this.commandSpy = false;
+        this.quickChat = false;
+        this.quickChannel = null;
+        this.replyPlayer = null;
+        this.partyChat = false;
+        this.modified = false;
+        this.messages = new ArrayList<ChatMessage>();
+        this.jsonFormat = "Default";
+        this.cooldowns = new HashMap<ChatChannel, Long>();
+        this.spam = new HashMap<ChatChannel, List<Long>>();
+        this.messageToggle = true;
+        this.bungeeToggle = true;
+    }
 
-	public String getName() {
-		return this.name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
+    @Deprecated
+    public String getNickname() {
+        return this.online ? this.player.getDisplayName() : "";
+    }
 
-	public ChatChannel getCurrentChannel() {
-		return this.currentChannel;
-	}
+    @Deprecated
+    public void setNickname(String nick) {
+    }
 
-	public boolean setCurrentChannel(ChatChannel channel) {
-		if(channel != null) {
-			this.currentChannel = channel;
-			return true;
-		}
-		return false;
-	}
+    @Deprecated
+    public boolean hasNickname() {
+        return false;
+    }
 
-	public Set<UUID> getIgnores() {
-		return this.ignores;
-	}
+    public boolean getBungeeToggle() {
+        return this.bungeeToggle;
+    }
 
-	public void addIgnore(UUID ignore) {
-		this.ignores.add(ignore);
-	}
+    public void setBungeeToggle(boolean bungeeToggle) {
+        this.bungeeToggle = bungeeToggle;
+    }
 
-	public void removeIgnore(UUID ignore) {
-		this.ignores.remove(ignore);
-	}
+    public boolean getMessageToggle() {
+        return this.messageToggle;
+    }
 
-	public Set<String> getListening() {
-		return this.listening;
-	}
-	
-	public boolean isListening(String channel) {
-		if(this.isOnline()) {
-			if(ChatChannel.isChannel(channel)) {
-				ChatChannel chatChannel = ChatChannel.getChannel(channel);
-				if(chatChannel.hasPermission()) {
-					if(!this.getPlayer().hasPermission(chatChannel.getPermission())) {
-						if(this.getCurrentChannel().equals(chatChannel)) {
-							this.setCurrentChannel(ChatChannel.getDefaultChannel());
-						}
-						this.removeListening(channel);
-						return false;
-					}
-				}
-			}
-		}
-		return this.listening.contains(channel);
-	}
+    public void setMessageToggle(boolean messageToggle) {
+        this.messageToggle = messageToggle;
+    }
 
-	public boolean addListening(String channel) {
-		if(channel != null) {
-			this.listening.add(channel);
-			return true;
-		}
-		return false;
-	}
+    public boolean getRangedSpy() {
+        if (isOnline()) {
+            if (!getPlayer().hasPermission("venturechat.rangedspy")) {
+                setRangedSpy(false);
+                return false;
+            }
+        }
+        return this.rangedSpy;
+    }
 
-	public boolean removeListening(String channel) {
-		if(channel != null) {
-			this.listening.remove(channel);
-			return true;
-		}
-		return false;
-	}
+    public void setRangedSpy(boolean rangedSpy) {
+        this.rangedSpy = rangedSpy;
+    }
 
-	public void clearListening() {
-		this.listening.clear();
-	}
+    public int getEditHash() {
+        return this.editHash;
+    }
 
-	public Collection<MuteContainer> getMutes() {
-		return this.mutes.values();
-	}
-	
-	public MuteContainer getMute(String channel) {
-		return mutes.get(channel);
-	}
+    public void setEditHash(int editHash) {
+        this.editHash = editHash;
+    }
 
-	public boolean addMute(String channel) {
-		return addMute(channel, 0, "");
-	}
-	
-	public boolean addMute(String channel, long time) {
-		return addMute(channel, time, "");
-	}
-	
-	public boolean addMute(String channel, String reason) {
-		return addMute(channel, 0, reason);
-	}
-	
-	public boolean addMute(String channel, long time, String reason) {
-		if(channel != null && time >= 0) {
-			mutes.put(channel, new MuteContainer(channel, time, reason));
-			return true;
-		}
-		return false;
-	}
+    public boolean isEditing() {
+        return this.editing;
+    }
 
-	public boolean removeMute(String channel) {
-		if(channel != null) {
-			mutes.remove(channel);
-			return true;
-		}
-		return false;
-	}
+    public void setEditing(boolean editing) {
+        this.editing = editing;
+    }
 
-	public boolean isMuted(String channel) {
-		return channel != null ? this.mutes.containsKey(channel) : false;
-	}
+    public UUID getUUID() {
+        return this.uuid;
+    }
 
-	public Set<String> getBlockedCommands() {
-		return this.blockedCommands;
-	}
+    public String getName() {
+        return this.name;
+    }
 
-	public void addBlockedCommand(String command) {
-		this.blockedCommands.add(command);
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void removeBlockedCommand(String command) {
-		this.blockedCommands.remove(command);
-	}
+    public ChatChannel getCurrentChannel() {
+        return this.currentChannel;
+    }
 
-	public boolean isBlockedCommand(String command) {
-		return this.blockedCommands.contains(command);
-	}
+    public boolean setCurrentChannel(ChatChannel channel) {
+        if (channel != null) {
+            this.currentChannel = channel;
+            return true;
+        }
+        return false;
+    }
 
-	public boolean isHost() {
-		return this.host;
-	}
+    public Set<UUID> getIgnores() {
+        return this.ignores;
+    }
 
-	public void setHost(boolean host) {
-		this.host = host;
-	}
+    public void addIgnore(UUID ignore) {
+        this.ignores.add(ignore);
+    }
 
-	public UUID getParty() {
-		return this.party;
-	}
+    public void removeIgnore(UUID ignore) {
+        this.ignores.remove(ignore);
+    }
 
-	public void setParty(UUID party) {
-		this.party = party;
-	}
+    public Set<String> getListening() {
+        return this.listening;
+    }
 
-	public boolean hasParty() {
-		return this.party != null;
-	}
+    public boolean isListening(String channel) {
+        if (this.isOnline()) {
+            if (ChatChannel.isChannel(channel)) {
+                ChatChannel chatChannel = ChatChannel.getChannel(channel);
+                if (chatChannel.hasPermission()) {
+                    if (!this.getPlayer().hasPermission(chatChannel.getPermission())) {
+                        if (this.getCurrentChannel().equals(chatChannel)) {
+                            this.setCurrentChannel(ChatChannel.getDefaultChannel());
+                        }
+                        this.removeListening(channel);
+                        return false;
+                    }
+                }
+            }
+        }
+        return this.listening.contains(channel);
+    }
 
-	public boolean hasFilter() {
-		return this.filter;
-	}
+    public boolean addListening(String channel) {
+        if (channel != null) {
+            this.listening.add(channel);
+            return true;
+        }
+        return false;
+    }
 
-	public void setFilter(boolean filter) {
-		this.filter = filter;
-	}
+    public boolean removeListening(String channel) {
+        if (channel != null) {
+            this.listening.remove(channel);
+            return true;
+        }
+        return false;
+    }
 
-	public boolean hasNotifications() {
-		return this.notifications;
-	}
+    public void clearListening() {
+        this.listening.clear();
+    }
 
-	public void setNotifications(boolean notifications) {
-		this.notifications = notifications;
-	}
+    public Collection<MuteContainer> getMutes() {
+        return this.mutes.values();
+    }
 
-	public boolean isOnline() {
-		return this.online;
-	}
+    public MuteContainer getMute(String channel) {
+        return mutes.get(channel);
+    }
 
-	public void setOnline(boolean online) {
-		this.online = online;
-		if(this.online) {
-			this.player = Bukkit.getPlayer(name);
-		}
-		else {
-			this.player = null;
-		}
-	}
+    public boolean addMute(String channel) {
+        return addMute(channel, 0, "");
+    }
 
-	public Player getPlayer() {
-		return this.online ? this.player : null;
-	}
+    public boolean addMute(String channel, long time) {
+        return addMute(channel, time, "");
+    }
 
-	public boolean hasPlayed() {
-		return this.hasPlayed;
-	}
+    public boolean addMute(String channel, String reason) {
+        return addMute(channel, 0, reason);
+    }
 
-	public void setHasPlayed(boolean played) {
-		this.hasPlayed = played;
-	}
+    public boolean addMute(String channel, long time, String reason) {
+        if (channel != null && time >= 0) {
+            mutes.put(channel, new MuteContainer(channel, time, reason));
+            return true;
+        }
+        return false;
+    }
 
-	public UUID getConversation() {
-		return this.conversation;
-	}
+    public boolean removeMute(String channel) {
+        if (channel != null) {
+            mutes.remove(channel);
+            return true;
+        }
+        return false;
+    }
 
-	public void setConversation(UUID conversation) {
-		this.conversation = conversation;
-	}
+    public boolean isMuted(String channel) {
+        return channel != null ? this.mutes.containsKey(channel) : false;
+    }
 
-	public boolean hasConversation() {
-		return this.conversation != null;
-	}
+    public Set<String> getBlockedCommands() {
+        return this.blockedCommands;
+    }
 
-	public boolean isSpy() {
-		if(this.isOnline()) {
-			if(!this.getPlayer().hasPermission("venturechat.spy")) {
-				this.setSpy(false);
-				return false;
-			}
-		}
-		return this.spy;
-	}
+    public void addBlockedCommand(String command) {
+        this.blockedCommands.add(command);
+    }
 
-	public void setSpy(boolean spy) {
-		this.spy = spy;
-	}
+    public void removeBlockedCommand(String command) {
+        this.blockedCommands.remove(command);
+    }
 
-	public boolean hasCommandSpy() {
-		if(this.isOnline()) {
-			if(!this.getPlayer().hasPermission("venturechat.commandspy")) {
-				this.setCommandSpy(false);
-				return false;
-			}
-		}
-		return this.commandSpy;
-	}
+    public boolean isBlockedCommand(String command) {
+        return this.blockedCommands.contains(command);
+    }
 
-	public void setCommandSpy(boolean commandSpy) {
-		this.commandSpy = commandSpy;
-	}
+    public boolean isHost() {
+        return this.host;
+    }
 
-	public boolean isQuickChat() {
-		return this.quickChat;
-	}
+    public void setHost(boolean host) {
+        this.host = host;
+    }
 
-	public void setQuickChat(boolean quickChat) {
-		this.quickChat = quickChat;
-	}
+    public UUID getParty() {
+        return this.party;
+    }
 
-	public ChatChannel getQuickChannel() {
-		return this.quickChannel;
-	}
+    public void setParty(UUID party) {
+        this.party = party;
+    }
 
-	public boolean setQuickChannel(ChatChannel channel) {
-		if(channel != null) {
-			this.quickChannel = channel;
-			return true;
-		}
-		return false;
-	}
+    public boolean hasParty() {
+        return this.party != null;
+    }
 
-	@Deprecated
-	/**
-	 * Not needed and never resets to it's original null value after being set once.
-	 * @return
-	 */
-	public boolean hasQuickChannel() {
-		return this.quickChannel != null;
-	}
+    public boolean hasFilter() {
+        return this.filter;
+    }
 
-	public UUID getReplyPlayer() {
-		return this.replyPlayer;
-	}
+    public void setFilter(boolean filter) {
+        this.filter = filter;
+    }
 
-	public void setReplyPlayer(UUID replyPlayer) {
-		this.replyPlayer = replyPlayer;
-	}
+    public boolean hasNotifications() {
+        return this.notifications;
+    }
 
-	public boolean hasReplyPlayer() {
-		return this.replyPlayer != null;
-	}
+    public void setNotifications(boolean notifications) {
+        this.notifications = notifications;
+    }
 
-	public boolean isPartyChat() {
-		return this.partyChat;
-	}
+    public boolean isOnline() {
+        return this.online;
+    }
 
-	public void setPartyChat(boolean partyChat) {
-		this.partyChat = partyChat;
-	}
+    public void setOnline(boolean online) {
+        this.online = online;
+        if (this.online) {
+            this.player = Bukkit.getPlayer(name);
+        } else {
+            this.player = null;
+        }
+    }
 
-	public HashMap<ChatChannel, Long> getCooldowns() {
-		return this.cooldowns;
-	}
+    public Player getPlayer() {
+        return this.online ? this.player : null;
+    }
 
-	public boolean addCooldown(ChatChannel channel, long time) {
-		if(channel != null && time > 0) {
-			cooldowns.put(channel, time);
-			return true;
-		}
-		return false;
-	}
+    public boolean hasPlayed() {
+        return this.hasPlayed;
+    }
 
-	public boolean removeCooldown(ChatChannel channel) {
-		if(channel != null) {
-			cooldowns.remove(channel);
-			return true;
-		}
-		return false;
-	}
+    public void setHasPlayed(boolean played) {
+        this.hasPlayed = played;
+    }
 
-	public boolean hasCooldown(ChatChannel channel) {
-		return channel != null && this.cooldowns != null ? this.cooldowns.containsKey(channel) : false;
-	}
-	
-	public HashMap<ChatChannel, List<Long>> getSpam() {
-		return this.spam;
-	}
-	
-	public boolean hasSpam(ChatChannel channel) {
-		return channel != null && this.spam != null ? this.spam.containsKey(channel) : false;
-	}
-	
-	public boolean addSpam(ChatChannel channel) {
-		if(channel != null) {
-			spam.put(channel, new ArrayList<Long>());
-			return true;
-		}
-		return false;
-	}
+    public UUID getConversation() {
+        return this.conversation;
+    }
 
-	public void setModified(boolean modified) {
-		this.modified = modified;
-	}
+    public void setConversation(UUID conversation) {
+        this.conversation = conversation;
+    }
 
-	public boolean wasModified() {
-		return this.modified;
-	}
+    public boolean hasConversation() {
+        return this.conversation != null;
+    }
 
-	public List<ChatMessage> getMessages() {
-		return this.messages;
-	}
+    public boolean isSpy() {
+        if (this.isOnline()) {
+            if (!this.getPlayer().hasPermission("venturechat.spy")) {
+                this.setSpy(false);
+                return false;
+            }
+        }
+        return this.spy;
+    }
 
-	public void addMessage(ChatMessage message) {
-		if(this.messages.size() >= 100) {
-			this.messages.remove(0);
-		}
-		this.messages.add(message);
-	}
+    public void setSpy(boolean spy) {
+        this.spy = spy;
+    }
 
-	public void clearMessages() {
-		this.messages.clear();
-	}
+    public boolean hasCommandSpy() {
+        if (this.isOnline()) {
+            if (!this.getPlayer().hasPermission("venturechat.commandspy")) {
+                this.setCommandSpy(false);
+                return false;
+            }
+        }
+        return this.commandSpy;
+    }
 
-	public String getJsonFormat() {
-		return this.jsonFormat;
-	}
+    public void setCommandSpy(boolean commandSpy) {
+        this.commandSpy = commandSpy;
+    }
 
-	public void setJsonFormat() {
-		this.jsonFormat = "Default";
-		for(JsonFormat j : JsonFormat.getJsonFormats()) {
-			if(this.getPlayer().hasPermission("venturechat.json." + j.getName())) {
-				if(JsonFormat.getJsonFormat(this.getJsonFormat()).getPriority() > j.getPriority()) {
-					this.jsonFormat = j.getName();
-				}
-			}
-		}
-	}
+    public boolean isQuickChat() {
+        return this.quickChat;
+    }
+
+    public void setQuickChat(boolean quickChat) {
+        this.quickChat = quickChat;
+    }
+
+    public ChatChannel getQuickChannel() {
+        return this.quickChannel;
+    }
+
+    public boolean setQuickChannel(ChatChannel channel) {
+        if (channel != null) {
+            this.quickChannel = channel;
+            return true;
+        }
+        return false;
+    }
+
+    @Deprecated
+    /**
+     * Not needed and never resets to it's original null value after being set once.
+     * @return
+     */
+    public boolean hasQuickChannel() {
+        return this.quickChannel != null;
+    }
+
+    public UUID getReplyPlayer() {
+        return this.replyPlayer;
+    }
+
+    public void setReplyPlayer(UUID replyPlayer) {
+        this.replyPlayer = replyPlayer;
+    }
+
+    public boolean hasReplyPlayer() {
+        return this.replyPlayer != null;
+    }
+
+    public boolean isPartyChat() {
+        return this.partyChat;
+    }
+
+    public void setPartyChat(boolean partyChat) {
+        this.partyChat = partyChat;
+    }
+
+    public HashMap<ChatChannel, Long> getCooldowns() {
+        return this.cooldowns;
+    }
+
+    public boolean addCooldown(ChatChannel channel, long time) {
+        if (channel != null && time > 0) {
+            cooldowns.put(channel, time);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeCooldown(ChatChannel channel) {
+        if (channel != null) {
+            cooldowns.remove(channel);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean hasCooldown(ChatChannel channel) {
+        return channel != null && this.cooldowns != null ? this.cooldowns.containsKey(channel) : false;
+    }
+
+    public HashMap<ChatChannel, List<Long>> getSpam() {
+        return this.spam;
+    }
+
+    public boolean hasSpam(ChatChannel channel) {
+        return channel != null && this.spam != null ? this.spam.containsKey(channel) : false;
+    }
+
+    public boolean addSpam(ChatChannel channel) {
+        if (channel != null) {
+            spam.put(channel, new ArrayList<Long>());
+            return true;
+        }
+        return false;
+    }
+
+    public void setModified(boolean modified) {
+        this.modified = modified;
+    }
+
+    public boolean wasModified() {
+        return this.modified;
+    }
+
+    public List<ChatMessage> getMessages() {
+        return this.messages;
+    }
+
+    public void addMessage(ChatMessage message) {
+        if (this.messages.size() >= 100) {
+            this.messages.remove(0);
+        }
+        this.messages.add(message);
+    }
+
+    public void clearMessages() {
+        this.messages.clear();
+    }
+
+    public String getJsonFormat() {
+        return this.jsonFormat;
+    }
+
+    public void setJsonFormat() {
+        this.jsonFormat = "Default";
+        for (JsonFormat j : JsonFormat.getJsonFormats()) {
+            if (this.getPlayer().hasPermission("venturechat.json." + j.getName())) {
+                if (JsonFormat.getJsonFormat(this.getJsonFormat()).getPriority() > j.getPriority()) {
+                    this.jsonFormat = j.getName();
+                }
+            }
+        }
+    }
 }

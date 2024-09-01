@@ -1,7 +1,6 @@
 package mineverse.Aust1n46.chat.api.events;
 
 import mineverse.Aust1n46.chat.channel.ChatChannel;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -12,8 +11,8 @@ import org.bukkit.event.HandlerList;
  */
 public class ChannelJoinEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
+    private final Player player;
     private boolean cancelled;
-    private Player player;
     private ChatChannel channel;
     private String message;
 
@@ -24,12 +23,12 @@ public class ChannelJoinEvent extends Event implements Cancellable {
         this.cancelled = false;
     }
 
-    @Override
-    public HandlerList getHandlers() {
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 
-    public static HandlerList getHandlerList() {
+    @Override
+    public HandlerList getHandlers() {
         return handlers;
     }
 
@@ -47,12 +46,12 @@ public class ChannelJoinEvent extends Event implements Cancellable {
         return this.player;
     }
 
-    public void setChannel(ChatChannel channel) {
-        this.channel = channel;
-    }
-
     public ChatChannel getChannel() {
         return this.channel;
+    }
+
+    public void setChannel(ChatChannel channel) {
+        this.channel = channel;
     }
 
     public String getMessage() {

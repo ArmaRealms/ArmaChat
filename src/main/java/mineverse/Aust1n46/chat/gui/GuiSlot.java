@@ -1,12 +1,11 @@
 package mineverse.Aust1n46.chat.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import mineverse.Aust1n46.chat.MineverseChat;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 
-import mineverse.Aust1n46.chat.MineverseChat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GuiSlot {
     private static MineverseChat plugin = MineverseChat.getInstance();
