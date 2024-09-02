@@ -25,6 +25,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.PluginManager;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -33,28 +34,18 @@ import java.util.Set;
 //This class listens to chat through the chat event and handles the bulk of the chat channels and formatting.
 public class ChatListener implements Listener {
     private final boolean essentialsDiscordHook = Bukkit.getPluginManager().isPluginEnabled("EssentialsDiscord");
-    private MineverseChat plugin = MineverseChat.getInstance();
-
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onChannelJoin(ChannelJoinEvent event) {
-
-    }
+    private final MineverseChat plugin = MineverseChat.getInstance();
 
     // this event isn't always asynchronous even though the event's name starts with "Async"
     // blame md_5 for that one
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent event) {
+    public void onAsyncPlayerChatEvent(@NotNull AsyncPlayerChatEvent event) {
         event.setCancelled(true);
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-            @Override
-            public void run() {
-                handleTrueAsyncPlayerChatEvent(event);
-            }
-        });
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> handleTrueAsyncPlayerChatEvent(event));
     }
 
-    public void handleTrueAsyncPlayerChatEvent(AsyncPlayerChatEvent event) {
-        boolean bungee = false;
+    public void handleTrueAsyncPlayerChatEvent(@NotNull AsyncPlayerChatEvent event) {
+        boolean bungee;
         String chat = event.getMessage();
         String format;
         Set<Player> recipients = event.getRecipients();
@@ -171,7 +162,7 @@ public class ChatListener implements Listener {
                             filtered = Format.FormatString(filtered);
                         }
                         filtered = " " + filtered;
-                        if (plugin.getConfig().getString("partyformat").equalsIgnoreCase("Default")) {
+                        if (plugin.getConfig().getString("partyformat", "").equalsIgnoreCase("Default")) {
                             partyformat = ChatColor.GREEN + "[" + MineverseChatAPI.getMineverseChatPlayer(mcp.getParty()).getName() + "'s Party] " + mcp.getName() + ":" + filtered;
                         } else {
                             partyformat = Format.FormatStringAll(plugin.getConfig().getString("partyformat").replace("{host}", MineverseChatAPI.getMineverseChatPlayer(mcp.getParty()).getName()).replace("{player}", mcp.getName())) + filtered;
@@ -267,7 +258,6 @@ public class ChatListener implements Listener {
                     mcp.getPlayer().sendMessage(LocalizedMessage.CHANNEL_COOLDOWN.toString()
                             .replace("{cooldown}", cooldownString));
                     mcp.setQuickChat(false);
-                    bungee = false;
                     return;
                 }
             }
@@ -277,7 +267,7 @@ public class ChatListener implements Listener {
                 }
             }
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            plugin.getLogger().warning("Invalid cooldown value for channel " + eventChannel.getName() + ". Please check your configuration.");
         }
 
         if (mcp.hasSpam(eventChannel) && plugin.getConfig().getConfigurationSection("antispam").getBoolean("enabled")
@@ -481,7 +471,7 @@ public class ChatListener implements Listener {
         mcp.setQuickChat(false);
     }
 
-    public void handleVentureChatEvent(VentureChatEvent event) {
+    public void handleVentureChatEvent(@NotNull VentureChatEvent event) {
         MineverseChatPlayer mcp = event.getMineverseChatPlayer();
         ChatChannel channel = event.getChannel();
         Set<Player> recipients = event.getRecipients();
@@ -540,7 +530,6 @@ public class ChatListener implements Listener {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return;
         }
     }
 }

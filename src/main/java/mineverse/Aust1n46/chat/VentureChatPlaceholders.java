@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class VentureChatPlaceholders extends PlaceholderExpansion {
     @Override
-    public String onPlaceholderRequest(Player p, String identifier) {
+    public String onPlaceholderRequest(Player p, @NotNull String identifier) {
         if (p == null) {
             return null;
         }

@@ -80,24 +80,7 @@ public class VentureCommandExecutor {
             plugin.saveResource("commands.yml", true);
             commandsFileConfiguration = YamlConfiguration.loadConfiguration(commandsFile);
         }
-        try {
-            knownCommands = server.getCommandMap().getKnownCommands(); // Paper :)
-        }
-        // Spigot :(
-        catch (final NoSuchMethodError error) {
-            try {
-                final Field commandMapField = server.getClass().getDeclaredField("commandMap");
-                commandMapField.setAccessible(true);
-                final SimpleCommandMap simpleCommandMap = (SimpleCommandMap) commandMapField.get(server);
-                final Field knownCommandsField = SimpleCommandMap.class.getDeclaredField("knownCommands");
-                knownCommandsField.setAccessible(true);
-                knownCommands = (Map<String, Command>) knownCommandsField.get(simpleCommandMap);
-            } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-                server.getConsoleSender()
-                        .sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&c - Unable to access CommandMap on Spigot. If this issue persists, try using Paper."));
-                e.printStackTrace();
-            }
-        }
+        knownCommands = server.getCommandMap().getKnownCommands();
         commands.put("broadcast", new Broadcast());
         commands.put("channel", new Channel());
         commands.put("channelinfo", new Channelinfo());
@@ -142,8 +125,10 @@ public class VentureCommandExecutor {
             commands.put(alias, channelAlias);
         }
         final ConfigurationSection commandsSection = commandsFileConfiguration.getConfigurationSection("commands");
+        if (commandsSection == null) return;
         for (final String commandName : commandsSection.getKeys(false)) {
             final ConfigurationSection commandSection = commandsSection.getConfigurationSection(commandName);
+            if (commandSection == null) continue;
             final boolean isEnabled = commandSection.getBoolean("enabled", true);
             if (!isEnabled) {
                 commands.remove(commandName);
