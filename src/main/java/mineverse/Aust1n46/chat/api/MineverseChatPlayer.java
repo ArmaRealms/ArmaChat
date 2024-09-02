@@ -298,7 +298,7 @@ public class MineverseChatPlayer {
     }
 
     public boolean isMuted(String channel) {
-        return channel != null ? this.mutes.containsKey(channel) : false;
+        return channel != null && this.mutes.containsKey(channel);
     }
 
     public Set<String> getBlockedCommands() {
@@ -488,7 +488,7 @@ public class MineverseChatPlayer {
     }
 
     public boolean hasCooldown(ChatChannel channel) {
-        return channel != null && this.cooldowns != null ? this.cooldowns.containsKey(channel) : false;
+        return channel != null && this.cooldowns != null && this.cooldowns.containsKey(channel);
     }
 
     public HashMap<ChatChannel, List<Long>> getSpam() {
@@ -496,7 +496,7 @@ public class MineverseChatPlayer {
     }
 
     public boolean hasSpam(ChatChannel channel) {
-        return channel != null && this.spam != null ? this.spam.containsKey(channel) : false;
+        return channel != null && this.spam != null && this.spam.containsKey(channel);
     }
 
     public boolean addSpam(ChatChannel channel) {
@@ -521,7 +521,7 @@ public class MineverseChatPlayer {
 
     public void addMessage(ChatMessage message) {
         if (this.messages.size() >= 100) {
-            this.messages.remove(0);
+            this.messages.removeFirst();
         }
         this.messages.add(message);
     }
