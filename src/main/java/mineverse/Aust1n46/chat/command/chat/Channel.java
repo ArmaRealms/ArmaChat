@@ -51,10 +51,7 @@ public class Channel extends Command implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onChannelJoin(@NotNull ChannelJoinEvent event) {
-        if (event.isCancelled()) {
-            JavaPlugin.getPlugin(MineverseChat.class).getLogger().info("ChannelJoinEvent was cancelled.");
-            return;
-        }
+        if (event.isCancelled()) return;
 
         ChatChannel channel = event.getChannel();
         Player player = event.getPlayer();
