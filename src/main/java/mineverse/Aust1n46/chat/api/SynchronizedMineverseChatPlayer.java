@@ -11,12 +11,12 @@ import java.util.Set;
 import java.util.UUID;
 
 public class SynchronizedMineverseChatPlayer {
-    private UUID uuid;
-    private Set<String> listening;
-    private HashMap<String, MuteContainer> mutes;
-    private Set<UUID> ignores;
+    private final UUID uuid;
+    private final Set<String> listening;
+    private final HashMap<String, MuteContainer> mutes;
+    private final Set<UUID> ignores;
     private int messagePackets;
-    private List<String> messageData = new ArrayList<String>();
+    private final List<String> messageData = new ArrayList<String>();
     private boolean spy;
     private boolean messageToggle;
 

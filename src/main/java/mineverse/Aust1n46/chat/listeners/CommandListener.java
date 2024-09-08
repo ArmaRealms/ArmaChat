@@ -28,7 +28,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.io.FileNotFoundException;
 
 public class CommandListener implements Listener {
-    private MineverseChat plugin = MineverseChat.getInstance();
+    private final MineverseChat plugin = MineverseChat.getInstance();
 
     @EventHandler
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) throws FileNotFoundException {

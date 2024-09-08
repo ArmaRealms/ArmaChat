@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class Ignore extends Command {
-    private MineverseChat plugin = MineverseChat.getInstance();
+    private final MineverseChat plugin = MineverseChat.getInstance();
 
     public Ignore() {
         super("ignore");

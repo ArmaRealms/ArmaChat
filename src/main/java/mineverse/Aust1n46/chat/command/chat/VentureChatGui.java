@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VentureChatGui extends Command {
-    private MineverseChat plugin = MineverseChat.getInstance();
+    private final MineverseChat plugin = MineverseChat.getInstance();
 
     public VentureChatGui() {
         super("venturechatgui");

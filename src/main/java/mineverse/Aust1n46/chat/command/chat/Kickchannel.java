@@ -31,12 +31,12 @@ public class Kickchannel extends Command {
                 sender.sendMessage(LocalizedMessage.INVALID_CHANNEL.toString().replace("{args}", args[1]));
                 return true;
             }
-            sender.sendMessage(LocalizedMessage.KICK_CHANNEL.toString().replace("{player}", args[0]).replace("{channel_color}", channel.getColor() + "").replace("{channel_name}",
+            sender.sendMessage(LocalizedMessage.KICK_CHANNEL.toString().replace("{player}", args[0]).replace("{channel_color}", channel.getColor()).replace("{channel_name}",
                     channel.getName()));
             player.removeListening(channel.getName());
             if (player.isOnline()) {
                 player.getPlayer()
-                        .sendMessage(LocalizedMessage.LEAVE_CHANNEL.toString().replace("{channel_color}", channel.getColor() + "").replace("{channel_name}", channel.getName()));
+                        .sendMessage(LocalizedMessage.LEAVE_CHANNEL.toString().replace("{channel_color}", channel.getColor()).replace("{channel_name}", channel.getName()));
             } else {
                 player.setModified(true);
             }

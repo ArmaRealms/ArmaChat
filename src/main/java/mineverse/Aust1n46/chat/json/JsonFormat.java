@@ -11,12 +11,12 @@ import java.util.HashMap;
 import java.util.List;
 
 public class JsonFormat {
-    private static MineverseChat plugin = MineverseChat.getInstance();
+    private static final MineverseChat plugin = MineverseChat.getInstance();
     private static HashMap<String, JsonFormat> jsonFormats;
 
-    private List<JsonAttribute> jsonAttributes;
-    private int priority;
-    private String name;
+    private final List<JsonAttribute> jsonAttributes;
+    private final int priority;
+    private final String name;
 
     public JsonFormat(String name, int priority, List<JsonAttribute> jsonAttributes) {
         this.name = name;

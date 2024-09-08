@@ -38,13 +38,13 @@ public class Setchannel extends Command {
                 if (!player.getPlayer().hasPermission(channel.getPermission())) {
                     player.removeListening(channel.getName());
                     sender.sendMessage(LocalizedMessage.SET_CHANNEL_PLAYER_CHANNEL_NO_PERMISSION.toString().replace("{player}", player.getName())
-                            .replace("{channel_color}", channel.getColor() + "").replace("{channel_name}", channel.getName()));
+                            .replace("{channel_color}", channel.getColor()).replace("{channel_name}", channel.getName()));
                     return true;
                 }
             }
             player.addListening(channel.getName());
             player.setCurrentChannel(channel);
-            sender.sendMessage(LocalizedMessage.SET_CHANNEL_SENDER.toString().replace("{player}", player.getName()).replace("{channel_color}", channel.getColor() + "")
+            sender.sendMessage(LocalizedMessage.SET_CHANNEL_SENDER.toString().replace("{player}", player.getName()).replace("{channel_color}", channel.getColor())
                     .replace("{channel_name}", channel.getName()));
             if (player.hasConversation()) {
                 for (MineverseChatPlayer p : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
@@ -62,7 +62,7 @@ public class Setchannel extends Command {
             }
             if (player.isOnline())
                 player.getPlayer()
-                        .sendMessage(LocalizedMessage.SET_CHANNEL.toString().replace("{channel_color}", channel.getColor() + "").replace("{channel_name}", channel.getName()));
+                        .sendMessage(LocalizedMessage.SET_CHANNEL.toString().replace("{channel_color}", channel.getColor()).replace("{channel_name}", channel.getName()));
             else {
                 player.setModified(true);
             }

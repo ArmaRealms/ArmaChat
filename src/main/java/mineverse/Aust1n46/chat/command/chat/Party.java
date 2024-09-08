@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import static mineverse.Aust1n46.chat.MineverseChat.LINE_LENGTH;
 
 public class Party extends Command {
-    private MineverseChat plugin = MineverseChat.getInstance();
+    private final MineverseChat plugin = MineverseChat.getInstance();
 
     public Party() {
         super("party");

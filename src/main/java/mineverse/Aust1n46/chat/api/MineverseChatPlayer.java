@@ -21,13 +21,13 @@ import java.util.UUID;
  * @author Aust1n46
  */
 public class MineverseChatPlayer {
-    private UUID uuid;
+    private final UUID uuid;
     private String name;
     private ChatChannel currentChannel;
-    private Set<UUID> ignores;
-    private Set<String> listening;
-    private HashMap<String, MuteContainer> mutes;
-    private Set<String> blockedCommands;
+    private final Set<UUID> ignores;
+    private final Set<String> listening;
+    private final HashMap<String, MuteContainer> mutes;
+    private final Set<String> blockedCommands;
     private boolean host;
     private UUID party;
     private boolean filter;
@@ -41,11 +41,11 @@ public class MineverseChatPlayer {
     private boolean quickChat;
     private ChatChannel quickChannel;
     private UUID replyPlayer;
-    private HashMap<ChatChannel, Long> cooldowns;
+    private final HashMap<ChatChannel, Long> cooldowns;
     private boolean partyChat;
-    private HashMap<ChatChannel, List<Long>> spam;
+    private final HashMap<ChatChannel, List<Long>> spam;
     private boolean modified;
-    private List<ChatMessage> messages;
+    private final List<ChatMessage> messages;
     private String jsonFormat;
     private boolean editing;
     private int editHash;

@@ -5,10 +5,10 @@ import mineverse.Aust1n46.chat.ClickAction;
 import java.util.List;
 
 public class JsonAttribute {
-    private String name;
-    private List<String> hoverText;
-    private ClickAction clickAction;
-    private String clickText;
+    private final String name;
+    private final List<String> hoverText;
+    private final ClickAction clickAction;
+    private final String clickText;
 
     public JsonAttribute(String name, List<String> hoverText, ClickAction clickAction, String clickText) {
         this.name = name;

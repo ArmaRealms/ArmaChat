@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender;
 import java.util.List;
 
 public class Commandblock extends Command {
-    private MineverseChat plugin = MineverseChat.getInstance();
+    private final MineverseChat plugin = MineverseChat.getInstance();
 
     public Commandblock() {
         super("commandblock");
@@ -26,9 +26,11 @@ public class Commandblock extends Command {
                     return true;
                 }
                 boolean match = false;
-                for (String cb : (List<String>) plugin.getConfig().getStringList("blockablecommands"))
-                    if (args[1].equals("/" + cb))
+                for (String cb : plugin.getConfig().getStringList("blockablecommands"))
+                    if (args[1].equals("/" + cb)) {
                         match = true;
+                        break;
+                    }
                 if (match || player.isBlockedCommand(args[1])) {
                     if (!player.isBlockedCommand(args[1])) {
                         player.addBlockedCommand(args[1]);

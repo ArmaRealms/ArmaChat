@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 import java.util.UUID;
 
 public class Chatreload extends Command {
-    private MineverseChat plugin = MineverseChat.getInstance();
+    private final MineverseChat plugin = MineverseChat.getInstance();
 
     public Chatreload() {
         super("chatreload");

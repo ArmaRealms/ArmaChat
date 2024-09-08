@@ -21,7 +21,7 @@ import java.io.DataOutputStream;
 import static mineverse.Aust1n46.chat.MineverseChat.LINE_LENGTH;
 
 public class Chwho extends Command {
-    private MineverseChat plugin = MineverseChat.getInstance();
+    private final MineverseChat plugin = MineverseChat.getInstance();
 
     public Chwho() {
         super("chwho");
@@ -79,7 +79,7 @@ public class Chwho extends Command {
                                     TownyUniverse towny = TownyUniverse.getInstance();
                                     if (channel.getName().equalsIgnoreCase("Town")) {
                                         Resident r = towny.getResident(p.getName());
-                                        Resident pp = towny.getResident(((Player) sender).getName());
+                                        Resident pp = towny.getResident(sender.getName());
                                         if (!pp.hasTown()) {
                                             if (playerlist.length() + p.getName().length() > linecount) {
                                                 playerlist += "\n";
@@ -100,7 +100,7 @@ public class Chwho extends Command {
                                     }
                                     if (channel.getName().equalsIgnoreCase("Nation")) {
                                         Resident r = towny.getResident(p.getName());
-                                        Resident pp = towny.getResident(((Player) sender).getName());
+                                        Resident pp = towny.getResident(sender.getName());
                                         if (!pp.hasNation()) {
                                             if (playerlist.length() + p.getName().length() > linecount) {
                                                 playerlist += "\n";
@@ -127,7 +127,7 @@ public class Chwho extends Command {
                                 try {
                                     if (channel.getName().equalsIgnoreCase("Faction")) {
                                         MPlayer mplayer = MPlayer.get(p.getPlayer());
-                                        MPlayer mplayerp = MPlayer.get((Player) sender);
+                                        MPlayer mplayerp = MPlayer.get(sender);
                                         if (!mplayerp.hasFaction()) {
                                             if (playerlist.length() + p.getName().length() > linecount) {
                                                 playerlist += "\n";
@@ -165,7 +165,7 @@ public class Chwho extends Command {
                     if (playerlist.length() > 2) {
                         playerlist = playerlist.substring(0, playerlist.length() - 2);
                     }
-                    sender.sendMessage(LocalizedMessage.CHANNEL_PLAYER_LIST_HEADER.toString().replace("{channel_color}", (channel.getColor()).toString()).replace("{channel_name}",
+                    sender.sendMessage(LocalizedMessage.CHANNEL_PLAYER_LIST_HEADER.toString().replace("{channel_color}", (channel.getColor())).replace("{channel_name}",
                             channel.getName()));
                     sender.sendMessage(playerlist);
                     return true;
@@ -192,9 +192,7 @@ public class Chwho extends Command {
             locreceip = p2.getLocation();
             if (locreceip.getWorld() == p1.getWorld()) {
                 diff = locreceip.subtract(locsender);
-                if (Math.abs(diff.getX()) > chDistance || Math.abs(diff.getZ()) > chDistance || Math.abs(diff.getY()) > chDistance) {
-                    return false;
-                }
+                return !(Math.abs(diff.getX()) > chDistance) && !(Math.abs(diff.getZ()) > chDistance) && !(Math.abs(diff.getY()) > chDistance);
             } else {
                 return false;
             }

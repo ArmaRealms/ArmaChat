@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender;
 //import net.minecraft.server.v1_15_R1.PacketPlayOutChat;
 
 public class Venturechat extends Command {
-    private MineverseChat plugin = MineverseChat.getInstance();
+    private final MineverseChat plugin = MineverseChat.getInstance();
 
     public Venturechat() {
         super("venturechat");

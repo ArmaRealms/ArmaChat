@@ -30,7 +30,7 @@ public class Leave extends Command {
                 return true;
             }
             mcp.removeListening(channel.getName());
-            mcp.getPlayer().sendMessage(LocalizedMessage.LEAVE_CHANNEL.toString().replace("{channel_color}", channel.getColor() + "").replace("{channel_name}", channel.getName()));
+            mcp.getPlayer().sendMessage(LocalizedMessage.LEAVE_CHANNEL.toString().replace("{channel_color}", channel.getColor()).replace("{channel_name}", channel.getName()));
             boolean isThereABungeeChannel = channel.getBungee();
             if (mcp.getListening().size() == 0) {
                 mcp.addListening(ChatChannel.getDefaultChannel().getName());

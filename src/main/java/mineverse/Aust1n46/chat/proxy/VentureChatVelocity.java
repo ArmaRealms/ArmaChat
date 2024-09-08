@@ -76,7 +76,7 @@ public class VentureChatVelocity implements VentureChatProxySource {
             e.printStackTrace();
         }
 
-        velocityPlayerDataDirectory = new File(dataPath.toAbsolutePath().toString() + "/PlayerData");
+        velocityPlayerDataDirectory = new File(dataPath.toAbsolutePath() + "/PlayerData");
         ProxyPlayerData.loadProxyPlayerData(velocityPlayerDataDirectory, this);
     }
 

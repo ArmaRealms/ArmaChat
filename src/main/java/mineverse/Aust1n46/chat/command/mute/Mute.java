@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Mute extends Command {
-    private static final List<String> COMMON_MUTE_TIMES = Collections.unmodifiableList(Arrays.asList(new String[]{"12h", "15m", "1d", "1h", "1m", "30s"}));
+    private static final List<String> COMMON_MUTE_TIMES = Collections.unmodifiableList(Arrays.asList("12h", "15m", "1d", "1h", "1m", "30s"));
 
     public Mute() {
         super("mute");

@@ -1,8 +1,8 @@
 package mineverse.Aust1n46.chat.proxy;
 
 public class VentureChatProxyServer {
-    private String name;
-    private boolean empty;
+    private final String name;
+    private final boolean empty;
 
     public VentureChatProxyServer(String name, boolean empty) {
         this.name = name;

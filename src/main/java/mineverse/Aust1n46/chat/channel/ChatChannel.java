@@ -22,7 +22,7 @@ public class ChatChannel {
     private static final String PERMISSION_PREFIX = "venturechat.";
     private static final String NO_PERMISSIONS = "venturechat.none";
 
-    private static MineverseChat plugin = MineverseChat.getInstance();
+    private static final MineverseChat plugin = MineverseChat.getInstance();
     private static ChatChannel defaultChatChannel;
     private static String defaultColor;
     private static HashMap<String, ChatChannel> chatChannels;
@@ -30,20 +30,20 @@ public class ChatChannel {
     @Deprecated
     private static ChatChannel[] channels;
 
-    private String name;
-    private String permission;
-    private String speakPermission;
-    private boolean mutable;
-    private String color;
-    private String chatColor;
-    private boolean defaultChannel;
-    private boolean autojoin;
-    private String alias;
-    private double distance;
-    private boolean filter;
-    private boolean bungee;
-    private String format;
-    private int cooldown;
+    private final String name;
+    private final String permission;
+    private final String speakPermission;
+    private final boolean mutable;
+    private final String color;
+    private final String chatColor;
+    private final boolean defaultChannel;
+    private final boolean autojoin;
+    private final String alias;
+    private final double distance;
+    private final boolean filter;
+    private final boolean bungee;
+    private final String format;
+    private final int cooldown;
     private String prefix;
 
     /**
@@ -143,7 +143,7 @@ public class ChatChannel {
             String format = cs.getString(key + ".format", "Default");
             boolean defaultChannel = cs.getBoolean(key + ".default", false);
             String alias = cs.getString(key + ".alias", "None");
-            double distance = cs.getDouble(key + ".distance", (double) 0);
+            double distance = cs.getDouble(key + ".distance", 0);
             int cooldown = cs.getInt(key + ".cooldown", 0);
             boolean autojoin = cs.getBoolean(key + ".autojoin", false);
             String prefix = cs.getString(key + ".channel_prefix");

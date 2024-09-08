@@ -8,7 +8,6 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import mineverse.Aust1n46.chat.MineverseChat;
 import mineverse.Aust1n46.chat.api.MineverseChatAPI;
 import mineverse.Aust1n46.chat.api.MineverseChatPlayer;
-import mineverse.Aust1n46.chat.api.events.ChannelJoinEvent;
 import mineverse.Aust1n46.chat.api.events.VentureChatEvent;
 import mineverse.Aust1n46.chat.channel.ChatChannel;
 import mineverse.Aust1n46.chat.command.mute.MuteContainer;
@@ -503,7 +502,6 @@ public class ChatListener implements Listener {
                 Format.sendPacketPlayOutChat(p, packet);
             }
             Bukkit.getConsoleSender().sendMessage(consoleChat);
-            return;
         } else {
             ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
             DataOutputStream out = new DataOutputStream(byteOutStream);

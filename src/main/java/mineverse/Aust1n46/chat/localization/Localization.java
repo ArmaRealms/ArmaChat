@@ -11,7 +11,7 @@ import java.io.File;
 //This class is used to create objects of localization for different languages.
 public class Localization {
     private static final String VERSION = "2.22.4";
-    private static MineverseChat plugin = MineverseChat.getInstance();
+    private static final MineverseChat plugin = MineverseChat.getInstance();
     private static FileConfiguration localization;
 
     public static void initialize() {

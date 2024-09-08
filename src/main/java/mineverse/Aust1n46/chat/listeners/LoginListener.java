@@ -23,7 +23,7 @@ import java.util.UUID;
  * @author Aust1n46
  */
 public class LoginListener implements Listener {
-    private MineverseChat plugin = MineverseChat.getInstance();
+    private final MineverseChat plugin = MineverseChat.getInstance();
 
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerQuit(PlayerQuitEvent playerQuitEvent) {

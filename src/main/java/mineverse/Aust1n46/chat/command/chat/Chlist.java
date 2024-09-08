@@ -16,11 +16,11 @@ public class Chlist extends Command {
         for (ChatChannel chname : ChatChannel.getChatChannels()) {
             if (chname.hasPermission()) {
                 if (sender.hasPermission(chname.getPermission())) {
-                    sender.sendMessage(LocalizedMessage.CHANNEL_LIST_WITH_PERMISSIONS.toString().replace("{channel_color}", (chname.getColor()).toString())
+                    sender.sendMessage(LocalizedMessage.CHANNEL_LIST_WITH_PERMISSIONS.toString().replace("{channel_color}", (chname.getColor()))
                             .replace("{channel_name}", chname.getName()).replace("{channel_alias}", chname.getAlias()));
                 }
             } else {
-                sender.sendMessage(LocalizedMessage.CHANNEL_LIST.toString().replace("{channel_color}", chname.getColor().toString()).replace("{channel_name}", chname.getName())
+                sender.sendMessage(LocalizedMessage.CHANNEL_LIST.toString().replace("{channel_color}", chname.getColor()).replace("{channel_name}", chname.getName())
                         .replace("{channel_alias}", chname.getAlias()));
             }
         }

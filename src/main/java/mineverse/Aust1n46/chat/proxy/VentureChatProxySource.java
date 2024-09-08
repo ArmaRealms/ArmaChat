@@ -3,13 +3,13 @@ package mineverse.Aust1n46.chat.proxy;
 import java.util.List;
 
 public interface VentureChatProxySource {
-    public void sendPluginMessage(String serverName, byte[] data);
+    void sendPluginMessage(String serverName, byte[] data);
 
-    public List<VentureChatProxyServer> getServers();
+    List<VentureChatProxyServer> getServers();
 
-    public VentureChatProxyServer getServer(String serverName);
+    VentureChatProxyServer getServer(String serverName);
 
-    public void sendConsoleMessage(String message);
+    void sendConsoleMessage(String message);
 
-    public boolean isOfflineServerAcknowledgementSet();
+    boolean isOfflineServerAcknowledgementSet();
 }

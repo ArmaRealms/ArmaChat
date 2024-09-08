@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Message extends Command {
-    private MineverseChat plugin = MineverseChat.getInstance();
+    private final MineverseChat plugin = MineverseChat.getInstance();
 
     public Message() {
         super("message");

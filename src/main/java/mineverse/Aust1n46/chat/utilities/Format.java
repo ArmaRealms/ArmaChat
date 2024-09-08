@@ -745,6 +745,7 @@ public class Format {
         for (ChatColor bkColors : ChatColor.values()) {
             if (color.equalsIgnoreCase(bkColors.name())) {
                 bFound = true;
+                break;
             }
         }
         return bFound;
@@ -862,7 +863,7 @@ public class Format {
     public static long parseTimeStringToMillis(String timeInput) {
         long millis = 0L;
         timeInput = timeInput.toLowerCase();
-        char validChars[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'd', 'h', 'm', 's'};
+        char[] validChars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'd', 'h', 'm', 's'};
         if (containsInvalidChars(validChars, timeInput)) {
             return -1;
         }
@@ -933,6 +934,7 @@ public class Format {
             for (char v : validChars) {
                 if (c == v) {
                     isValidChar = true;
+                    break;
                 }
             }
             if (!isValidChar) {

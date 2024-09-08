@@ -12,14 +12,15 @@ import mineverse.Aust1n46.chat.api.MineverseChatAPI;
 import mineverse.Aust1n46.chat.api.MineverseChatPlayer;
 import mineverse.Aust1n46.chat.utilities.Format;
 import mineverse.Aust1n46.chat.versions.VersionHandler;
+import org.jetbrains.annotations.NotNull;
 
 public class PacketListenerLegacyChat extends PacketAdapter {
     public PacketListenerLegacyChat() {
-        super(MineverseChat.getInstance(), ListenerPriority.MONITOR, new PacketType[]{PacketType.Play.Server.CHAT});
+        super(MineverseChat.getInstance(), ListenerPriority.MONITOR, PacketType.Play.Server.CHAT);
     }
 
     @Override
-    public void onPacketSending(PacketEvent event) {
+    public void onPacketSending(@NotNull PacketEvent event) {
         if (event.isCancelled()) {
             return;
         }
@@ -51,13 +52,10 @@ public class PacketListenerLegacyChat extends PacketAdapter {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            plugin.getLogger().severe("Failed to get chat type from packet.");
         }
         String message = Format.toPlainText(chat.getHandle(), chat.getHandleType());
         String coloredMessage = Format.toColoredText(chat.getHandle(), chat.getHandleType());
-        if (message == null) {
-            return;
-        }
         int hash = message.hashCode();
         mcp.addMessage(new ChatMessage(chat, message, coloredMessage, hash));
     }

@@ -14,7 +14,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 
 public class Reply extends Command {
-    private MineverseChat plugin = MineverseChat.getInstance();
+    private final MineverseChat plugin = MineverseChat.getInstance();
 
     public Reply() {
         super("reply");

@@ -122,7 +122,7 @@ public class VentureChatBungee extends Plugin implements Listener, VentureChatPr
 
     @Override
     public VentureChatProxyServer getServer(String serverName) {
-        ServerInfo server = (ServerInfo) getProxy().getServers().get(serverName);
+        ServerInfo server = getProxy().getServers().get(serverName);
         return new VentureChatProxyServer(serverName, server.getPlayers().isEmpty());
     }
 

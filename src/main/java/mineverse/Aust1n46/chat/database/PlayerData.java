@@ -31,7 +31,7 @@ import java.util.UUID;
  * @author Aust1n46
  */
 public class PlayerData {
-    private static MineverseChat plugin = MineverseChat.getInstance();
+    private static final MineverseChat plugin = MineverseChat.getInstance();
     private static final String PLAYER_DATA_DIRECTORY_PATH = plugin.getDataFolder().getAbsolutePath() + "/PlayerData";
 
     public static void loadLegacyPlayerData() {
