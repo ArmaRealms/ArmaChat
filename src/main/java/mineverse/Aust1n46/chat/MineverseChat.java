@@ -20,7 +20,6 @@ import mineverse.Aust1n46.chat.listeners.ChatListener;
 import mineverse.Aust1n46.chat.listeners.CommandListener;
 import mineverse.Aust1n46.chat.listeners.LoginListener;
 import mineverse.Aust1n46.chat.listeners.PacketListenerLegacyChat;
-import mineverse.Aust1n46.chat.listeners.SignListener;
 import mineverse.Aust1n46.chat.localization.Localization;
 import mineverse.Aust1n46.chat.localization.LocalizedMessage;
 import mineverse.Aust1n46.chat.utilities.Format;
@@ -323,7 +322,6 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new Channel(), this);
         pm.registerEvents(new ChatListener(), this);
-        pm.registerEvents(new SignListener(), this);
         pm.registerEvents(new CommandListener(), this);
         pm.registerEvents(new LoginListener(), this);
         if (VersionHandler.isUnder_1_19()) {
@@ -497,7 +495,7 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
                         playerList = playerList.substring(0, playerList.length() - 2);
                     }
                     mcp.getPlayer().sendMessage(LocalizedMessage.CHANNEL_PLAYER_LIST_HEADER.toString()
-                            .replace("{channel_color}", chatchannel.getColor().toString())
+                            .replace("{channel_color}", chatchannel.getColor())
                             .replace("{channel_name}", chatchannel.getName()));
                     mcp.getPlayer().sendMessage(Format.FormatStringAll(playerList));
                 }
