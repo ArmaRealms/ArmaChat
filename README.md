@@ -29,7 +29,7 @@ Requires Java 8.
 
 License:
 
-Copyright (C) {2020}  {Austin Brolly}
+Copyright (C) {2020} {Austin Brolly}
 
 ```
     This program is free software: you can redistribute it and/or modify

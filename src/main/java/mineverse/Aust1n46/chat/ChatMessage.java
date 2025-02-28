@@ -5,9 +5,9 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
 //This class is used to create ChatMessage objects, which are used to store information about previous text components
 //that were sent to the player.  This is a main component in making the message remover work.
 public class ChatMessage {
-    private WrappedChatComponent component;
     private final String message;
     private final String coloredMessage;
+    private WrappedChatComponent component;
     private int hash;
 
     public ChatMessage(WrappedChatComponent component, String message, String coloredMessage, int hash) {

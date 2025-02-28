@@ -1,12 +1,7 @@
 package mineverse.Aust1n46.chat.listeners;
 
-import mineverse.Aust1n46.chat.MineverseChat;
-import mineverse.Aust1n46.chat.api.MineverseChatAPI;
-import mineverse.Aust1n46.chat.api.MineverseChatPlayer;
-import mineverse.Aust1n46.chat.channel.ChatChannel;
-import mineverse.Aust1n46.chat.database.PlayerData;
-import mineverse.Aust1n46.chat.utilities.Format;
-import mineverse.Aust1n46.chat.utilities.UUIDFetcher;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,7 +10,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.UUID;
+import mineverse.Aust1n46.chat.MineverseChat;
+import mineverse.Aust1n46.chat.api.MineverseChatAPI;
+import mineverse.Aust1n46.chat.api.MineverseChatPlayer;
+import mineverse.Aust1n46.chat.channel.ChatChannel;
+import mineverse.Aust1n46.chat.database.PlayerData;
+import mineverse.Aust1n46.chat.utilities.Format;
+import mineverse.Aust1n46.chat.utilities.UUIDFetcher;
 
 /**
  * Manages player login and logout events.
@@ -23,7 +24,7 @@ import java.util.UUID;
  * @author Aust1n46
  */
 public class LoginListener implements Listener {
-    private final MineverseChat plugin = MineverseChat.getInstance();
+    private MineverseChat plugin = MineverseChat.getInstance();
 
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerQuit(PlayerQuitEvent playerQuitEvent) {
@@ -71,20 +72,14 @@ public class LoginListener implements Listener {
             }
         }
 
-        try {
-            if (plugin.getServer().spigot().getConfig().getBoolean("settings.bungeecord")
-                    || plugin.getServer().spigot().getPaperConfig().getBoolean("settings.velocity-support.enabled")
-                    || plugin.getServer().spigot().getPaperConfig().getBoolean("proxies.velocity.enabled")) {
-                long delayInTicks = 20L;
-                final MineverseChatPlayer sync = mcp;
-                plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
-                    public void run() {
-                        MineverseChat.synchronize(sync, false);
-                    }
-                }, delayInTicks);
-            }
-        } catch (NoSuchMethodError exception) { // Thrown if server isn't Paper.
-            // Do nothing
+        if (MineverseChat.isConnectedToProxy()) {
+            long delayInTicks = 20L;
+            final MineverseChatPlayer sync = mcp;
+            plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
+                public void run() {
+                    MineverseChat.synchronize(sync, false);
+                }
+            }, delayInTicks);
         }
     }
 }

@@ -22,12 +22,15 @@ import java.util.UUID;
  */
 public class MineverseChatPlayer {
     private final UUID uuid;
-    private String name;
-    private ChatChannel currentChannel;
     private final Set<UUID> ignores;
     private final Set<String> listening;
     private final HashMap<String, MuteContainer> mutes;
     private final Set<String> blockedCommands;
+    private final HashMap<ChatChannel, Long> cooldowns;
+    private final HashMap<ChatChannel, List<Long>> spam;
+    private final List<ChatMessage> messages;
+    private String name;
+    private ChatChannel currentChannel;
     private boolean host;
     private UUID party;
     private boolean filter;
@@ -41,11 +44,8 @@ public class MineverseChatPlayer {
     private boolean quickChat;
     private ChatChannel quickChannel;
     private UUID replyPlayer;
-    private final HashMap<ChatChannel, Long> cooldowns;
     private boolean partyChat;
-    private final HashMap<ChatChannel, List<Long>> spam;
     private boolean modified;
-    private final List<ChatMessage> messages;
     private String jsonFormat;
     private boolean editing;
     private int editHash;

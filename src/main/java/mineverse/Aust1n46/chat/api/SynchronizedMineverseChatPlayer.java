@@ -15,8 +15,8 @@ public class SynchronizedMineverseChatPlayer {
     private final Set<String> listening;
     private final HashMap<String, MuteContainer> mutes;
     private final Set<UUID> ignores;
-    private int messagePackets;
     private final List<String> messageData = new ArrayList<String>();
+    private int messagePackets;
     private boolean spy;
     private boolean messageToggle;
 

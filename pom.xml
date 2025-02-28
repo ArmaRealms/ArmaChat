@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>mineverse.Aust1n46.chat</groupId>
     <artifactId>VentureChat</artifactId>
-    <version>3.7.1</version>
+    <version>3.7.2</version>
     <url>https://bitbucket.org/Aust1n46/venturechat/src/master</url>
     <scm>
         <url>https://bitbucket.org/Aust1n46/venturechat/src/master</url>
@@ -36,54 +36,54 @@
                     <target>21</target>
                 </configuration>
             </plugin>
-		    <plugin>
-			    <groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-surefire-plugin</artifactId>
-			    <version>3.5.0</version>
-			    <dependencies>
-				    <dependency>
-					    <groupId>org.apache.maven.surefire</groupId>
-					    <artifactId>surefire-junit4</artifactId>
-					    <version>3.5.0</version>
-				    </dependency>
-			    </dependencies>
-			    <configuration>
-				    <includes>
-					    <include>**/*.java</include>
-				    </includes>
-			    </configuration>
-		    </plugin>
-		    <plugin>
-        		<groupId>org.apache.maven.plugins</groupId>
-        		<artifactId>maven-shade-plugin</artifactId>
-        		<version>3.6.0</version>
-        		<configuration>
-        			<relocations>
-                		<relocation>
-                  			<pattern>com.zaxxer.hikari</pattern>
-                  			<shadedPattern>shaded.com.zaxxer.hikari</shadedPattern>
-               			</relocation>
-               			<relocation>
-                  			<pattern>net.md_5.bungee.config</pattern>
-                  			<shadedPattern>shaded.net.md_5.bungee.config</shadedPattern>
-               			</relocation>
-             		</relocations>
-         			<artifactSet>
-         				<includes>
-         					<include>com.zaxxer:HikariCP</include>
-         					<include>net.md-5:bungeecord-config</include>
-         				</includes>
-         			</artifactSet>
-        		</configuration>
-       			 <executions>
-         			 <execution>
-           				 <phase>package</phase>
-            				<goals>
-              					<goal>shade</goal>
-            				</goals>
-          			</execution>
-        		</executions>
-      		</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.0</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.surefire</groupId>
+                        <artifactId>surefire-junit4</artifactId>
+                        <version>3.5.0</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <includes>
+                        <include>**/*.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <relocations>
+                        <relocation>
+                            <pattern>com.zaxxer.hikari</pattern>
+                            <shadedPattern>shaded.com.zaxxer.hikari</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>net.md_5.bungee.config</pattern>
+                            <shadedPattern>shaded.net.md_5.bungee.config</shadedPattern>
+                        </relocation>
+                    </relocations>
+                    <artifactSet>
+                        <includes>
+                            <include>com.zaxxer:HikariCP</include>
+                            <include>net.md-5:bungeecord-config</include>
+                        </includes>
+                    </artifactSet>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <repositories>
@@ -116,17 +116,17 @@
             <url>https://repo.velocitypowered.com/snapshots/</url>
         </repository>
         <repository>
-    		<id>papermc</id>
-    		<url>https://papermc.io/repo/repository/maven-public/</url>
-		</repository>
+            <id>papermc</id>
+            <url>https://papermc.io/repo/repository/maven-public/</url>
+        </repository>
     </repositories>
     <dependencies>
-    	<dependency>
-    		<groupId>io.papermc.paper</groupId>
-    		<artifactId>paper-api</artifactId>
-    		<version>1.20.4-R0.1-SNAPSHOT</version>
-    		<scope>provided</scope>
-		</dependency>
+        <dependency>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>1.20.4-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
@@ -174,11 +174,11 @@
         </dependency>
         <!--Back to safety.-->
         <dependency>
-	        <groupId>com.github.TownyAdvanced</groupId>
-	        <artifactId>Towny</artifactId>
-	        <version>0.96.7.0</version>
-	        <scope>provided</scope>
-	    </dependency>
+            <groupId>com.github.TownyAdvanced</groupId>
+            <artifactId>Towny</artifactId>
+            <version>0.96.7.0</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>net.essentialsx</groupId>
             <artifactId>EssentialsXDiscord</artifactId>
@@ -196,11 +196,11 @@
             </exclusions>
         </dependency>
         <dependency>
-	        <groupId>com.velocitypowered</groupId>
-	        <artifactId>velocity-api</artifactId>
-	        <version>3.0.0-SNAPSHOT</version>
-	        <scope>provided</scope>
-	    </dependency>
+            <groupId>com.velocitypowered</groupId>
+            <artifactId>velocity-api</artifactId>
+            <version>3.0.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
@@ -222,10 +222,10 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-	        <groupId>junit</groupId>
-	        <artifactId>junit</artifactId>
-	        <version>4.12</version>
-	        <scope>test</scope>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>

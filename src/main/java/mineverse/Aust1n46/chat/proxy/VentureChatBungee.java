@@ -1,5 +1,12 @@
 package mineverse.Aust1n46.chat.proxy;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.nio.file.Files;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import mineverse.Aust1n46.chat.database.ProxyPlayerData;
 import mineverse.Aust1n46.chat.utilities.Format;
 import mineverse.Aust1n46.chat.utilities.UUIDFetcher;
@@ -18,13 +25,6 @@ import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 import net.md_5.bungee.event.EventHandler;
-
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.nio.file.Files;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * VentureChat Minecraft plugin for BungeeCord.
@@ -103,6 +103,9 @@ public class VentureChatBungee extends Plugin implements Listener, VentureChatPr
         if (!event.getTag().equals(VentureChatProxy.PLUGIN_MESSAGING_CHANNEL_STRING) && !event.getTag().contains("viaversion:")) {
             return;
         }
+        // Critical to prevent client from sending or receiving messages
+        event.setCancelled(true);
+
         if (!(event.getSender() instanceof Server)) {
             return;
         }
@@ -122,7 +125,7 @@ public class VentureChatBungee extends Plugin implements Listener, VentureChatPr
 
     @Override
     public VentureChatProxyServer getServer(String serverName) {
-        ServerInfo server = getProxy().getServers().get(serverName);
+        ServerInfo server = (ServerInfo) getProxy().getServers().get(serverName);
         return new VentureChatProxyServer(serverName, server.getPlayers().isEmpty());
     }
 

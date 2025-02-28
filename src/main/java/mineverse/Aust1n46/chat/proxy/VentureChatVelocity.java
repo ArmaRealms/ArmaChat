@@ -1,5 +1,18 @@
 package mineverse.Aust1n46.chat.proxy;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
@@ -15,23 +28,12 @@ import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.messages.ChannelIdentifier;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
+
 import mineverse.Aust1n46.chat.database.ProxyPlayerData;
 import mineverse.Aust1n46.chat.utilities.Format;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
-import org.slf4j.Logger;
-
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * VentureChat Minecraft plugin for Velocity.
@@ -76,7 +78,7 @@ public class VentureChatVelocity implements VentureChatProxySource {
             e.printStackTrace();
         }
 
-        velocityPlayerDataDirectory = new File(dataPath.toAbsolutePath() + "/PlayerData");
+        velocityPlayerDataDirectory = new File(dataPath.toAbsolutePath().toString() + "/PlayerData");
         ProxyPlayerData.loadProxyPlayerData(velocityPlayerDataDirectory, this);
     }
 
@@ -127,12 +129,14 @@ public class VentureChatVelocity implements VentureChatProxySource {
         if (!channelIdentifierId.equals(VentureChatProxy.PLUGIN_MESSAGING_CHANNEL_STRING) && !channelIdentifierId.contains("viaversion:")) {
             return;
         }
+        // Critical to prevent client from sending or receiving messages
+        event.setResult(ForwardResult.handled());
+
         if (!(event.getSource() instanceof ServerConnection)) {
             return;
         }
         String serverName = ((ServerConnection) event.getSource()).getServerInfo().getName();
         VentureChatProxy.onPluginMessage(event.getData(), serverName, this);
-        event.setResult(ForwardResult.handled());
     }
 
     @Override
