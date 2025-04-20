@@ -75,7 +75,7 @@ public class LoginListenerTest {
     }
 
     @Test
-    public void testLoginWithNameChange() throws Exception {
+    public void testLoginWithNameChange() {
         Mockito.when(mockPlayer.getName()).thenReturn("NewName");
         Mockito.when(mockMCP.getName()).thenReturn("OldName");
         testLoginListener.handleNameChange(mockMCP, mockPlayer);
