@@ -32,6 +32,13 @@ public class Message extends Command {
         }
 
         MineverseChatPlayer mcp = MineverseChatAPI.getOnlineMineverseChatPlayer((Player) sender);
+        if (mcp == null) {
+            return true;
+        }
+        if (mcp.getMessageToggle()) {
+            mcp.getPlayer().sendMessage(LocalizedMessage.MESSAGE_TOGGLE_OFF.toString());
+            return true;
+        }
         if (args.length == 0) {
             mcp.getPlayer().sendMessage(LocalizedMessage.COMMAND_INVALID_ARGUMENTS.toString().replace("{command}", "/" + command).replace("{args}", "[player] [message]"));
             return true;
@@ -61,25 +68,25 @@ public class Message extends Command {
         }
 
         if (args.length >= 2) {
-            String msg = "";
+            StringBuilder msg = new StringBuilder();
             String echo = "";
             String send = "";
             String spy = "";
-            if (args[1].length() > 0) {
+            if (!args[1].isEmpty()) {
                 for (int r = 1; r < args.length; r++) {
-                    msg += " " + args[r];
+                    msg.append(" ").append(args[r]);
                 }
                 if (mcp.hasFilter()) {
-                    msg = Format.FilterChat(msg);
+                    msg = new StringBuilder(Format.FilterChat(msg.toString()));
                 }
                 if (mcp.getPlayer().hasPermission("venturechat.color.legacy")) {
-                    msg = Format.FormatStringLegacyColor(msg);
+                    msg = new StringBuilder(Format.FormatStringLegacyColor(msg.toString()));
                 }
                 if (mcp.getPlayer().hasPermission("venturechat.color")) {
-                    msg = Format.FormatStringColor(msg);
+                    msg = new StringBuilder(Format.FormatStringColor(msg.toString()));
                 }
                 if (mcp.getPlayer().hasPermission("venturechat.format")) {
-                    msg = Format.FormatString(msg);
+                    msg = new StringBuilder(Format.FormatString(msg.toString()));
                 }
 
                 send = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(mcp.getPlayer(), plugin.getConfig().getString("tellformatfrom").replaceAll("sender_", "")));
@@ -109,39 +116,38 @@ public class Message extends Command {
                 }
             }
         }
-        if (args.length == 1) {
-            if (args[0].length() > 0) {
-                if (!mcp.hasConversation() || (mcp.hasConversation() && !mcp.getConversation().toString().equals(player.getUUID().toString()))) {
-                    mcp.setConversation(player.getUUID());
-                    if (!mcp.getPlayer().hasPermission("venturechat.spy.override")) {
-                        for (MineverseChatPlayer sp : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
-                            if (sp.getName().equals(mcp.getName())) {
-                                continue;
-                            }
-                            if (sp.isSpy()) {
-                                sp.getPlayer().sendMessage(LocalizedMessage.ENTER_PRIVATE_CONVERSATION_SPY.toString().replace("{player_sender}", mcp.getName())
-                                        .replace("{player_receiver}", player.getName()));
-                            }
+        if (args.length == 1 && !args[0].isEmpty()) {
+            if (!mcp.hasConversation() || (mcp.hasConversation() && !mcp.getConversation().toString().equals(player.getUUID().toString()))) {
+                mcp.setConversation(player.getUUID());
+                if (!mcp.getPlayer().hasPermission("venturechat.spy.override")) {
+                    for (MineverseChatPlayer sp : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
+                        if (sp.getName().equals(mcp.getName())) {
+                            continue;
+                        }
+                        if (sp.isSpy()) {
+                            sp.getPlayer().sendMessage(LocalizedMessage.ENTER_PRIVATE_CONVERSATION_SPY.toString().replace("{player_sender}", mcp.getName())
+                                    .replace("{player_receiver}", player.getName()));
                         }
                     }
-                    mcp.getPlayer().sendMessage(LocalizedMessage.ENTER_PRIVATE_CONVERSATION.toString().replace("{player_receiver}", player.getName()));
-                } else {
-                    mcp.setConversation(null);
-                    if (!mcp.getPlayer().hasPermission("venturechat.spy.override")) {
-                        for (MineverseChatPlayer sp : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
-                            if (sp.getName().equals(mcp.getName())) {
-                                continue;
-                            }
-                            if (sp.isSpy()) {
-                                sp.getPlayer().sendMessage(LocalizedMessage.EXIT_PRIVATE_CONVERSATION_SPY.toString().replace("{player_sender}", mcp.getName())
-                                        .replace("{player_receiver}", player.getName()));
-                            }
-                        }
-                    }
-                    mcp.getPlayer().sendMessage(LocalizedMessage.EXIT_PRIVATE_CONVERSATION.toString().replace("{player_receiver}", player.getName()));
                 }
+                mcp.getPlayer().sendMessage(LocalizedMessage.ENTER_PRIVATE_CONVERSATION.toString().replace("{player_receiver}", player.getName()));
+            } else {
+                mcp.setConversation(null);
+                if (!mcp.getPlayer().hasPermission("venturechat.spy.override")) {
+                    for (MineverseChatPlayer sp : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
+                        if (sp.getName().equals(mcp.getName())) {
+                            continue;
+                        }
+                        if (sp.isSpy()) {
+                            sp.getPlayer().sendMessage(LocalizedMessage.EXIT_PRIVATE_CONVERSATION_SPY.toString().replace("{player_sender}", mcp.getName())
+                                    .replace("{player_receiver}", player.getName()));
+                        }
+                    }
+                }
+                mcp.getPlayer().sendMessage(LocalizedMessage.EXIT_PRIVATE_CONVERSATION.toString().replace("{player_receiver}", player.getName()));
             }
         }
+
         return true;
     }
 
@@ -165,7 +171,7 @@ public class Message extends Command {
         DataOutputStream out = new DataOutputStream(byteOutStream);
         StringBuilder msgBuilder = new StringBuilder();
         for (int r = 1; r < args.length; r++) {
-            msgBuilder.append(" " + args[r]);
+            msgBuilder.append(" ").append(args[r]);
         }
         String msg = msgBuilder.toString();
         if (mcp.hasFilter()) {

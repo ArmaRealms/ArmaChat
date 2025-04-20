@@ -50,6 +50,9 @@ public class ChatListener implements Listener {
         Set<Player> recipients = event.getRecipients();
         int recipientCount = recipients.size(); // Don't count vanished players
         MineverseChatPlayer mcp = MineverseChatAPI.getOnlineMineverseChatPlayer(event.getPlayer());
+        if (mcp == null) {
+            return;
+        }
         ChatChannel eventChannel = mcp.getCurrentChannel();
 
         if (mcp.isEditing()) {
@@ -491,11 +494,10 @@ public class ChatListener implements Listener {
                 Database.writeVentureChat(mcp.getUUID().toString(), mcp.getName(), "Local", channel.getName(), chat.replace("'", "''"), "Chat");
             }
 
-            if (recipientCount == 1) {
-                if (!plugin.getConfig().getString("emptychannelalert", "&6No one is listening to you.").equals("")) {
+            if (recipientCount == 1 && !plugin.getConfig().getString("emptychannelalert", "&6No one is listening to you.").equals("")) {
                     mcp.getPlayer().sendMessage(Format.FormatStringAll(plugin.getConfig().getString("emptychannelalert", "&6No one is listening to you.")));
                 }
-            }
+
             for (Player p : recipients) {
                 String json = Format.formatModerationGUI(globalJSON, p, mcp.getName(), channel.getName(), hash);
                 PacketContainer packet = Format.createPacketPlayOutChat(json);
