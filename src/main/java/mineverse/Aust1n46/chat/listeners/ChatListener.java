@@ -495,8 +495,8 @@ public class ChatListener implements Listener {
             }
 
             if (recipientCount == 1 && !plugin.getConfig().getString("emptychannelalert", "&6No one is listening to you.").equals("")) {
-                    mcp.getPlayer().sendMessage(Format.FormatStringAll(plugin.getConfig().getString("emptychannelalert", "&6No one is listening to you.")));
-                }
+                mcp.getPlayer().sendMessage(Format.FormatStringAll(plugin.getConfig().getString("emptychannelalert", "&6No one is listening to you.")));
+            }
 
             for (Player p : recipients) {
                 String json = Format.formatModerationGUI(globalJSON, p, mcp.getName(), channel.getName(), hash);

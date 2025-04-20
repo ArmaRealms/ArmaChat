@@ -1,30 +1,7 @@
 package mineverse.Aust1n46.chat;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.messaging.PluginMessageListener;
-import org.bukkit.scheduler.BukkitScheduler;
-
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
-
 import me.clip.placeholderapi.PlaceholderAPI;
 import mineverse.Aust1n46.chat.alias.Alias;
 import mineverse.Aust1n46.chat.api.MineverseChatAPI;
@@ -50,6 +27,27 @@ import mineverse.Aust1n46.chat.utilities.Format;
 import mineverse.Aust1n46.chat.versions.VersionHandler;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.messaging.PluginMessageListener;
+import org.bukkit.scheduler.BukkitScheduler;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * VentureChat Minecraft plugin for servers running Spigot or Paper software.
@@ -303,7 +301,7 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
                     Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - Saving Player Data"));
                 }
             }
-        }, 0L, getConfig().getInt("saveinterval") * 1200); //one minute * save interval
+        }, 0L, getConfig().getInt("saveinterval") * 1200L); //one minute * save interval
 
         scheduler.runTaskTimerAsynchronously(this, new Runnable() {
             @Override
@@ -523,7 +521,7 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
                         playerList = playerList.substring(0, playerList.length() - 2);
                     }
                     mcp.getPlayer().sendMessage(LocalizedMessage.CHANNEL_PLAYER_LIST_HEADER.toString()
-                            .replace("{channel_color}", chatchannel.getColor().toString())
+                            .replace("{channel_color}", chatchannel.getColor())
                             .replace("{channel_name}", chatchannel.getName()));
                     mcp.getPlayer().sendMessage(Format.FormatStringAll(playerList));
                 }

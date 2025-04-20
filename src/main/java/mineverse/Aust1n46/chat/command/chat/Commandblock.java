@@ -7,8 +7,6 @@ import mineverse.Aust1n46.chat.localization.LocalizedMessage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import java.util.List;
-
 public class Commandblock extends Command {
     private final MineverseChat plugin = MineverseChat.getInstance();
 
