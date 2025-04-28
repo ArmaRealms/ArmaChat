@@ -185,7 +185,7 @@ public class ChatListener implements Listener {
         Location locreceip;
         Location locsender = mcp.getPlayer().getLocation();
         Location diff;
-        Boolean filterthis = true;
+        Boolean filterthis;
         mcp.addListening(eventChannel.getName());
         if (mcp.isMuted(eventChannel.getName())) {
             MuteContainer muteContainer = mcp.getMute(eventChannel.getName());
@@ -229,7 +229,7 @@ public class ChatListener implements Listener {
             return;
         }
         Double chDistance = (double) 0;
-        String curColor = "";
+        String curColor;
         if (eventChannel.hasPermission() && !mcp.getPlayer().hasPermission(eventChannel.getPermission())) {
             mcp.getPlayer().sendMessage(LocalizedMessage.CHANNEL_NO_PERMISSION.toString());
             mcp.setQuickChat(false);
@@ -253,7 +253,7 @@ public class ChatListener implements Listener {
         }
         try {
             if (mcp.hasCooldown(eventChannel)) {
-                long cooldownTime = mcp.getCooldowns().get(eventChannel).longValue();
+                long cooldownTime = mcp.getCooldowns().get(eventChannel);
                 if (dateTimeSeconds < cooldownTime) {
                     long remainingCooldownTime = cooldownTime - dateTimeSeconds;
                     String cooldownString = Format.parseTimeStringFromMillis(remainingCooldownTime * Format.MILLISECONDS_PER_SECOND);
@@ -263,11 +263,10 @@ public class ChatListener implements Listener {
                     return;
                 }
             }
-            if (eventChannel.hasCooldown()) {
-                if (!mcp.getPlayer().hasPermission("venturechat.cooldown.bypass")) {
-                    mcp.addCooldown(eventChannel, dateTimeSeconds + chCooldown);
-                }
+            if (eventChannel.hasCooldown() && !mcp.getPlayer().hasPermission("venturechat.cooldown.bypass")) {
+                mcp.addCooldown(eventChannel, dateTimeSeconds + chCooldown);
             }
+
         } catch (NumberFormatException e) {
             plugin.getLogger().warning("Invalid cooldown value for channel " + eventChannel.getName() + ". Please check your configuration.");
         }
@@ -332,11 +331,10 @@ public class ChatListener implements Listener {
         format = Format.FormatStringAll(eventChannel.getFormat());
 
         filterthis = eventChannel.isFiltered();
-        if (filterthis) {
-            if (mcp.hasFilter()) {
-                chat = Format.FilterChat(chat);
-            }
+        if (filterthis && mcp.hasFilter()) {
+            chat = Format.FilterChat(chat);
         }
+
         PluginManager pluginManager = plugin.getServer().getPluginManager();
         for (MineverseChatPlayer p : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
             if (p.getPlayer() != mcp.getPlayer()) {
@@ -413,7 +411,7 @@ public class ChatListener implements Listener {
                     }
                 }
 
-                if (chDistance > (double) 0 && !bungee && !p.getRangedSpy()) {
+                if (chDistance > 0 && !bungee && !p.getRangedSpy()) {
                     locreceip = p.getPlayer().getLocation();
                     if (locreceip.getWorld() == mcp.getPlayer().getWorld()) {
                         diff = locreceip.subtract(locsender);
@@ -434,7 +432,6 @@ public class ChatListener implements Listener {
                 }
                 if (!mcp.getPlayer().canSee(p.getPlayer())) {
                     recipientCount--;
-                    continue;
                 }
             }
         }
