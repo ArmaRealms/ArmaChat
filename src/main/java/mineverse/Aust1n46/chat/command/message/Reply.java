@@ -22,18 +22,21 @@ public class Reply extends Command {
 
     @Override
     public boolean execute(CommandSender sender, String command, String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player mcplayer)) {
             plugin.getServer().getConsoleSender().sendMessage(LocalizedMessage.COMMAND_MUST_BE_RUN_BY_PLAYER.toString());
             return true;
         }
-        MineverseChatPlayer mcp = MineverseChatAPI.getOnlineMineverseChatPlayer((Player) sender);
+
+        MineverseChatPlayer mcp = MineverseChatAPI.getOnlineMineverseChatPlayer(mcplayer);
         if (mcp == null) {
             return true;
         }
-        if (mcp.getMessageToggle()) {
+
+        if (!mcp.getMessageToggle()) {
             mcp.getPlayer().sendMessage(LocalizedMessage.MESSAGE_TOGGLE_OFF.toString());
             return true;
         }
+
         if (args.length > 0) {
             if (mcp.hasReplyPlayer()) {
                 if (plugin.getConfig().getBoolean("bungeecordmessaging", true)) {
@@ -59,9 +62,9 @@ public class Reply extends Command {
                     return true;
                 }
                 StringBuilder msg = new StringBuilder();
-                String echo = "";
-                String send = "";
-                String spy = "";
+                String echo;
+                String send;
+                String spy;
                 for (String arg : args) msg.append(" ").append(arg);
                 if (mcp.hasFilter()) {
                     msg = new StringBuilder(Format.FilterChat(msg.toString()));
@@ -76,8 +79,7 @@ public class Reply extends Command {
                     msg = new StringBuilder(Format.FormatString(msg.toString()));
                 }
 
-                send = Format
-                        .FormatStringAll(PlaceholderAPI.setBracketPlaceholders(mcp.getPlayer(), plugin.getConfig().getString("replyformatfrom").replaceAll("sender_", "")));
+                send = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(mcp.getPlayer(), plugin.getConfig().getString("replyformatfrom").replaceAll("sender_", "")));
                 echo = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(mcp.getPlayer(), plugin.getConfig().getString("replyformatto").replaceAll("sender_", "")));
                 spy = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(mcp.getPlayer(), plugin.getConfig().getString("replyformatspy").replaceAll("sender_", "")));
 

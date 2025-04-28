@@ -10,6 +10,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -25,20 +26,22 @@ public class Message extends Command {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String command, String[] args) {
-        if (!(sender instanceof Player)) {
+    public boolean execute(@NotNull CommandSender sender, @NotNull String command, String[] args) {
+        if (!(sender instanceof Player mcplayer)) {
             plugin.getServer().getConsoleSender().sendMessage(LocalizedMessage.COMMAND_MUST_BE_RUN_BY_PLAYER.toString());
             return true;
         }
 
-        MineverseChatPlayer mcp = MineverseChatAPI.getOnlineMineverseChatPlayer((Player) sender);
+        MineverseChatPlayer mcp = MineverseChatAPI.getOnlineMineverseChatPlayer(mcplayer);
         if (mcp == null) {
             return true;
         }
-        if (mcp.getMessageToggle()) {
+
+        if (!mcp.getMessageToggle()) {
             mcp.getPlayer().sendMessage(LocalizedMessage.MESSAGE_TOGGLE_OFF.toString());
             return true;
         }
+
         if (args.length == 0) {
             mcp.getPlayer().sendMessage(LocalizedMessage.COMMAND_INVALID_ARGUMENTS.toString().replace("{command}", "/" + command).replace("{args}", "[player] [message]"));
             return true;
@@ -50,11 +53,7 @@ public class Message extends Command {
         }
 
         MineverseChatPlayer player = MineverseChatAPI.getOnlineMineverseChatPlayer(args[0]);
-        if (player == null) {
-            mcp.getPlayer().sendMessage(LocalizedMessage.PLAYER_OFFLINE.toString().replace("{args}", args[0]));
-            return true;
-        }
-        if (!mcp.getPlayer().canSee(player.getPlayer())) {
+        if (player == null || !mcp.getPlayer().canSee(player.getPlayer())) {
             mcp.getPlayer().sendMessage(LocalizedMessage.PLAYER_OFFLINE.toString().replace("{args}", args[0]));
             return true;
         }
@@ -69,9 +68,9 @@ public class Message extends Command {
 
         if (args.length >= 2) {
             StringBuilder msg = new StringBuilder();
-            String echo = "";
-            String send = "";
-            String spy = "";
+            String echo;
+            String send;
+            String spy;
             if (!args[1].isEmpty()) {
                 for (int r = 1; r < args.length; r++) {
                     msg.append(" ").append(args[r]);
@@ -152,7 +151,7 @@ public class Message extends Command {
     }
 
     @Override
-    public List<String> tabComplete(CommandSender sender, String label, String[] args) {
+    public List<String> tabComplete(@NotNull CommandSender sender, @NotNull String label, String[] args) {
         if (plugin.getConfig().getBoolean("bungeecordmessaging", true)) {
             List<String> completions = new ArrayList<>();
             StringUtil.copyPartialMatches(args[args.length - 1], MineverseChatAPI.getNetworkPlayerNames(), completions);
