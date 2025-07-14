@@ -14,6 +14,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -26,28 +27,12 @@ public class LoginListener implements Listener {
     private final MineverseChat plugin = MineverseChat.getInstance();
 
     @EventHandler(priority = EventPriority.LOW)
-    public void onPlayerQuit(PlayerQuitEvent playerQuitEvent) {
-        MineverseChatPlayer mcp = MineverseChatAPI.getOnlineMineverseChatPlayer(playerQuitEvent.getPlayer());
-        PlayerData.savePlayerData(mcp);
-        mcp.clearMessages();
-        mcp.setOnline(false);
-        MineverseChatAPI.removeMineverseChatOnlinePlayerToMap(mcp);
-    }
-
-    void handleNameChange(MineverseChatPlayer mcp, Player eventPlayerInstance) {
-        Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - Detected Name Change. Old Name:&c " + mcp.getName() + " &eNew Name:&c " + eventPlayerInstance.getName()));
-        MineverseChatAPI.removeNameFromMap(mcp.getName());
-        mcp.setName(eventPlayerInstance.getName());
-        MineverseChatAPI.addNameToMap(mcp);
-    }
-
-    @EventHandler(priority = EventPriority.LOW)
-    public void onPlayerJoin(PlayerJoinEvent event) throws Exception {
+    public void onPlayerJoin(final @NotNull PlayerJoinEvent event) throws Exception {
         MineverseChatPlayer mcp = MineverseChatAPI.getMineverseChatPlayer(event.getPlayer());
-        Player player = event.getPlayer();
-        String name = player.getName();
+        final Player player = event.getPlayer();
+        final String name = player.getName();
         if (mcp == null) {
-            UUID uuid = player.getUniqueId();
+            final UUID uuid = player.getUniqueId();
             mcp = new MineverseChatPlayer(uuid, name);
             MineverseChatAPI.addMineverseChatPlayerToMap(mcp);
             MineverseChatAPI.addNameToMap(mcp);
@@ -61,7 +46,7 @@ public class LoginListener implements Listener {
         mcp.setHasPlayed(false);
         MineverseChatAPI.addMineverseChatOnlinePlayerToMap(mcp);
         mcp.setJsonFormat();
-        for (ChatChannel ch : ChatChannel.getAutojoinList()) {
+        for (final ChatChannel ch : ChatChannel.getAutojoinList()) {
             if (ch.hasPermission()) {
                 if (mcp.getPlayer().hasPermission(ch.getPermission())) {
                     mcp.addListening(ch.getName());
@@ -72,13 +57,26 @@ public class LoginListener implements Listener {
         }
 
         if (MineverseChat.isConnectedToProxy()) {
-            long delayInTicks = 20L;
             final MineverseChatPlayer sync = mcp;
-            plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
-                public void run() {
-                    MineverseChat.synchronize(sync, false);
-                }
-            }, delayInTicks);
+            plugin.getServer().getScheduler()
+                    .runTaskLaterAsynchronously(plugin, () -> MineverseChat.synchronize(sync, false), 20L);
         }
     }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void onPlayerQuit(final @NotNull PlayerQuitEvent playerQuitEvent) {
+        final MineverseChatPlayer mcp = MineverseChatAPI.getOnlineMineverseChatPlayer(playerQuitEvent.getPlayer());
+        PlayerData.savePlayerData(mcp);
+        mcp.clearMessages();
+        mcp.setOnline(false);
+        MineverseChatAPI.removeMineverseChatOnlinePlayerToMap(mcp);
+    }
+
+    void handleNameChange(final @NotNull MineverseChatPlayer mcp, final @NotNull Player eventPlayerInstance) {
+        Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - Detected Name Change. Old Name:&c " + mcp.getName() + " &eNew Name:&c " + eventPlayerInstance.getName()));
+        MineverseChatAPI.removeNameFromMap(mcp.getName());
+        mcp.setName(eventPlayerInstance.getName());
+        MineverseChatAPI.addNameToMap(mcp);
+    }
+
 }

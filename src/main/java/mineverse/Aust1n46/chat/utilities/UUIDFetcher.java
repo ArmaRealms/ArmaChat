@@ -11,6 +11,7 @@ import org.json.simple.parser.JSONParser;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.Collections;
@@ -27,25 +28,25 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
     private final List<String> names;
     private final boolean rateLimiting;
 
-    public UUIDFetcher(List<String> names, boolean rateLimiting) {
+    public UUIDFetcher(final List<String> names, final boolean rateLimiting) {
         this.names = ImmutableList.copyOf(names);
         this.rateLimiting = rateLimiting;
     }
 
-    public UUIDFetcher(List<String> names) {
+    public UUIDFetcher(final List<String> names) {
         this(names, true);
     }
 
-    private static void writeBody(HttpURLConnection connection, String body) throws Exception {
-        OutputStream stream = connection.getOutputStream();
+    private static void writeBody(final HttpURLConnection connection, final String body) throws Exception {
+        final OutputStream stream = connection.getOutputStream();
         stream.write(body.getBytes());
         stream.flush();
         stream.close();
     }
 
     private static HttpURLConnection createConnection() throws Exception {
-        URL url = new URL(PROFILE_URL);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        final URL url = URI.create(PROFILE_URL).toURL();
+        final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setUseCaches(false);
@@ -54,28 +55,28 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
         return connection;
     }
 
-    private static UUID getUUID(String id) {
+    private static UUID getUUID(final String id) {
         return UUID.fromString(id.substring(0, 8) + "-" + id.substring(8, 12) + "-" + id.substring(12, 16) + "-" + id.substring(16, 20) + "-" + id.substring(20, 32));
     }
 
-    public static byte[] toBytes(UUID uuid) {
-        ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[16]);
+    public static byte[] toBytes(final UUID uuid) {
+        final ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[16]);
         byteBuffer.putLong(uuid.getMostSignificantBits());
         byteBuffer.putLong(uuid.getLeastSignificantBits());
         return byteBuffer.array();
     }
 
-    public static UUID fromBytes(byte[] array) {
+    public static UUID fromBytes(final byte[] array) {
         if (array.length != 16) {
             throw new IllegalArgumentException("Illegal byte array length: " + array.length);
         }
-        ByteBuffer byteBuffer = ByteBuffer.wrap(array);
-        long mostSignificant = byteBuffer.getLong();
-        long leastSignificant = byteBuffer.getLong();
+        final ByteBuffer byteBuffer = ByteBuffer.wrap(array);
+        final long mostSignificant = byteBuffer.getLong();
+        final long leastSignificant = byteBuffer.getLong();
         return new UUID(mostSignificant, leastSignificant);
     }
 
-    public static UUID getUUIDOf(String name) throws Exception {
+    public static UUID getUUIDOf(final String name) throws Exception {
         return new UUIDFetcher(Collections.singletonList(name)).call().get(name);
     }
 
@@ -85,19 +86,19 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
      * @param uuid the UUID to check
      * @return whether the UUID is a v3 UUID & thus is offline
      */
-    public static boolean uuidIsOffline(UUID uuid) {
+    public static boolean uuidIsOffline(final UUID uuid) {
         return uuid.version() == 3;
     }
 
-    public static boolean shouldSkipOfflineUUID(UUID uuid) {
+    public static boolean shouldSkipOfflineUUID(final UUID uuid) {
         return (uuidIsOffline(uuid) && !MineverseChat.getInstance().getConfig().getBoolean("offline_server_acknowledgement", false));
     }
 
-    public static boolean shouldSkipOfflineUUIDProxy(UUID uuid, VentureChatProxySource source) {
+    public static boolean shouldSkipOfflineUUIDProxy(final UUID uuid, final VentureChatProxySource source) {
         return (uuidIsOffline(uuid) && !source.isOfflineServerAcknowledgementSet());
     }
 
-    public static void checkOfflineUUIDWarning(UUID uuid) {
+    public static void checkOfflineUUIDWarning(final UUID uuid) {
         if (shouldSkipOfflineUUID(uuid)) {
             Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&c - Detected Offline UUID!"));
             Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&c - If you are using BungeeCord, make sure you have properly setup IP Forwarding."));
@@ -109,7 +110,7 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
         }
     }
 
-    public static void checkOfflineUUIDWarningProxy(UUID uuid, VentureChatProxySource source) {
+    public static void checkOfflineUUIDWarningProxy(final UUID uuid, final VentureChatProxySource source) {
         if (shouldSkipOfflineUUIDProxy(uuid, source)) {
             source.sendConsoleMessage("&8[&eVentureChat&8]&c - Detected Offline UUID!");
             source.sendConsoleMessage("&8[&eVentureChat&8]&c - If you are using BungeeCord, make sure you have properly setup IP Forwarding.");
@@ -122,18 +123,18 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
     }
 
     public Map<String, UUID> call() throws Exception {
-        Map<String, UUID> uuidMap = new HashMap<String, UUID>();
-        int requests = (int) Math.ceil(names.size() / PROFILES_PER_REQUEST);
+        final Map<String, UUID> uuidMap = new HashMap<String, UUID>();
+        final int requests = (int) Math.ceil(names.size() / PROFILES_PER_REQUEST);
         for (int i = 0; i < requests; i++) {
-            HttpURLConnection connection = createConnection();
-            String body = JSONArray.toJSONString(names.subList(i * 100, Math.min((i + 1) * 100, names.size())));
+            final HttpURLConnection connection = createConnection();
+            final String body = JSONArray.toJSONString(names.subList(i * 100, Math.min((i + 1) * 100, names.size())));
             writeBody(connection, body);
-            JSONArray array = (JSONArray) jsonParser.parse(new InputStreamReader(connection.getInputStream()));
-            for (Object profile : array) {
-                JSONObject jsonProfile = (JSONObject) profile;
-                String id = (String) jsonProfile.get("id");
-                String name = (String) jsonProfile.get("name");
-                UUID uuid = UUIDFetcher.getUUID(id);
+            final JSONArray array = (JSONArray) jsonParser.parse(new InputStreamReader(connection.getInputStream()));
+            for (final Object profile : array) {
+                final JSONObject jsonProfile = (JSONObject) profile;
+                final String id = (String) jsonProfile.get("id");
+                final String name = (String) jsonProfile.get("name");
+                final UUID uuid = UUIDFetcher.getUUID(id);
                 uuidMap.put(name, uuid);
             }
             if (rateLimiting && i != requests - 1) {
