@@ -31,18 +31,13 @@ public final class MineverseChatAPI {
         networkPlayerNames.clear();
     }
 
-    public static void addNetworkPlayerName(String name) {
+    public static void addNetworkPlayerName(final String name) {
         networkPlayerNames.add(name);
     }
 
-    public static void addSynchronizedMineverseChatPlayerToMap(SynchronizedMineverseChatPlayer smcp) {
+    public static void addSynchronizedMineverseChatPlayerToMap(final SynchronizedMineverseChatPlayer smcp) {
         proxyPlayerMap.put(smcp.getUUID(), smcp);
     }
-
-//    @Deprecated
-//    public static void clearBungeePlayerMap() {
-//        clearProxyPlayerMap();
-//    }
 
     public static void clearProxyPlayerMap() {
         proxyPlayerMap.clear();
@@ -52,11 +47,11 @@ public final class MineverseChatAPI {
         return proxyPlayerMap.values();
     }
 
-    public static void addNameToMap(MineverseChatPlayer mcp) {
+    public static void addNameToMap(final MineverseChatPlayer mcp) {
         namesMap.put(mcp.getName(), mcp.getUUID());
     }
 
-    public static void removeNameFromMap(String name) {
+    public static void removeNameFromMap(final String name) {
         namesMap.remove(name);
     }
 
@@ -65,7 +60,7 @@ public final class MineverseChatAPI {
     }
 
     @SuppressWarnings("deprecation")
-    public static void addMineverseChatPlayerToMap(MineverseChatPlayer mcp) {
+    public static void addMineverseChatPlayerToMap(final MineverseChatPlayer mcp) {
         playerMap.put(mcp.getUUID(), mcp);
         MineverseChat.players.add(mcp);
     }
@@ -81,13 +76,13 @@ public final class MineverseChatAPI {
     }
 
     @SuppressWarnings("deprecation")
-    public static void addMineverseChatOnlinePlayerToMap(MineverseChatPlayer mcp) {
+    public static void addMineverseChatOnlinePlayerToMap(final MineverseChatPlayer mcp) {
         onlinePlayerMap.put(mcp.getUUID(), mcp);
         MineverseChat.onlinePlayers.add(mcp);
     }
 
     @SuppressWarnings("deprecation")
-    public static void removeMineverseChatOnlinePlayerToMap(MineverseChatPlayer mcp) {
+    public static void removeMineverseChatOnlinePlayerToMap(final MineverseChatPlayer mcp) {
         onlinePlayerMap.remove(mcp.getUUID());
         MineverseChat.onlinePlayers.remove(mcp);
     }
@@ -108,7 +103,7 @@ public final class MineverseChatAPI {
      * @param player {@link Player} object.
      * @return {@link MineverseChatPlayer}
      */
-    public static MineverseChatPlayer getMineverseChatPlayer(Player player) {
+    public static MineverseChatPlayer getMineverseChatPlayer(final Player player) {
         return getMineverseChatPlayer(player.getUniqueId());
     }
 
@@ -118,7 +113,7 @@ public final class MineverseChatAPI {
      * @param uuid {@link UUID}.
      * @return {@link MineverseChatPlayer}
      */
-    public static MineverseChatPlayer getMineverseChatPlayer(UUID uuid) {
+    public static MineverseChatPlayer getMineverseChatPlayer(final UUID uuid) {
         return playerMap.get(uuid);
     }
 
@@ -128,7 +123,7 @@ public final class MineverseChatAPI {
      * @param name {@link String}.
      * @return {@link MineverseChatPlayer}
      */
-    public static MineverseChatPlayer getMineverseChatPlayer(String name) {
+    public static MineverseChatPlayer getMineverseChatPlayer(final String name) {
         return getMineverseChatPlayer(namesMap.get(name));
     }
 
@@ -139,7 +134,7 @@ public final class MineverseChatAPI {
      * @param player {@link Player} object.
      * @return {@link MineverseChatPlayer}
      */
-    public static MineverseChatPlayer getOnlineMineverseChatPlayer(Player player) {
+    public static MineverseChatPlayer getOnlineMineverseChatPlayer(final Player player) {
         return getOnlineMineverseChatPlayer(player.getUniqueId());
     }
 
@@ -150,7 +145,7 @@ public final class MineverseChatAPI {
      * @param uuid {@link UUID}.
      * @return {@link MineverseChatPlayer}
      */
-    public static MineverseChatPlayer getOnlineMineverseChatPlayer(UUID uuid) {
+    public static MineverseChatPlayer getOnlineMineverseChatPlayer(final UUID uuid) {
         return onlinePlayerMap.get(uuid);
     }
 
@@ -161,7 +156,7 @@ public final class MineverseChatAPI {
      * @param name {@link String}.
      * @return {@link MineverseChatPlayer}
      */
-    public static MineverseChatPlayer getOnlineMineverseChatPlayer(String name) {
+    public static MineverseChatPlayer getOnlineMineverseChatPlayer(final String name) {
         return getOnlineMineverseChatPlayer(namesMap.get(name));
     }
 
@@ -171,7 +166,7 @@ public final class MineverseChatAPI {
      * @param uuid {@link UUID}
      * @return {@link SynchronizedMineverseChatPlayer}
      */
-    public static SynchronizedMineverseChatPlayer getSynchronizedMineverseChatPlayer(UUID uuid) {
+    public static SynchronizedMineverseChatPlayer getSynchronizedMineverseChatPlayer(final UUID uuid) {
         return proxyPlayerMap.get(uuid);
     }
 }

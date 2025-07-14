@@ -21,7 +21,7 @@ public class Chatreload extends Command {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String command, String[] args) {
+    public boolean execute(final CommandSender sender, final String command, final String[] args) {
         if (sender.hasPermission("venturechat.reload")) {
             PlayerData.savePlayerData();
             MineverseChatAPI.clearMineverseChatPlayerMap();
@@ -31,16 +31,15 @@ public class Chatreload extends Command {
             plugin.reloadConfig();
             MineverseChat.initializeConfigReaders();
 
-            PlayerData.loadLegacyPlayerData();
             PlayerData.loadPlayerData();
-            for (Player p : plugin.getServer().getOnlinePlayers()) {
+            for (final Player p : plugin.getServer().getOnlinePlayers()) {
                 MineverseChatPlayer mcp = MineverseChatAPI.getMineverseChatPlayer(p);
                 if (mcp == null) {
                     Bukkit.getConsoleSender()
                             .sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&c - Could not find player data post reload for currently online player: " + p.getName()));
                     Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&c - There could be an issue with your player data saving."));
-                    String name = p.getName();
-                    UUID uuid = p.getUniqueId();
+                    final String name = p.getName();
+                    final UUID uuid = p.getUniqueId();
                     mcp = new MineverseChatPlayer(uuid, name);
                 }
                 mcp.setOnline(true);
@@ -51,7 +50,7 @@ public class Chatreload extends Command {
             }
 
             Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&e - Config reloaded"));
-            for (MineverseChatPlayer player : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
+            for (final MineverseChatPlayer player : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
                 if (player.getPlayer().hasPermission("venturechat.reload")) {
                     player.getPlayer().sendMessage(LocalizedMessage.CONFIG_RELOADED.toString());
                 }

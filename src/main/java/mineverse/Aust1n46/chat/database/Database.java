@@ -21,20 +21,16 @@ public class Database {
 
     public static void initializeMySQL() {
         try {
-            ConfigurationSection mysqlConfig = MineverseChat.getInstance().getConfig().getConfigurationSection("mysql");
+            final ConfigurationSection mysqlConfig = MineverseChat.getInstance().getConfig().getConfigurationSection("mysql");
             if (mysqlConfig.getBoolean("enabled", false)) {
-                String host = mysqlConfig.getString("host");
-                int port = mysqlConfig.getInt("port");
-                String database = mysqlConfig.getString("database");
-                String user = mysqlConfig.getString("user");
-                String password = mysqlConfig.getString("password");
+                final String host = mysqlConfig.getString("host");
+                final int port = mysqlConfig.getInt("port");
+                final String database = mysqlConfig.getString("database");
+                final String user = mysqlConfig.getString("user");
+                final String password = mysqlConfig.getString("password");
 
                 final HikariConfig config = new HikariConfig();
-                // config.setDriverClassName(org.postgresql.Driver.class.getName());
-                // final String jdbcUrl = String.format("jdbc:postgresql://%s:%d/%s", hostname,
-                // port, database);
-                final String jdbcUrl = String.format("jdbc:mysql://%s:%d/%s?autoReconnect=true&useSSL=false", host,
-                        port, database);
+                final String jdbcUrl = String.format("jdbc:mysql://%s:%d/%s?autoReconnect=true&useSSL=false", host, port, database);
                 config.setJdbcUrl(jdbcUrl);
                 config.setUsername(user);
                 config.setPassword(password);
@@ -49,7 +45,7 @@ public class Database {
                 final PreparedStatement statement = conn.prepareStatement(SQL_CREATE_TABLE);
                 statement.executeUpdate();
             }
-        } catch (Exception exception) {
+        } catch (final Exception exception) {
             Bukkit.getConsoleSender().sendMessage(
                     Format.FormatStringAll("&8[&eVentureChat&8]&c - Database could not be loaded. Is it running?"));
         }
@@ -59,12 +55,12 @@ public class Database {
         return dataSource != null;
     }
 
-    public static void writeVentureChat(String uuid, String name, String server, String channel, String text,
-                                        String type) {
-        MineverseChat plugin = MineverseChat.getInstance();
-        Calendar currentDate = Calendar.getInstance();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String date = formatter.format(currentDate.getTime());
+    public static void writeVentureChat(final String uuid, final String name, final String server, final String channel, final String text,
+                                        final String type) {
+        final MineverseChat plugin = MineverseChat.getInstance();
+        final Calendar currentDate = Calendar.getInstance();
+        final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        final String date = formatter.format(currentDate.getTime());
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try (final Connection conn = dataSource.getConnection();
                  final PreparedStatement statement = conn.prepareStatement(
@@ -78,7 +74,7 @@ public class Database {
                 statement.setString(6, text);
                 statement.setString(7, type);
                 statement.executeUpdate();
-            } catch (SQLException error) {
+            } catch (final SQLException error) {
                 error.printStackTrace();
             }
         });
