@@ -31,16 +31,16 @@ public class CommandListener implements Listener {
     private final MineverseChat plugin = MineverseChat.getInstance();
 
     @EventHandler
-    public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) throws FileNotFoundException {
+    public void onPlayerCommandPreprocess(final PlayerCommandPreprocessEvent event) throws FileNotFoundException {
         if (event.getPlayer() == null) {
             Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&c - Event.getPlayer() returned null in PlayerCommandPreprocessEvent"));
             return;
         }
-        ConfigurationSection cs = plugin.getConfig().getConfigurationSection("commandspy");
-        Boolean wec = cs.getBoolean("worldeditcommands", true);
-        MineverseChatPlayer mcp = MineverseChatAPI.getOnlineMineverseChatPlayer(event.getPlayer());
+        final ConfigurationSection cs = plugin.getConfig().getConfigurationSection("commandspy");
+        final Boolean wec = cs.getBoolean("worldeditcommands", true);
+        final MineverseChatPlayer mcp = MineverseChatAPI.getOnlineMineverseChatPlayer(event.getPlayer());
         if (!mcp.getPlayer().hasPermission("venturechat.commandspy.override")) {
-            for (MineverseChatPlayer p : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
+            for (final MineverseChatPlayer p : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
                 if (p.hasCommandSpy()) {
                     if (wec) {
                         p.getPlayer().sendMessage(Format.FormatStringAll(cs.getString("format").replace("{player}", mcp.getName()).replace("{command}", event.getMessage())));
@@ -57,40 +57,40 @@ public class CommandListener implements Listener {
             }
         }
 
-        String[] blocked = event.getMessage().split(" ");
+        final String[] blocked = event.getMessage().split(" ");
         if (mcp.getBlockedCommands().contains(blocked[0])) {
             mcp.getPlayer().sendMessage(LocalizedMessage.BLOCKED_COMMAND.toString().replace("{command}", event.getMessage()));
             event.setCancelled(true);
             return;
         }
 
-        String message = event.getMessage();
+        final String message = event.getMessage();
 
         if (Database.isEnabled()) {
             Database.writeVentureChat(mcp.getUUID().toString(), mcp.getName(), "Local", "Command_Component", event.getMessage().replace("'", "''"), "Command");
         }
 
-        for (Alias a : Alias.getAliases()) {
-            if (message.toLowerCase().substring(1).split(" ")[0].equals(a.getName().toLowerCase())) {
-                for (String s : a.getComponents()) {
-                    if (!mcp.getPlayer().hasPermission(a.getPermission()) && a.hasPermission()) {
+        for (final Alias a : Alias.getAliases()) {
+            if (message.toLowerCase().substring(1).split(" ")[0].equals(a.name().toLowerCase())) {
+                for (String s : a.components()) {
+                    if (!mcp.getPlayer().hasPermission(a.permission()) && a.hasPermission()) {
                         mcp.getPlayer().sendMessage(ChatColor.RED + "You do not have permission for this alias.");
                         event.setCancelled(true);
                         return;
                     }
                     int num = 1;
-                    if (message.length() < a.getName().length() + 2 || a.getArguments() == 0)
+                    if (message.length() < a.name().length() + 2 || a.arguments() == 0)
                         num = 0;
                     int arg = 0;
-                    if (message.substring(a.getName().length() + 1 + num).length() == 0)
+                    if (message.substring(a.name().length() + 1 + num).length() == 0)
                         arg = 1;
-                    String[] args = message.substring(a.getName().length() + 1 + num).split(" ");
+                    final String[] args = message.substring(a.name().length() + 1 + num).split(" ");
                     String send = "";
-                    if (args.length - arg < a.getArguments()) {
+                    if (args.length - arg < a.arguments()) {
                         String keyword = "arguments.";
-                        if (a.getArguments() == 1)
+                        if (a.arguments() == 1)
                             keyword = "argument.";
-                        mcp.getPlayer().sendMessage(ChatColor.RED + "Invalid arguments for this alias, enter at least " + a.getArguments() + " " + keyword);
+                        mcp.getPlayer().sendMessage(ChatColor.RED + "Invalid arguments for this alias, enter at least " + a.arguments() + " " + keyword);
                         event.setCancelled(true);
                         return;
                     }
@@ -128,7 +128,7 @@ public class CommandListener implements Listener {
 
     // old 1.8 command map
     @EventHandler
-    public void onServerCommand(ServerCommandEvent event) {
+    public void onServerCommand(final ServerCommandEvent event) {
         if (Database.isEnabled()) {
             Database.writeVentureChat("N/A", "Console", "Local", "Command_Component", event.getCommand().replace("'", "''"), "Command");
         }
@@ -136,19 +136,19 @@ public class CommandListener implements Listener {
 
     @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOW)
-    public void InventoryClick(InventoryClickEvent e) {
-        ItemStack item = e.getCurrentItem();
+    public void InventoryClick(final InventoryClickEvent e) {
+        final ItemStack item = e.getCurrentItem();
         if (item == null || !e.getView().getTitle().contains("VentureChat")) {
             return;
         }
         e.setCancelled(true);
-        MineverseChatPlayer mcp = MineverseChatAPI.getOnlineMineverseChatPlayer((Player) e.getWhoClicked());
-        String playerName = e.getView().getTitle().replace(" GUI", "").replace("VentureChat: ", "");
-        MineverseChatPlayer target = MineverseChatAPI.getMineverseChatPlayer(playerName);
-        ItemStack skull = e.getInventory().getItem(0);
-        SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
-        ChatChannel channel = ChatChannel.getChannel(ChatColor.stripColor(skullMeta.getLore().get(0)).replace("Channel: ", ""));
-        int hash = Integer.parseInt(ChatColor.stripColor(skullMeta.getLore().get(1).replace("Hash: ", "")));
+        final MineverseChatPlayer mcp = MineverseChatAPI.getOnlineMineverseChatPlayer((Player) e.getWhoClicked());
+        final String playerName = e.getView().getTitle().replace(" GUI", "").replace("VentureChat: ", "");
+        final MineverseChatPlayer target = MineverseChatAPI.getMineverseChatPlayer(playerName);
+        final ItemStack skull = e.getInventory().getItem(0);
+        final SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
+        final ChatChannel channel = ChatChannel.getChannel(ChatColor.stripColor(skullMeta.getLore().get(0)).replace("Channel: ", ""));
+        final int hash = Integer.parseInt(ChatColor.stripColor(skullMeta.getLore().get(1).replace("Hash: ", "")));
         if (VersionHandler.is1_7()) {
             if (item.getType() == Material.BEDROCK) {
                 mcp.getPlayer().closeInventory();
@@ -158,7 +158,7 @@ public class CommandListener implements Listener {
                 mcp.getPlayer().closeInventory();
             }
         }
-        for (GuiSlot g : GuiSlot.getGuiSlots()) {
+        for (final GuiSlot g : GuiSlot.getGuiSlots()) {
             if (g.getIcon() == item.getType() && g.getDurability() == item.getDurability() && g.getSlot() == e.getSlot()) {
                 String command = g.getCommand().replace("{channel}", channel.getName()).replace("{hash}", hash + "");
                 if (target != null) {
