@@ -981,6 +981,7 @@ public class Format {
         }
     }
 
+    @SuppressWarnings({"UnstableApiUsage", "removal"})
     private static @NotNull Sound getSound(final String soundName) {
         for (final Sound sound : Sound.values()) {
             if (sound.toString().equalsIgnoreCase(soundName)) {
@@ -991,6 +992,7 @@ public class Format {
         return getDefaultMessageSound();
     }
 
+    @SuppressWarnings({"UnstableApiUsage", "removal"})
     private static @NotNull Sound getDefaultMessageSound() {
         if (VersionHandler.is1_7() || VersionHandler.is1_8()) {
             return Sound.valueOf(DEFAULT_LEGACY_MESSAGE_SOUND);
