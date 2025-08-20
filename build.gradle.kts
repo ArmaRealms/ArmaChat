@@ -10,43 +10,22 @@ plugins {
 
 repositories {
     mavenLocal()
-    maven {
-        url = uri("https://jitpack.io")
-    }
-
-    maven {
-        url = uri("https://repo.dmulloy2.net/repository/public/")
-    }
-
-    maven {
-        url = uri("https://repo.essentialsx.net/releases/")
-    }
-
-    maven {
-        url = uri("https://repo.velocitypowered.com/snapshots/")
-    }
-
-    maven {
-        url = uri("https://repo.papermc.io/repository/maven-public/")
-    }
-
-    maven {
-        url = uri("https://repo.glaremasters.me/repository/towny/")
-    }
-
-    maven {
-        url = uri("https://repo.maven.apache.org/maven2/")
-    }
-    flatDir {
-        dirs("libs")
-    }
+    maven { url = uri("https://jitpack.io") }
+    maven { url = uri("https://repo.dmulloy2.net/repository/public/") }
+    maven { url = uri("https://repo.essentialsx.net/releases/") }
+    maven { url = uri("https://repo.velocitypowered.com/snapshots/") }
+    maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
+    maven { url = uri("https://repo.glaremasters.me/repository/towny/") }
+    maven { url = uri("https://repo.maven.apache.org/maven2/") }
+    flatDir { dirs("libs") }
 }
 
 dependencies {
-    implementation(libs.com.zaxxer.hikaricp)
-    implementation(libs.net.md.v5.bungeecord.api)
-    implementation(libs.com.googlecode.json.simple.json.simple)
-    implementation(libs.commons.lang)
+    compileOnly(libs.com.zaxxer.hikaricp)
+    compileOnly(libs.com.googlecode.json.simple.json.simple)
+    compileOnly(libs.commons.lang)
+    compileOnly(libs.net.md.v5.bungeecord.api)
+
     testImplementation(libs.io.papermc.paper.paper.api)
     testImplementation(libs.junit.junit)
     testImplementation(libs.org.mockito.mockito.core)
@@ -54,6 +33,7 @@ dependencies {
     testImplementation(libs.org.mockbukkit.mockbukkit)
     testImplementation(libs.net.dmulloy2.protocollib)
     testImplementation(libs.com.github.milkbowl.vaultapi)
+
     compileOnly(libs.net.dmulloy2.protocollib)
     compileOnly(libs.io.papermc.paper.paper.api)
     compileOnly(libs.com.github.placeholderapi.placeholderapi)
@@ -61,7 +41,6 @@ dependencies {
     compileOnly(libs.com.palmergames.bukkit.towny.towny)
     compileOnly(libs.net.essentialsx.essentialsxdiscord)
     compileOnly(libs.com.velocitypowered.velocity.api)
-    compileOnly(libs.net.md.v5.bungeecord.api)
     compileOnly(libs.net.kyori.adventure.api)
     compileOnly(libs.net.kyori.adventure.platform.bukkit)
     compileOnly(fileTree("libs"))
@@ -83,16 +62,17 @@ java {
 }
 
 tasks.named<ProcessResources>("processResources") {
-    // garante reprodutibilidade e evita capturas do script
     filteringCharset = "UTF-8"
 
-    // crie o mapa aqui dentro, para não capturar o script
-    val props = mapOf("version" to project.version.toString())
+    val props = mapOf(
+        "version" to project.version.toString(),
+        "hikari" to libs.versions.com.zaxxer.hikaricp.get(),
+        "jsonSimple" to libs.versions.com.googlecode.json.simple.json.simple.get(),
+        "commonsLang" to libs.versions.commons.lang.get()
+    )
 
-    // declare como inputs para o cache
     inputs.properties(props)
 
-    // aplique só no plugin.yml do main resources
     filesMatching("plugin.yml") {
         expand(props)
     }
@@ -100,9 +80,11 @@ tasks.named<ProcessResources>("processResources") {
 
 tasks {
     withType<ShadowJar> {
-        relocate("com.zaxxer.hikari", "shaded.com.zaxxer.hikari")
-        relocate("net.md_5.bungee.config", "shaded.net.md_5.bungee.config")
         archiveClassifier.set("")
+        exclude(
+            "META-INF/versions/**", "module-info.class",
+            "META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA"
+        )
     }
 
     withType<JavaCompile> {
