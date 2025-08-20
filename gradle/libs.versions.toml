@@ -9,13 +9,16 @@ com-palmergames-bukkit-towny-towny = "0.101.2.0"
 com-velocitypowered-velocity-api = "3.4.0-SNAPSHOT"
 com-zaxxer-hikaricp = "6.2.1"
 io-papermc-paper-paper-api = "1.21.8-R0.1-SNAPSHOT"
-junit-junit = "4.12"
+junit-junit = "4.13.2"
 net-dmulloy2-protocollib = "5.4.0"
 net-essentialsx-essentialsxdiscord = "2.19.0"
 net-kyori-adventure-api = "4.24.0"
 net-kyori-adventure-platform-bukkit = "4.4.1"
 net-md-v5-bungeecord-api = "1.20-R0.2"
-org-mockito-mockito-inline = "3.12.4"
+org-mockito-mockito-core = "5.12.0"
+org-mockito-mockito-inline = "5.2.0"
+org-mockbukkit-mockbukkit = "4.72.8"
+commons-lang = "2.6"
 
 [libraries]
 com-github-milkbowl-vaultapi = { module = "com.github.MilkBowl:VaultAPI", version.ref = "com-github-milkbowl-vaultapi" }
@@ -31,4 +34,7 @@ net-essentialsx-essentialsxdiscord = { module = "net.essentialsx:EssentialsXDisc
 net-kyori-adventure-api = { module = "net.kyori:adventure-api", version.ref = "net-kyori-adventure-api" }
 net-kyori-adventure-platform-bukkit = { module = "net.kyori:adventure-platform-bukkit", version.ref = "net-kyori-adventure-platform-bukkit" }
 net-md-v5-bungeecord-api = { module = "net.md-5:bungeecord-api", version.ref = "net-md-v5-bungeecord-api" }
+org-mockito-mockito-core = { module = "org.mockito:mockito-core", version.ref = "org-mockito-mockito-core" }
 org-mockito-mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "org-mockito-mockito-inline" }
+org-mockbukkit-mockbukkit = { module = "org.mockbukkit.mockbukkit:mockbukkit-v1.21", version.ref = "org-mockbukkit-mockbukkit" }
+commons-lang = { module= "commons-lang:commons-lang", version.ref = "commons-lang" }
