@@ -5,8 +5,6 @@
 com-github-milkbowl-vaultapi = "1.7"
 com-github-placeholderapi-placeholderapi = "2.11.6"
 com-googlecode-json-simple-json-simple = "1.1.1"
-com-massivecraft-factions-factions = "2.14.0"
-com-massivecraft-massivecore-massivecore = "2.14.0"
 com-palmergames-bukkit-towny-towny = "0.101.2.0"
 com-velocitypowered-velocity-api = "3.4.0-SNAPSHOT"
 com-zaxxer-hikaricp = "6.2.1"
@@ -23,8 +21,6 @@ org-mockito-mockito-inline = "3.12.4"
 com-github-milkbowl-vaultapi = { module = "com.github.MilkBowl:VaultAPI", version.ref = "com-github-milkbowl-vaultapi" }
 com-github-placeholderapi-placeholderapi = { module = "com.github.placeholderapi:placeholderapi", version.ref = "com-github-placeholderapi-placeholderapi" }
 com-googlecode-json-simple-json-simple = { module = "com.googlecode.json-simple:json-simple", version.ref = "com-googlecode-json-simple-json-simple" }
-com-massivecraft-factions-factions = { module = "com.massivecraft.factions:Factions", version.ref = "com-massivecraft-factions-factions" }
-com-massivecraft-massivecore-massivecore = { module = "com.massivecraft.massivecore:MassiveCore", version.ref = "com-massivecraft-massivecore-massivecore" }
 com-palmergames-bukkit-towny-towny = { module = "com.palmergames.bukkit.towny:towny", version.ref = "com-palmergames-bukkit-towny-towny" }
 com-velocitypowered-velocity-api = { module = "com.velocitypowered:velocity-api", version.ref = "com-velocitypowered-velocity-api" }
 com-zaxxer-hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "com-zaxxer-hikaricp" }

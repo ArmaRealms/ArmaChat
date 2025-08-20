@@ -44,12 +44,12 @@ repositories {
 }
 
 dependencies {
-    api(libs.com.zaxxer.hikaricp)
-    api(libs.net.dmulloy2.protocollib)
-    api(libs.net.md.v5.bungeecord.api)
-    api(libs.com.googlecode.json.simple.json.simple)
+    implementation(libs.com.zaxxer.hikaricp)
+    implementation(libs.net.md.v5.bungeecord.api)
+    implementation(libs.com.googlecode.json.simple.json.simple)
     testImplementation(libs.junit.junit)
     testImplementation(libs.org.mockito.mockito.inline)
+    compileOnly(libs.net.dmulloy2.protocollib)
     compileOnly(libs.io.papermc.paper.paper.api)
     compileOnly(libs.com.github.placeholderapi.placeholderapi)
     compileOnly(libs.com.github.milkbowl.vaultapi)
