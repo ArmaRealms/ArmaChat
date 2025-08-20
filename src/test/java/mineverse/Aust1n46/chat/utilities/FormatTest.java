@@ -25,7 +25,6 @@ public class FormatTest {
     private static MockedStatic<MineverseChat> mockedMineverseChat;
 
     private static MineverseChat mockPlugin;
-    private FileConfiguration mockConfig;
 
     private List<String> filters;
 
@@ -46,7 +45,7 @@ public class FormatTest {
         filters = new ArrayList<String>();
         filters.add("ass,donut");
 
-        mockConfig = Mockito.mock(FileConfiguration.class);
+        final FileConfiguration mockConfig = Mockito.mock(FileConfiguration.class);
         Mockito.when(mockPlugin.getConfig()).thenReturn(mockConfig);
         Mockito.when(mockConfig.getStringList("filters")).thenReturn(filters);
     }
@@ -58,133 +57,133 @@ public class FormatTest {
 
     @Test
     public void testGetLastCodeSingleColor() {
-        String input = BUKKIT_COLOR_CODE_PREFIX + "cHello";
-        String expectedResult = BUKKIT_COLOR_CODE_PREFIX + "c";
+        final String input = BUKKIT_COLOR_CODE_PREFIX + "cHello";
+        final String expectedResult = BUKKIT_COLOR_CODE_PREFIX + "c";
 
-        String result = Format.getLastCode(input);
+        final String result = Format.getLastCode(input);
 
         assertEquals(expectedResult, result);
     }
 
     @Test
     public void testGetLastCodeColorAfterFormat() {
-        String input = BUKKIT_COLOR_CODE_PREFIX + "o" + BUKKIT_COLOR_CODE_PREFIX + "cHello";
-        String expectedResult = BUKKIT_COLOR_CODE_PREFIX + "c";
+        final String input = BUKKIT_COLOR_CODE_PREFIX + "o" + BUKKIT_COLOR_CODE_PREFIX + "cHello";
+        final String expectedResult = BUKKIT_COLOR_CODE_PREFIX + "c";
 
-        String result = Format.getLastCode(input);
+        final String result = Format.getLastCode(input);
 
         assertEquals(expectedResult, result);
     }
 
     @Test
     public void testGetLastCodeColorBeforeFormat() {
-        String input = BUKKIT_COLOR_CODE_PREFIX + "c" + BUKKIT_COLOR_CODE_PREFIX + "oHello";
-        String expectedResult = BUKKIT_COLOR_CODE_PREFIX + "c" + BUKKIT_COLOR_CODE_PREFIX + "o";
+        final String input = BUKKIT_COLOR_CODE_PREFIX + "c" + BUKKIT_COLOR_CODE_PREFIX + "oHello";
+        final String expectedResult = BUKKIT_COLOR_CODE_PREFIX + "c" + BUKKIT_COLOR_CODE_PREFIX + "o";
 
-        String result = Format.getLastCode(input);
+        final String result = Format.getLastCode(input);
 
         assertEquals(expectedResult, result);
     }
 
     @Test
     public void testFilterChat() {
-        String test = "I am an ass";
-        String expectedResult = "I am an donut";
+        final String test = "I am an ass";
+        final String expectedResult = "I am an donut";
 
-        String result = Format.FilterChat(test);
+        final String result = Format.FilterChat(test);
         assertEquals(expectedResult, result);
     }
 
     @Test
     public void testIsValidColor() {
-        String color = "red";
+        final String color = "red";
 
-        boolean result = Format.isValidColor(color);
+        final boolean result = Format.isValidColor(color);
         assertTrue(result);
     }
 
     @Test
     public void testIsInvalidColor() {
-        String color = "randomString";
+        final String color = "randomString";
 
-        boolean result = Format.isValidColor(color);
+        final boolean result = Format.isValidColor(color);
         assertFalse(result);
     }
 
     @Test
     public void testIsValidHexColor() {
-        String hexColor = "#ff00ff";
+        final String hexColor = "#ff00ff";
 
-        boolean result = Format.isValidHexColor(hexColor);
+        final boolean result = Format.isValidHexColor(hexColor);
         assertTrue(result);
     }
 
     @Test
     public void testIsInvalidHexColor() {
-        String hexColor = "#random";
+        final String hexColor = "#random";
 
-        boolean result = Format.isValidHexColor(hexColor);
+        final boolean result = Format.isValidHexColor(hexColor);
         assertFalse(result);
     }
 
     @Test
     public void testConvertHexColorCodeToBukkitColorCode() {
-        String hexColor = "#ff00ff";
-        String expectedResult = BUKKIT_COLOR_CODE_PREFIX + "x" + BUKKIT_COLOR_CODE_PREFIX + "f"
+        final String hexColor = "#ff00ff";
+        final String expectedResult = BUKKIT_COLOR_CODE_PREFIX + "x" + BUKKIT_COLOR_CODE_PREFIX + "f"
                 + BUKKIT_COLOR_CODE_PREFIX + "f" + BUKKIT_COLOR_CODE_PREFIX + "0" + BUKKIT_COLOR_CODE_PREFIX + "0"
                 + BUKKIT_COLOR_CODE_PREFIX + "f" + BUKKIT_COLOR_CODE_PREFIX + "f";
 
-        String result = Format.convertHexColorCodeToBukkitColorCode(hexColor);
+        final String result = Format.convertHexColorCodeToBukkitColorCode(hexColor);
         assertEquals(expectedResult, result);
     }
 
     @Test
     public void testConvertHexColorCodeStringToBukkitColorCodeString() {
-        String input = "#ff00ffHello" + BUKKIT_COLOR_CODE_PREFIX + "cThere#00ff00Austin";
-        String expectedResult = BUKKIT_COLOR_CODE_PREFIX + "x" + BUKKIT_COLOR_CODE_PREFIX + "f"
+        final String input = "#ff00ffHello" + BUKKIT_COLOR_CODE_PREFIX + "cThere#00ff00Austin";
+        final String expectedResult = BUKKIT_COLOR_CODE_PREFIX + "x" + BUKKIT_COLOR_CODE_PREFIX + "f"
                 + BUKKIT_COLOR_CODE_PREFIX + "f" + BUKKIT_COLOR_CODE_PREFIX + "0" + BUKKIT_COLOR_CODE_PREFIX + "0"
                 + BUKKIT_COLOR_CODE_PREFIX + "f" + BUKKIT_COLOR_CODE_PREFIX + "fHello" + BUKKIT_COLOR_CODE_PREFIX
                 + "cThere" + BUKKIT_COLOR_CODE_PREFIX + "x" + BUKKIT_COLOR_CODE_PREFIX + "0" + BUKKIT_COLOR_CODE_PREFIX
                 + "0" + BUKKIT_COLOR_CODE_PREFIX + "f" + BUKKIT_COLOR_CODE_PREFIX + "f" + BUKKIT_COLOR_CODE_PREFIX + "0"
                 + BUKKIT_COLOR_CODE_PREFIX + "0Austin";
 
-        String result = Format.convertHexColorCodeStringToBukkitColorCodeString(input);
+        final String result = Format.convertHexColorCodeStringToBukkitColorCodeString(input);
         assertEquals(expectedResult, result);
     }
 
     @Test
     public void testFormatStringLegacyColor_NoColorCode() {
-        String input = "Hello There Austin";
-        String expectedResult = "Hello There Austin";
+        final String input = "Hello There Austin";
+        final String expectedResult = "Hello There Austin";
 
-        String result = Format.FormatStringLegacyColor(input);
+        final String result = Format.FormatStringLegacyColor(input);
         assertEquals(expectedResult, result);
     }
 
     @Test
     public void testFormatStringLegacyColor_LegacyCodeOnly() {
-        String input = "Hello &cThere Austin";
-        String expectedResult = "Hello " + BUKKIT_COLOR_CODE_PREFIX + "cThere Austin";
+        final String input = "Hello &cThere Austin";
+        final String expectedResult = "Hello " + BUKKIT_COLOR_CODE_PREFIX + "cThere Austin";
 
-        String result = Format.FormatStringLegacyColor(input);
+        final String result = Format.FormatStringLegacyColor(input);
         assertEquals(expectedResult, result);
     }
 
     @Test
     public void testFormatStringLegacyColor_SpigotHexCodeOnly() {
-        String input = "&x&f&f&f&f&f&fHello There Austin";
-        String expectedResult = "&x&f&f&f&f&f&fHello There Austin";
+        final String input = "&x&f&f&f&f&f&fHello There Austin";
+        final String expectedResult = "&x&f&f&f&f&f&fHello There Austin";
 
-        String result = Format.FormatStringLegacyColor(input);
+        final String result = Format.FormatStringLegacyColor(input);
         assertEquals(expectedResult, result);
     }
 
     @Test
     public void testFormatStringLegacyColor_BothColorCodes() {
-        String input = "&x&f&f&f&f&f&f&cHello There Austin";
-        String expectedResult = "&x&f&f&f&f&f&f" + BUKKIT_COLOR_CODE_PREFIX + "cHello There Austin";
+        final String input = "&x&f&f&f&f&f&f&cHello There Austin";
+        final String expectedResult = "&x&f&f&f&f&f&f" + BUKKIT_COLOR_CODE_PREFIX + "cHello There Austin";
 
-        String result = Format.FormatStringLegacyColor(input);
+        final String result = Format.FormatStringLegacyColor(input);
         assertEquals(expectedResult, result);
     }
 }

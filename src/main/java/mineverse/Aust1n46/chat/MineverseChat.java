@@ -77,6 +77,7 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
     private static Chat chat = null;
 
     // TODO: This won't be so poorly done in the 4.0.0 branch I promise...
+    @SuppressWarnings("removal")
     public static boolean isConnectedToProxy() {
         try {
             final MineverseChat plugin = MineverseChat.getInstance();

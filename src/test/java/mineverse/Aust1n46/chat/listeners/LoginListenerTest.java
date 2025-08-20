@@ -4,8 +4,6 @@ import mineverse.Aust1n46.chat.MineverseChat;
 import mineverse.Aust1n46.chat.api.MineverseChatAPI;
 import mineverse.Aust1n46.chat.api.MineverseChatPlayer;
 import mineverse.Aust1n46.chat.database.PlayerData;
-import org.bukkit.Bukkit;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.junit.After;
@@ -13,73 +11,68 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockbukkit.mockbukkit.MockBukkit;
+import org.mockbukkit.mockbukkit.ServerMock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
-import java.io.File;
-
-/**
- * Tests {@link LoginListener}.
- */
 public class LoginListenerTest {
+    private static ServerMock server;
+
     private static MockedStatic<MineverseChat> mockedMineverseChat;
-    private static MockedStatic<Bukkit> mockedBukkit;
     private static MockedStatic<PlayerData> mockedPlayerData;
     private static MockedStatic<MineverseChatAPI> mockedMineverseChatAPI;
 
-    private static MineverseChat mockPlugin;
-    private static File mockDataFile;
-    private Player mockPlayer;
     private MineverseChatPlayer mockMCP;
-    private ConsoleCommandSender mockConsoleSender;
+    private Player mockPlayer;
     private LoginListener testLoginListener;
     private PlayerQuitEvent mockPlayerQuitEvent;
 
     @BeforeClass
     public static void init() {
+        server = MockBukkit.mock();
+
+        final MineverseChat plugin = MockBukkit.load(MineverseChat.class);
+
         mockedMineverseChat = Mockito.mockStatic(MineverseChat.class);
-        mockPlugin = Mockito.mock(MineverseChat.class);
-        Mockito.when(MineverseChat.getInstance()).thenReturn(mockPlugin);
-        mockedBukkit = Mockito.mockStatic(Bukkit.class);
-        mockDataFile = Mockito.mock(File.class);
-        Mockito.when(mockPlugin.getDataFolder()).thenReturn(mockDataFile);
-        Mockito.when(mockDataFile.getAbsolutePath()).thenReturn("");
+        mockedMineverseChat.when(MineverseChat::getInstance).thenReturn(plugin);
         mockedPlayerData = Mockito.mockStatic(PlayerData.class);
         mockedMineverseChatAPI = Mockito.mockStatic(MineverseChatAPI.class);
     }
 
     @AfterClass
     public static void close() {
-        mockedMineverseChat.close();
-        mockedBukkit.close();
-        mockedPlayerData.close();
-        mockedMineverseChatAPI.close();
+        if (mockedMineverseChat != null) mockedMineverseChat.close();
+        if (mockedPlayerData != null) mockedPlayerData.close();
+        if (mockedMineverseChatAPI != null) mockedMineverseChatAPI.close();
+        MockBukkit.unmock();
     }
 
     @Before
     public void setUp() {
-        mockPlayer = Mockito.mock(Player.class);
+        mockPlayer = server.addPlayer("NewName");
+
         mockMCP = Mockito.mock(MineverseChatPlayer.class);
-        mockConsoleSender = Mockito.mock(ConsoleCommandSender.class);
         mockPlayerQuitEvent = Mockito.mock(PlayerQuitEvent.class);
         Mockito.when(mockPlayerQuitEvent.getPlayer()).thenReturn(mockPlayer);
+
         Mockito.when(MineverseChatAPI.getMineverseChatPlayer(Mockito.any(Player.class))).thenReturn(mockMCP);
         Mockito.when(MineverseChatAPI.getOnlineMineverseChatPlayer(Mockito.any(Player.class))).thenReturn(mockMCP);
-        Mockito.when(Bukkit.getConsoleSender()).thenReturn(mockConsoleSender);
+
         testLoginListener = new LoginListener();
     }
 
+
     @After
     public void tearDown() {
-        mockPlugin = null;
+        // nada crítico aqui
     }
 
     @Test
     public void testLoginWithNameChange() {
-        Mockito.when(mockPlayer.getName()).thenReturn("NewName");
         Mockito.when(mockMCP.getName()).thenReturn("OldName");
         testLoginListener.handleNameChange(mockMCP, mockPlayer);
-        Mockito.verify(mockMCP, Mockito.times(1)).setName("NewName");
+        Mockito.verify(mockMCP).setName("NewName");
     }
 
     @Test
