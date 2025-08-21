@@ -107,9 +107,9 @@ public class Format {
                 lastCode = getLastCode(lastCode + remaining.substring(0, indexStart));
                 boolean placeholderHasJsonAttribute = false;
                 for (final JsonAttribute jsonAttribute : format.getJsonAttributes()) {
-                    if (placeholder.contains(jsonAttribute.getName().replace("{", "").replace("}", ""))) {
+                    if (placeholder.contains(jsonAttribute.name().replace("{", "").replace("}", ""))) {
                         final StringBuilder hover = new StringBuilder();
-                        for (final String st : jsonAttribute.getHoverText()) {
+                        for (final String st : jsonAttribute.hoverText()) {
                             hover.append(Format.FormatStringAll(st)).append("\n");
                         }
                         final String hoverText;
@@ -119,14 +119,14 @@ public class Format {
                         } else {
                             hoverText = StringUtils.EMPTY;
                         }
-                        final ClickAction clickAction = jsonAttribute.getClickAction();
+                        final ClickAction clickAction = jsonAttribute.clickAction();
                         final String actionJson;
                         if (clickAction == ClickAction.NONE) {
                             actionJson = StringUtils.EMPTY;
                         } else {
                             final String clickText = escapeJsonChars(Format.FormatStringAll(
-                                    PlaceholderAPI.setBracketPlaceholders(icp.getPlayer(), jsonAttribute.getClickText())));
-                            actionJson = ",\"click_event\":{\"action\":\"" + jsonAttribute.getClickAction().toString() + "\",\"command\":\"" + clickText
+                                    PlaceholderAPI.setBracketPlaceholders(icp.getPlayer(), jsonAttribute.clickText())));
+                            actionJson = ",\"click_event\":{\"action\":\"" + jsonAttribute.clickAction().toString() + "\",\"command\":\"" + clickText
                                     + "\"}";
                         }
                         final String hoverJson;

@@ -4,6 +4,8 @@ import mineverse.Aust1n46.chat.ClickAction;
 import mineverse.Aust1n46.chat.MineverseChat;
 import mineverse.Aust1n46.chat.utilities.Format;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,28 +20,28 @@ public class JsonFormat {
     private final int priority;
     private final String name;
 
-    public JsonFormat(String name, int priority, List<JsonAttribute> jsonAttributes) {
+    public JsonFormat(final String name, final int priority, final List<JsonAttribute> jsonAttributes) {
         this.name = name;
         this.priority = priority;
         this.jsonAttributes = jsonAttributes;
     }
 
     public static void initialize() {
-        jsonFormats = new HashMap<String, JsonFormat>();
-        ConfigurationSection jsonFormatSection = plugin.getConfig().getConfigurationSection("jsonformatting");
-        for (String jsonFormat : jsonFormatSection.getKeys(false)) {
-            int priority = jsonFormatSection.getInt(jsonFormat + ".priority", 0);
-            List<JsonAttribute> jsonAttributes = new ArrayList<>();
-            ConfigurationSection jsonAttributeSection = jsonFormatSection.getConfigurationSection(jsonFormat + ".json_attributes");
+        jsonFormats = new HashMap<>();
+        final ConfigurationSection jsonFormatSection = plugin.getConfig().getConfigurationSection("jsonformatting");
+        for (final String jsonFormat : jsonFormatSection.getKeys(false)) {
+            final int priority = jsonFormatSection.getInt(jsonFormat + ".priority", 0);
+            final List<JsonAttribute> jsonAttributes = new ArrayList<>();
+            final ConfigurationSection jsonAttributeSection = jsonFormatSection.getConfigurationSection(jsonFormat + ".json_attributes");
             if (jsonAttributeSection != null) {
-                for (String attribute : jsonAttributeSection.getKeys(false)) {
-                    List<String> hoverText = jsonAttributeSection.getStringList(attribute + ".hover_text");
-                    String clickActionText = jsonAttributeSection.getString(attribute + ".click_action", "none");
+                for (final String attribute : jsonAttributeSection.getKeys(false)) {
+                    final List<String> hoverText = jsonAttributeSection.getStringList(attribute + ".hover_text");
+                    final String clickActionText = jsonAttributeSection.getString(attribute + ".click_action", "none");
                     try {
-                        ClickAction clickAction = ClickAction.valueOf(clickActionText.toUpperCase());
-                        String clickText = jsonAttributeSection.getString(attribute + ".click_text", "");
+                        final ClickAction clickAction = ClickAction.valueOf(clickActionText.toUpperCase());
+                        final String clickText = jsonAttributeSection.getString(attribute + ".click_text", "");
                         jsonAttributes.add(new JsonAttribute(attribute, hoverText, clickAction, clickText));
-                    } catch (IllegalArgumentException | NullPointerException exception) {
+                    } catch (final IllegalArgumentException | NullPointerException exception) {
                         plugin.getServer().getConsoleSender()
                                 .sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&c - Illegal click_action: " + clickActionText + " in jsonFormat: " + jsonFormat));
                     }
@@ -49,11 +51,12 @@ public class JsonFormat {
         }
     }
 
-    public static Collection<JsonFormat> getJsonFormats() {
+    @Contract(pure = true)
+    public static @NotNull Collection<JsonFormat> getJsonFormats() {
         return jsonFormats.values();
     }
 
-    public static JsonFormat getJsonFormat(String name) {
+    public static JsonFormat getJsonFormat(@NotNull final String name) {
         return jsonFormats.get(name.toLowerCase());
     }
 
