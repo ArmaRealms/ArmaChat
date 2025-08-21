@@ -25,15 +25,6 @@ dependencies {
     compileOnly(libs.com.googlecode.json.simple.json.simple)
     compileOnly(libs.commons.lang)
     compileOnly(libs.net.md.v5.bungeecord.api)
-
-    testImplementation(libs.io.papermc.paper.paper.api)
-    testImplementation(libs.junit.junit)
-    testImplementation(libs.org.mockito.mockito.core)
-    testImplementation(libs.org.mockito.mockito.inline)
-    testImplementation(libs.org.mockbukkit.mockbukkit)
-    testImplementation(libs.net.dmulloy2.protocollib)
-    testImplementation(libs.com.github.milkbowl.vaultapi)
-
     compileOnly(libs.net.dmulloy2.protocollib)
     compileOnly(libs.io.papermc.paper.paper.api)
     compileOnly(libs.com.github.placeholderapi.placeholderapi)
@@ -44,6 +35,14 @@ dependencies {
     compileOnly(libs.net.kyori.adventure.api)
     compileOnly(libs.net.kyori.adventure.platform.bukkit)
     compileOnly(fileTree("libs"))
+
+    testImplementation(libs.io.papermc.paper.paper.api)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.org.mockito.mockito.core)
+    testImplementation(libs.org.mockito.mockito.inline)
+    testImplementation(libs.org.mockbukkit.mockbukkit)
+    testImplementation(libs.net.dmulloy2.protocollib)
+    testImplementation(libs.com.github.milkbowl.vaultapi)
 }
 
 group = "mineverse.Aust1n46.chat"
