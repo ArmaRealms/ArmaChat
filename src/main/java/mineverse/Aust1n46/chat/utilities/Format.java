@@ -668,8 +668,6 @@ public class Format {
         allFormated = allFormated.replaceAll("&[eE]", BUKKIT_COLOR_CODE_PREFIX + "e");
         allFormated = allFormated.replaceAll("&[fF]", BUKKIT_COLOR_CODE_PREFIX + "f");
 
-        allFormated = allFormated.replaceAll("%", "%");
-
         allFormated = convertHexColorCodeStringToBukkitColorCodeString(allFormated);
         return allFormated;
     }
@@ -692,7 +690,6 @@ public class Format {
         allFormated = allFormated.replaceAll(BUKKIT_COLOR_CODE_PREFIX + "[E]", BUKKIT_COLOR_CODE_PREFIX + "e");
         allFormated = allFormated.replaceAll(BUKKIT_COLOR_CODE_PREFIX + "[F]", BUKKIT_COLOR_CODE_PREFIX + "f");
 
-        allFormated = allFormated.replaceAll("%", "%");
         return allFormated;
     }
 
@@ -711,7 +708,6 @@ public class Format {
         allFormated = allFormated.replaceAll("&[oO]", BUKKIT_COLOR_CODE_PREFIX + "o");
         allFormated = allFormated.replaceAll("&[rR]", BUKKIT_COLOR_CODE_PREFIX + "r");
 
-        allFormated = allFormated.replaceAll("%", "%");
         return allFormated;
     }
 
