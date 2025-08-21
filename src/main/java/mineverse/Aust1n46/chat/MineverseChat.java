@@ -3,7 +3,6 @@ package mineverse.Aust1n46.chat;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import me.clip.placeholderapi.PlaceholderAPI;
-import mineverse.Aust1n46.chat.alias.Alias;
 import mineverse.Aust1n46.chat.api.MineverseChatAPI;
 import mineverse.Aust1n46.chat.api.MineverseChatPlayer;
 import mineverse.Aust1n46.chat.api.events.VentureChatEvent;
@@ -95,7 +94,6 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 
     public static void initializeConfigReaders() {
         Localization.initialize();
-        Alias.initialize();
         JsonFormat.initialize();
         GuiSlot.initialize();
         ChatChannel.initialize();
