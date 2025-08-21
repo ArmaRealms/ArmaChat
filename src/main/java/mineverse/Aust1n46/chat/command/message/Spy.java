@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class Spy extends Command {
     public Spy() {
@@ -15,12 +16,12 @@ public class Spy extends Command {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String command, String[] args) {
+    public boolean execute(@NotNull final CommandSender sender, @NotNull final String command, final String[] args) {
         if (!(sender instanceof Player)) {
             Bukkit.getServer().getConsoleSender().sendMessage(LocalizedMessage.COMMAND_MUST_BE_RUN_BY_PLAYER.toString());
             return true;
         }
-        MineverseChatPlayer mcp = MineverseChatAPI.getOnlineMineverseChatPlayer((Player) sender);
+        final MineverseChatPlayer mcp = MineverseChatAPI.getOnlineMineverseChatPlayer((Player) sender);
         if (mcp.getPlayer().hasPermission("venturechat.spy")) {
             if (!mcp.isSpy()) {
                 mcp.setSpy(true);

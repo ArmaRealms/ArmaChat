@@ -63,7 +63,6 @@ public class VentureCommandExecutor {
 
     private static Map<String, Command> knownCommands;
 
-    @SuppressWarnings("unchecked")
     public static void initialize() {
         final Server server = plugin.getServer();
         final File commandsFile = new File(plugin.getDataFolder().getAbsolutePath(), "commands.yml");
