@@ -1,9 +1,9 @@
 package mineverse.Aust1n46.chat.command.mute;
 
 public class MuteContainer {
-    private String channel;
-    private String reason;
-    private long duration;
+    private final String channel;
+    private final String reason;
+    private final long duration;
 
     public MuteContainer(String channel) {
         this(channel, 0, "");
