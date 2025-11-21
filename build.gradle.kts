@@ -42,9 +42,9 @@ dependencies {
     // (e.g. com.destroystokyo.paper.MaterialTags) from running under MockBukkit.
     // Make the Paper API available only at test compile-time.
     testCompileOnly(libs.io.papermc.paper.paper.api)
-    // Provide a Spigot API at test runtime so MockBukkit can find Spigot-specific API
-    // classes (e.g. org.bukkit.Server$Spigot) without pulling in Paper implementation.
-    testImplementation("org.spigotmc:spigot-api:1.21.8-R0.1-SNAPSHOT")
+    // Add Paper API to the test runtime so MockBukkit's v1.21 artifacts (which reference
+    // Paper types) can initialize correctly.
+    testImplementation(libs.io.papermc.paper.paper.api)
     testImplementation(libs.net.kyori.adventure.api)
     testImplementation(libs.net.kyori.adventure.platform.bukkit)
     // MiniMessage provides TagResolver and related classes used by MockBukkit/plugins.
@@ -52,6 +52,8 @@ dependencies {
     testImplementation(libs.junit.junit)
     testImplementation(libs.org.mockito.mockito.core)
     testImplementation(libs.org.mockito.mockito.inline)
+    // Use the MockBukkit artifact targeting 1.21 (Paper) which matches the project's
+    // runtime. We provide paper-api above so its types are available at test runtime.
     testImplementation(libs.org.mockbukkit.mockbukkit)
     testImplementation(libs.net.dmulloy2.protocollib)
     testImplementation(libs.com.github.milkbowl.vaultapi)
@@ -134,10 +136,14 @@ configurations.configureEach {
     }
 }
 
-// Exclude paper-api from the test runtime classpath so MockBukkit's mocked server classes
-// are used instead of Paper's API implementation classes that run problematic static inits.
-configurations {
-    testRuntimeClasspath {
-        exclude(group = "io.papermc.paper", module = "paper-api")
+// Our earlier test-time Paper stubs live in `src/test/java` but we now depend on the
+// real Paper API for tests; exclude any test stubs we created from compilation so
+// they don't conflict with the real API classes.
+sourceSets {
+    test {
+        java {
+            exclude("com/destroystokyo/**")
+            exclude("io/papermc/**")
+        }
     }
 }
