@@ -45,6 +45,7 @@ dependencies {
     // Do NOT add paper-api to test runtime. We provide small test-only stubs for
     // Paper-specific types (under src/test/java) so MockBukkit can run without
     // initializing Paper's static initializers.
+    testImplementation("org.spigotmc:spigot-api:1.21.8-R0.1-SNAPSHOT")
     testImplementation(libs.net.kyori.adventure.api)
     testImplementation(libs.net.kyori.adventure.platform.bukkit)
     // MiniMessage provides TagResolver and related classes used by MockBukkit/plugins.
