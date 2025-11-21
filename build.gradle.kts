@@ -39,6 +39,7 @@ dependencies {
 
     implementation("org.mockito:mockito-core:5.15.2")
     implementation("org.junit.jupiter:junit-jupiter:5.11.3")
+    testImplementation(libs.org.mockbukkit.mockbukkit)
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation("com.google.guava:guava:33.4.0-jre")
