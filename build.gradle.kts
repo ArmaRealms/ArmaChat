@@ -9,14 +9,13 @@ plugins {
 }
 
 repositories {
+    mavenCentral()
     mavenLocal()
     maven { url = uri("https://jitpack.io") }
     maven { url = uri("https://repo.dmulloy2.net/repository/public/") }
     maven { url = uri("https://repo.essentialsx.net/releases/") }
     maven { url = uri("https://repo.velocitypowered.com/snapshots/") }
     maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
-    // Spigot snapshots repository for spigot-api needed by MockBukkit at test runtime
-    maven { url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") }
     maven { url = uri("https://repo.glaremasters.me/repository/towny/") }
     maven { url = uri("https://repo.maven.apache.org/maven2/") }
     flatDir { dirs("libs") }
@@ -38,26 +37,11 @@ dependencies {
     compileOnly(libs.net.kyori.adventure.platform.bukkit)
     compileOnly(fileTree("libs"))
 
-    // Avoid loading the Paper API at test runtime to prevent Paper's static initializers
-    // (e.g. com.destroystokyo.paper.MaterialTags) from running under MockBukkit.
-    // Make the Paper API available only at test compile-time.
-    testCompileOnly(libs.io.papermc.paper.paper.api)
-    // Do NOT add paper-api to test runtime. We provide small test-only stubs for
-    // Paper-specific types (under src/test/java) so MockBukkit can run without
-    // initializing Paper's static initializers.
-    testImplementation("org.spigotmc:spigot-api:1.21.8-R0.1-SNAPSHOT")
-    testImplementation(libs.net.kyori.adventure.api)
-    testImplementation(libs.net.kyori.adventure.platform.bukkit)
-    // MiniMessage provides TagResolver and related classes used by MockBukkit/plugins.
-    testImplementation("net.kyori:adventure-text-minimessage:4.11.0")
-    testImplementation(libs.junit.junit)
-    testImplementation(libs.org.mockito.mockito.core)
-    testImplementation(libs.org.mockito.mockito.inline)
-    // Use the MockBukkit artifact targeting 1.21 (Paper) which matches the project's
-    // runtime. We provide paper-api above so its types are available at test runtime.
-    testImplementation(libs.org.mockbukkit.mockbukkit)
-    testImplementation(libs.net.dmulloy2.protocollib)
-    testImplementation(libs.com.github.milkbowl.vaultapi)
+    testImplementation("org.junit.jupiter:junit-jupiter:5.11.3")
+    testImplementation(platform("org.junit:junit-bom:5.10.0"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    implementation("com.google.guava:guava:33.4.0-jre")
+    implementation("com.google.code.gson:gson:2.11.0")
 }
 
 group = "mineverse.Aust1n46.chat"
@@ -117,30 +101,5 @@ tasks {
         jvmArguments.add("-Dfile.encoding=UTF8")
         systemProperty("terminal.jline", false)
         systemProperty("terminal.ansi", true)
-    }
-}
-
-// Force paper-api for non-test configurations only. This prevents test configurations from
-// having their Bukkit/Spigot dependencies rewritten to Paper (which would then be excluded
-// and cause ClassNotFoundException for org.bukkit.* while also risking Paper static inits).
-val paperApiCoordinate = "io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT"
-configurations.configureEach {
-    if (!name.startsWith("test")) {
-        resolutionStrategy {
-            force(paperApiCoordinate)
-            eachDependency {
-                if (requested.group == "org.spigotmc" || requested.group == "org.bukkit") {
-                    useTarget(paperApiCoordinate)
-                }
-            }
-        }
-    }
-}
-
-// Ensure paper-api isn't present on the test runtime classpath so the real
-// MaterialTags (and other Paper static initializers) don't run during tests.
-configurations {
-    testRuntimeClasspath {
-        exclude(group = "io.papermc.paper", module = "paper-api")
     }
 }
