@@ -47,6 +47,8 @@ dependencies {
     testImplementation("org.spigotmc:spigot-api:1.21.8-R0.1-SNAPSHOT")
     testImplementation(libs.net.kyori.adventure.api)
     testImplementation(libs.net.kyori.adventure.platform.bukkit)
+    // MiniMessage provides TagResolver and related classes used by MockBukkit/plugins.
+    testImplementation("net.kyori:adventure-text-minimessage:4.11.0")
     testImplementation(libs.junit.junit)
     testImplementation(libs.org.mockito.mockito.core)
     testImplementation(libs.org.mockito.mockito.inline)
