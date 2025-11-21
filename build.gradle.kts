@@ -15,6 +15,8 @@ repositories {
     maven { url = uri("https://repo.essentialsx.net/releases/") }
     maven { url = uri("https://repo.velocitypowered.com/snapshots/") }
     maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
+    // Spigot snapshots repository for spigot-api needed by MockBukkit at test runtime
+    maven { url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") }
     maven { url = uri("https://repo.glaremasters.me/repository/towny/") }
     maven { url = uri("https://repo.maven.apache.org/maven2/") }
     flatDir { dirs("libs") }
@@ -40,6 +42,11 @@ dependencies {
     // (e.g. com.destroystokyo.paper.MaterialTags) from running under MockBukkit.
     // Make the Paper API available only at test compile-time.
     testCompileOnly(libs.io.papermc.paper.paper.api)
+    // Provide a Spigot API at test runtime so MockBukkit can find Spigot-specific API
+    // classes (e.g. org.bukkit.Server$Spigot) without pulling in Paper implementation.
+    testImplementation("org.spigotmc:spigot-api:1.21.8-R0.1-SNAPSHOT")
+    testImplementation(libs.net.kyori.adventure.api)
+    testImplementation(libs.net.kyori.adventure.platform.bukkit)
     testImplementation(libs.junit.junit)
     testImplementation(libs.org.mockito.mockito.core)
     testImplementation(libs.org.mockito.mockito.inline)
