@@ -42,9 +42,9 @@ dependencies {
     // (e.g. com.destroystokyo.paper.MaterialTags) from running under MockBukkit.
     // Make the Paper API available only at test compile-time.
     testCompileOnly(libs.io.papermc.paper.paper.api)
-    // Add Paper API to the test runtime so MockBukkit's v1.21 artifacts (which reference
-    // Paper types) can initialize correctly.
-    testImplementation(libs.io.papermc.paper.paper.api)
+    // Do NOT add paper-api to test runtime. We provide small test-only stubs for
+    // Paper-specific types (under src/test/java) so MockBukkit can run without
+    // initializing Paper's static initializers.
     testImplementation(libs.net.kyori.adventure.api)
     testImplementation(libs.net.kyori.adventure.platform.bukkit)
     // MiniMessage provides TagResolver and related classes used by MockBukkit/plugins.
@@ -136,14 +136,10 @@ configurations.configureEach {
     }
 }
 
-// Our earlier test-time Paper stubs live in `src/test/java` but we now depend on the
-// real Paper API for tests; exclude any test stubs we created from compilation so
-// they don't conflict with the real API classes.
-sourceSets {
-    test {
-        java {
-            exclude("com/destroystokyo/**")
-            exclude("io/papermc/**")
-        }
+// Ensure paper-api isn't present on the test runtime classpath so the real
+// MaterialTags (and other Paper static initializers) don't run during tests.
+configurations {
+    testRuntimeClasspath {
+        exclude(group = "io.papermc.paper", module = "paper-api")
     }
 }
