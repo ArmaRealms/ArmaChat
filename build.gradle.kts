@@ -36,7 +36,10 @@ dependencies {
     compileOnly(libs.net.kyori.adventure.platform.bukkit)
     compileOnly(fileTree("libs"))
 
-    testImplementation(libs.io.papermc.paper.paper.api)
+    // Avoid loading the Paper API at test runtime to prevent Paper's static initializers
+    // (e.g. com.destroystokyo.paper.MaterialTags) from running under MockBukkit.
+    // Make the Paper API available only at test compile-time.
+    testCompileOnly(libs.io.papermc.paper.paper.api)
     testImplementation(libs.junit.junit)
     testImplementation(libs.org.mockito.mockito.core)
     testImplementation(libs.org.mockito.mockito.inline)
@@ -105,13 +108,27 @@ tasks {
     }
 }
 
-configurations.all {
-    resolutionStrategy {
-        force("io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT")
-        eachDependency {
-            if (requested.group == "org.spigotmc" || requested.group == "org.bukkit") {
-                useTarget("io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT")
+// Force paper-api for non-test configurations only. This prevents test configurations from
+// having their Bukkit/Spigot dependencies rewritten to Paper (which would then be excluded
+// and cause ClassNotFoundException for org.bukkit.* while also risking Paper static inits).
+val paperApiCoordinate = "io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT"
+configurations.configureEach {
+    if (!name.startsWith("test")) {
+        resolutionStrategy {
+            force(paperApiCoordinate)
+            eachDependency {
+                if (requested.group == "org.spigotmc" || requested.group == "org.bukkit") {
+                    useTarget(paperApiCoordinate)
+                }
             }
         }
+    }
+}
+
+// Exclude paper-api from the test runtime classpath so MockBukkit's mocked server classes
+// are used instead of Paper's API implementation classes that run problematic static inits.
+configurations {
+    testRuntimeClasspath {
+        exclude(group = "io.papermc.paper", module = "paper-api")
     }
 }
