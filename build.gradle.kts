@@ -37,7 +37,8 @@ dependencies {
     compileOnly(libs.net.kyori.adventure.platform.bukkit)
     compileOnly(fileTree("libs"))
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.11.3")
+    implementation("org.mockito:mockito-core:5.15.2")
+    implementation("org.junit.jupiter:junit-jupiter:5.11.3")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation("com.google.guava:guava:33.4.0-jre")
@@ -102,4 +103,8 @@ tasks {
         systemProperty("terminal.jline", false)
         systemProperty("terminal.ansi", true)
     }
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
