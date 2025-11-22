@@ -29,9 +29,9 @@ dependencies {
     compileOnly(libs.net.dmulloy2.protocollib)
     compileOnly(libs.io.papermc.paper.paper.api)
     compileOnly(libs.com.github.placeholderapi.placeholderapi)
-    compileOnly(libs.com.github.milkbowl.vaultapi)
+    compileOnly(libs.com.github.milkbowl.vaultapi)  { isTransitive = false }
     compileOnly(libs.com.palmergames.bukkit.towny.towny)
-    compileOnly(libs.net.essentialsx.essentialsxdiscord)
+    compileOnly(libs.net.essentialsx.essentialsxdiscord) { isTransitive = false }
     compileOnly(libs.com.velocitypowered.velocity.api)
     compileOnly(libs.net.kyori.adventure.api)
     compileOnly(libs.net.kyori.adventure.platform.bukkit)
