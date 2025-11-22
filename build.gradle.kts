@@ -9,6 +9,7 @@ plugins {
 }
 
 repositories {
+    mavenCentral()
     mavenLocal()
     maven { url = uri("https://jitpack.io") }
     maven { url = uri("https://repo.dmulloy2.net/repository/public/") }
@@ -28,21 +29,13 @@ dependencies {
     compileOnly(libs.net.dmulloy2.protocollib)
     compileOnly(libs.io.papermc.paper.paper.api)
     compileOnly(libs.com.github.placeholderapi.placeholderapi)
-    compileOnly(libs.com.github.milkbowl.vaultapi)
+    compileOnly(libs.com.github.milkbowl.vaultapi)  { isTransitive = false }
     compileOnly(libs.com.palmergames.bukkit.towny.towny)
-    compileOnly(libs.net.essentialsx.essentialsxdiscord)
+    compileOnly(libs.net.essentialsx.essentialsxdiscord) { isTransitive = false }
     compileOnly(libs.com.velocitypowered.velocity.api)
     compileOnly(libs.net.kyori.adventure.api)
     compileOnly(libs.net.kyori.adventure.platform.bukkit)
     compileOnly(fileTree("libs"))
-
-    testImplementation(libs.io.papermc.paper.paper.api)
-    testImplementation(libs.junit.junit)
-    testImplementation(libs.org.mockito.mockito.core)
-    testImplementation(libs.org.mockito.mockito.inline)
-    testImplementation(libs.org.mockbukkit.mockbukkit)
-    testImplementation(libs.net.dmulloy2.protocollib)
-    testImplementation(libs.com.github.milkbowl.vaultapi)
 }
 
 group = "mineverse.Aust1n46.chat"
