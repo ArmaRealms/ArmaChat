@@ -36,15 +36,6 @@ dependencies {
     compileOnly(libs.net.kyori.adventure.api)
     compileOnly(libs.net.kyori.adventure.platform.bukkit)
     compileOnly(fileTree("libs"))
-
-    implementation("org.mockito:mockito-core:5.15.2")
-    implementation("org.junit.jupiter:junit-jupiter:5.11.3")
-    testImplementation(libs.org.mockbukkit.mockbukkit)
-    testImplementation(libs.junit.junit)
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
-    implementation("com.google.guava:guava:33.4.0-jre")
-    implementation("com.google.code.gson:gson:2.11.0")
 }
 
 group = "mineverse.Aust1n46.chat"
