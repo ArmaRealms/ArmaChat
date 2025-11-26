@@ -4,6 +4,9 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
+import com.massivecraft.massivecore.command.type.RegistryType;
+import io.papermc.paper.registry.RegistryAccess;
+import io.papermc.paper.registry.RegistryKey;
 import me.clip.placeholderapi.PlaceholderAPI;
 import mineverse.Aust1n46.chat.ClickAction;
 import mineverse.Aust1n46.chat.MineverseChat;
@@ -16,6 +19,8 @@ import mineverse.Aust1n46.chat.versions.VersionHandler;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
@@ -45,11 +50,8 @@ public class Format {
     public static final long MILLISECONDS_PER_HOUR = 3600000;
     public static final long MILLISECONDS_PER_MINUTE = 60000;
     public static final long MILLISECONDS_PER_SECOND = 1000;
-    public static final String DEFAULT_MESSAGE_SOUND = "ENTITY_PLAYER_LEVELUP";
-    public static final String DEFAULT_LEGACY_MESSAGE_SOUND = "LEVEL_UP";
     private static final Pattern LEGACY_CHAT_COLOR_DIGITS_PATTERN = Pattern.compile("&([0-9])");
-    private static final Pattern LEGACY_CHAT_COLOR_PATTERN = Pattern.compile(
-            "(?<!(&x(&[a-fA-F0-9]){5}))(?<!(&x(&[a-fA-F0-9]){4}))(?<!(&x(&[a-fA-F0-9]){3}))(?<!(&x(&[a-fA-F0-9]){2}))(?<!(&x(&[a-fA-F0-9]){1}))(?<!(&x))(&)([0-9a-fA-F])");
+    private static final Pattern LEGACY_CHAT_COLOR_PATTERN = Pattern.compile("(?<!(&x(&[a-fA-F0-9]){5}))(?<!(&x(&[a-fA-F0-9]){4}))(?<!(&x(&[a-fA-F0-9]){3}))(?<!(&x(&[a-fA-F0-9]){2}))(?<!(&x(&[a-fA-F0-9])))(?<!(&x))(&)([0-9a-fA-F])");
     private static final Pattern PLACEHOLDERAPI_PLACEHOLDER_PATTERN = Pattern.compile("\\{([^{}]+)}");
 
     /**
@@ -964,37 +966,28 @@ public class Format {
 
     public static void playMessageSound(final @NotNull MineverseChatPlayer mcp) {
         final Player player = mcp.getPlayer();
-        final String soundName = getInstance().getConfig().getString("message_sound", DEFAULT_MESSAGE_SOUND);
+        final String soundName = getInstance().getConfig().getString("message_sound", "None");
         if (!soundName.equalsIgnoreCase("None")) {
             try {
                 final Sound messageSound = getSound(soundName);
                 player.playSound(player.getLocation(), messageSound, 1, 0);
             } catch (final Exception e) {
-                if (MineverseChat.getInstance().getConfig().getString("loglevel", "info").equals("debug")) {
-                    Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&c - Error playing sound, defaulting to none"));
+                if (MineverseChat.getInstance().getConfig()
+                        .getString("loglevel", "info").equals("debug")) {
+                    MineverseChat.getInstance().getLogger().warning(Format.FormatStringAll("&8[&eVentureChat&8]&c - Error playing sound, defaulting to none"));
                 }
             }
         }
     }
 
-    @SuppressWarnings({"UnstableApiUsage", "removal"})
     private static @NotNull Sound getSound(final String soundName) {
-        for (final Sound sound : Sound.values()) {
-            if (sound.toString().equalsIgnoreCase(soundName)) {
-                return sound;
-            }
+        var soundRegistry = RegistryAccess.registryAccess()
+                .getRegistry(RegistryKey.SOUND_EVENT)
+                .get(NamespacedKey.minecraft(soundName));
+        if (soundRegistry != null) {
+            return soundRegistry;
         }
-        Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&c - Message sound invalid!"));
-        return getDefaultMessageSound();
-    }
-
-    @SuppressWarnings({"UnstableApiUsage", "removal"})
-    private static @NotNull Sound getDefaultMessageSound() {
-        if (VersionHandler.is1_7() || VersionHandler.is1_8()) {
-            return Sound.valueOf(DEFAULT_LEGACY_MESSAGE_SOUND);
-        } else {
-            return Sound.valueOf(DEFAULT_MESSAGE_SOUND);
-        }
+        return Sound.ENTITY_EXPERIENCE_ORB_PICKUP; // Default sound
     }
 
     @Contract(pure = true)
