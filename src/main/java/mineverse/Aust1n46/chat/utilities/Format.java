@@ -981,11 +981,15 @@ public class Format {
     }
 
     private static @NotNull Sound getSound(final String soundName) {
-        var soundRegistry = RegistryAccess.registryAccess()
+        NamespacedKey soundKey = NamespacedKey.fromString(soundName);
+        if (soundKey == null) {
+            return Sound.ENTITY_EXPERIENCE_ORB_PICKUP; // Default sound
+        }
+        var sound = RegistryAccess.registryAccess()
                 .getRegistry(RegistryKey.SOUND_EVENT)
-                .get(NamespacedKey.minecraft(soundName));
-        if (soundRegistry != null) {
-            return soundRegistry;
+                .get(soundKey);
+        if (sound != null) {
+            return sound;
         }
         return Sound.ENTITY_EXPERIENCE_ORB_PICKUP; // Default sound
     }
