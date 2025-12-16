@@ -14,6 +14,8 @@ import mineverse.Aust1n46.chat.database.Database;
 import mineverse.Aust1n46.chat.localization.LocalizedMessage;
 import mineverse.Aust1n46.chat.utilities.Format;
 import net.essentialsx.api.v2.services.discord.DiscordService;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -472,6 +474,7 @@ public class ChatListener implements Listener {
     public void handleVentureChatEvent(@NotNull final VentureChatEvent event) {
         final MineverseChatPlayer mcp = event.getMineverseChatPlayer();
         final ChatChannel channel = event.getChannel();
+        final Set<Player> recipients = event.getRecipients();
         final int recipientCount = event.getRecipientCount();
         final String format = event.getFormat();
         final String chat = event.getChat();
@@ -494,6 +497,11 @@ public class ChatListener implements Listener {
 
             if (recipientCount == 1 && !plugin.getConfig().getString("emptychannelalert", "&6No one is listening to you.").equals("")) {
                 mcp.getPlayer().sendMessage(Format.FormatStringAll(plugin.getConfig().getString("emptychannelalert", "&6No one is listening to you.")));
+            }
+
+            for (final Player p : recipients) {
+                final Component messsage = GsonComponentSerializer.gson().deserialize(globalJSON);
+                p.sendMessage(messsage);
             }
 
             Bukkit.getConsoleSender().sendMessage(consoleChat);
