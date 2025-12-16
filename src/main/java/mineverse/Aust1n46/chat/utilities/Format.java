@@ -1,9 +1,5 @@
 package mineverse.Aust1n46.chat.utilities;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import com.massivecraft.massivecore.command.type.RegistryType;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -11,16 +7,12 @@ import mineverse.Aust1n46.chat.ClickAction;
 import mineverse.Aust1n46.chat.MineverseChat;
 import mineverse.Aust1n46.chat.api.MineverseChatAPI;
 import mineverse.Aust1n46.chat.api.MineverseChatPlayer;
-import mineverse.Aust1n46.chat.hooks.PacketManager;
 import mineverse.Aust1n46.chat.json.JsonAttribute;
 import mineverse.Aust1n46.chat.json.JsonFormat;
 import mineverse.Aust1n46.chat.localization.LocalizedMessage;
-import mineverse.Aust1n46.chat.versions.VersionHandler;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
@@ -58,7 +50,7 @@ public class Format {
      * Converts a message to Minecraft JSON formatting while applying the
      * {@link JsonFormat} from the config.
      *
-     * @param sender {@link MineverseChatPlayer} wrapper of the message sender.
+     * @param sender {@link mineverse.Aust1n46.chat.api.MineverseChatPlayer} wrapper of the message sender.
      * @param format The format section of the message.
      * @param chat   The chat section of the message.
      * @return {@link String}
@@ -85,9 +77,9 @@ public class Format {
     /**
      * Converts the format section of a message to JSON using PlaceholderAPI.
      *
-     * @param s
-     * @param format
-     * @param icp
+     * @param s      The format section of the message.
+     * @param format The {@link JsonFormat} to apply.
+     * @param icp    {@link MineverseChatPlayer} wrapper of the message sender.
      * @return {@link String}
      */
     private static String convertPlaceholders(final String s, final JsonFormat format, final MineverseChatPlayer icp) {
@@ -108,7 +100,7 @@ public class Format {
                 temp += convertToJsonColors(escapeJsonChars(lastCode + remaining.substring(0, indexStart))) + ",";
                 lastCode = getLastCode(lastCode + remaining.substring(0, indexStart));
                 boolean placeholderHasJsonAttribute = false;
-                for (final JsonAttribute jsonAttribute : format.getJsonAttributes()) {
+                for (final JsonAttribute jsonAttribute : format.jsonAttributes()) {
                     if (placeholder.contains(jsonAttribute.name().replace("{", "").replace("}", ""))) {
                         final StringBuilder hover = new StringBuilder();
                         for (final String st : jsonAttribute.hoverText()) {
@@ -336,36 +328,11 @@ public class Format {
                 strikethrough = false;
                 underlined = false;
             }
-            if (bold)
-                if (VersionHandler.isAtLeast_1_20_4()) {
-                    modifier += ",\"bold\":true";
-                } else {
-                    modifier += ",\"bold\":\"true\"";
-                }
-            if (obfuscated)
-                if (VersionHandler.isAtLeast_1_20_4()) {
-                    modifier += ",\"obfuscated\":true";
-                } else {
-                    modifier += ",\"obfuscated\":\"true\"";
-                }
-            if (italic)
-                if (VersionHandler.isAtLeast_1_20_4()) {
-                    modifier += ",\"italic\":true";
-                } else {
-                    modifier += ",\"italic\":\"true\"";
-                }
-            if (underlined)
-                if (VersionHandler.isAtLeast_1_20_4()) {
-                    modifier += ",\"underlined\":true";
-                } else {
-                    modifier += ",\"underlined\":\"true\"";
-                }
-            if (strikethrough)
-                if (VersionHandler.isAtLeast_1_20_4()) {
-                    modifier += ",\"strikethrough\":true";
-                } else {
-                    modifier += ",\"strikethrough\":\"true\"";
-                }
+            if (bold) modifier += ",\"bold\":true";
+            if (obfuscated) modifier += ",\"obfuscated\":true";
+            if (italic) modifier += ",\"italic\":true";
+            if (underlined) modifier += ",\"underlined\":true";
+            if (strikethrough) modifier += ",\"strikethrough\":true";
             remaining = remaining.substring(colorLength);
             colorLength = LEGACY_COLOR_CODE_LENGTH;
             indexNextColor = remaining.indexOf(BUKKIT_COLOR_CODE_PREFIX);
@@ -466,90 +433,8 @@ public class Format {
         return json;
     }
 
-    public static @NotNull PacketContainer createPacketPlayOutChat(final String json) {
-        final PacketContainer container;
-        if (VersionHandler.isAtLeast_1_20_4()) { // 1.20.4+
-            container = new PacketContainer(PacketType.Play.Server.SYSTEM_CHAT);
-            container.getChatComponents().write(0, WrappedChatComponent.fromJson(json));
-            container.getBooleans().write(0, false);
-        } else if (VersionHandler.isAbove_1_19()) { // 1.19.1 -> 1.20.3
-            container = new PacketContainer(PacketType.Play.Server.SYSTEM_CHAT);
-            container.getStrings().write(0, json);
-            container.getBooleans().write(0, false);
-        } else if (VersionHandler.isUnder_1_19()) { // 1.7 -> 1.19
-            final WrappedChatComponent component = WrappedChatComponent.fromJson(json);
-            container = new PacketContainer(PacketType.Play.Server.CHAT);
-            container.getModifier().writeDefaults();
-            container.getChatComponents().write(0, component);
-        } else { // 1.19
-            container = new PacketContainer(PacketType.Play.Server.SYSTEM_CHAT);
-            container.getStrings().write(0, json);
-            container.getIntegers().write(0, 1);
-        }
-        return container;
-    }
-
-    public static @NotNull PacketContainer createPacketPlayOutChat(final WrappedChatComponent component) {
-        final PacketContainer container;
-        if (VersionHandler.isAtLeast_1_20_4()) { // 1.20.4+
-            container = new PacketContainer(PacketType.Play.Server.SYSTEM_CHAT);
-            container.getChatComponents().write(0, component);
-            container.getBooleans().write(0, false);
-        } else if (VersionHandler.isAbove_1_19()) { // 1.19.1 -> 1.20.3
-            container = new PacketContainer(PacketType.Play.Server.SYSTEM_CHAT);
-            container.getStrings().write(0, component.getJson());
-            container.getBooleans().write(0, false);
-        } else if (VersionHandler.isUnder_1_19()) { // 1.7 -> 1.19
-            container = new PacketContainer(PacketType.Play.Server.CHAT);
-            container.getModifier().writeDefaults();
-            container.getChatComponents().write(0, component);
-        } else { // 1.19
-            container = new PacketContainer(PacketType.Play.Server.SYSTEM_CHAT);
-            container.getStrings().write(0, component.getJson());
-            container.getIntegers().write(0, 1);
-        }
-        return container;
-    }
-
-    /**
-     * Sends a chat packet using the active packet hook (ProtocolLib or PacketEvents).
-     * This is the preferred method for sending chat packets.
-     * 
-     * @param player The player to send the packet to
-     * @param json The JSON string representing the chat message
-     */
-    public static void sendChatPacket(final Player player, final String json) {
-        if (!PacketManager.sendChatPacket(player, json)) {
-            // Fallback: if packet manager fails, log warning
-            getInstance().getLogger().warning("Failed to send chat packet to " + player.getName());
-        }
-    }
-
-    /**
-     * @deprecated Use {@link #sendChatPacket(Player, String)} instead for cross-library compatibility.
-     * This method is kept for backwards compatibility with ProtocolLib-specific code.
-     */
-    @Deprecated
-    public static void sendPacketPlayOutChat(final Player player, final PacketContainer packet) {
-        if (PacketManager.isAvailable() && "ProtocolLib".equals(PacketManager.getActiveHookName())) {
-            try {
-                Class.forName("com.comphenix.protocol.ProtocolLibrary");
-                com.comphenix.protocol.ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
-            } catch (final Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            // If using PacketEvents, we need to convert the packet
-            // For now, just log a warning
-            getInstance().getLogger().warning("sendPacketPlayOutChat called with PacketEvents active - use sendChatPacket instead");
-        }
-    }
-
     @SuppressWarnings("unchecked")
     public static @NotNull String toColoredText(final Object o, final Class<?> c) {
-        if (VersionHandler.is1_7()) {
-            return "\"extra\":[{\"text\":\"Hover to see original message is not currently supported in 1.7\",\"color\":\"red\"}]";
-        }
         final List<Object> finalList = new ArrayList<>();
         final StringBuilder stringbuilder = new StringBuilder();
         stringbuilder.append("\"extra\":[");
@@ -557,53 +442,27 @@ public class Format {
             splitComponents(finalList, o, c);
             for (final Object component : finalList) {
                 try {
-                    if (VersionHandler.is1_8() || VersionHandler.is1_9() || VersionHandler.is1_10() || VersionHandler.is1_11()
-                            || VersionHandler.is1_12() || VersionHandler.is1_13() || VersionHandler.is1_14()
-                            || VersionHandler.is1_15() || VersionHandler.is1_16() || VersionHandler.is1_17()) {
-                        final String text = (String) component.getClass().getMethod("getText").invoke(component);
-                        final Object chatModifier = component.getClass().getMethod("getChatModifier").invoke(component);
-                        final Object color = chatModifier.getClass().getMethod("getColor").invoke(chatModifier);
-                        String colorString = "white";
-                        if (color != null) {
-                            colorString = color.getClass().getMethod("b").invoke(color).toString();
-                        }
-                        final boolean bold = (boolean) chatModifier.getClass().getMethod("isBold").invoke(chatModifier);
-                        final boolean strikethrough = (boolean) chatModifier.getClass().getMethod("isStrikethrough").invoke(chatModifier);
-                        final boolean italic = (boolean) chatModifier.getClass().getMethod("isItalic").invoke(chatModifier);
-                        final boolean underlined = (boolean) chatModifier.getClass().getMethod("isUnderlined").invoke(chatModifier);
-                        final boolean obfuscated = (boolean) chatModifier.getClass().getMethod("isRandom").invoke(chatModifier);
-                        final JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("text", text);
-                        jsonObject.put("color", colorString);
-                        jsonObject.put("bold", bold);
-                        jsonObject.put("strikethrough", strikethrough);
-                        jsonObject.put("italic", italic);
-                        jsonObject.put("underlined", underlined);
-                        jsonObject.put("obfuscated", obfuscated);
-                        stringbuilder.append(jsonObject.toJSONString()).append(",");
-                    } else {
-                        final String text = (String) component.getClass().getMethod("getString").invoke(component);
-                        final Object chatModifier = component.getClass().getMethod("c").invoke(component);
-                        final Object color = chatModifier.getClass().getMethod("a").invoke(chatModifier);
-                        String colorString = "white";
-                        if (color != null) {
-                            colorString = color.getClass().getMethod("b").invoke(color).toString();
-                        }
-                        final boolean bold = (boolean) chatModifier.getClass().getMethod("b").invoke(chatModifier);
-                        final boolean italic = (boolean) chatModifier.getClass().getMethod("c").invoke(chatModifier);
-                        final boolean strikethrough = (boolean) chatModifier.getClass().getMethod("d").invoke(chatModifier);
-                        final boolean underlined = (boolean) chatModifier.getClass().getMethod("e").invoke(chatModifier);
-                        final boolean obfuscated = (boolean) chatModifier.getClass().getMethod("f").invoke(chatModifier);
-                        final JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("text", text);
-                        jsonObject.put("color", colorString);
-                        jsonObject.put("bold", bold);
-                        jsonObject.put("strikethrough", strikethrough);
-                        jsonObject.put("italic", italic);
-                        jsonObject.put("underlined", underlined);
-                        jsonObject.put("obfuscated", obfuscated);
-                        stringbuilder.append(jsonObject.toJSONString()).append(",");
+                    final String text = (String) component.getClass().getMethod("getString").invoke(component);
+                    final Object chatModifier = component.getClass().getMethod("c").invoke(component);
+                    final Object color = chatModifier.getClass().getMethod("a").invoke(chatModifier);
+                    String colorString = "white";
+                    if (color != null) {
+                        colorString = color.getClass().getMethod("b").invoke(color).toString();
                     }
+                    final boolean bold = (boolean) chatModifier.getClass().getMethod("b").invoke(chatModifier);
+                    final boolean italic = (boolean) chatModifier.getClass().getMethod("c").invoke(chatModifier);
+                    final boolean strikethrough = (boolean) chatModifier.getClass().getMethod("d").invoke(chatModifier);
+                    final boolean underlined = (boolean) chatModifier.getClass().getMethod("e").invoke(chatModifier);
+                    final boolean obfuscated = (boolean) chatModifier.getClass().getMethod("f").invoke(chatModifier);
+                    final JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("text", text);
+                    jsonObject.put("color", colorString);
+                    jsonObject.put("bold", bold);
+                    jsonObject.put("strikethrough", strikethrough);
+                    jsonObject.put("italic", italic);
+                    jsonObject.put("underlined", underlined);
+                    jsonObject.put("obfuscated", obfuscated);
+                    stringbuilder.append(jsonObject.toJSONString()).append(",");
                 } catch (final Exception e) {
                     return "\"extra\":[{\"text\":\"Something went wrong. Could not access color.\",\"color\":\"red\"}]";
                 }
@@ -625,15 +484,7 @@ public class Format {
         try {
             splitComponents(finalList, o, c);
             for (final Object component : finalList) {
-                if (VersionHandler.is1_7()) {
-                    stringbuilder.append((String) component.getClass().getMethod("e").invoke(component));
-                } else if (VersionHandler.is1_8() || VersionHandler.is1_9() || VersionHandler.is1_10() || VersionHandler.is1_11()
-                        || VersionHandler.is1_12() || VersionHandler.is1_13() || VersionHandler.is1_14() || VersionHandler.is1_15()
-                        || VersionHandler.is1_16() || VersionHandler.is1_17()) {
-                    stringbuilder.append((String) component.getClass().getMethod("getText").invoke(component));
-                } else {
-                    stringbuilder.append((String) component.getClass().getMethod("getString").invoke(component));
-                }
+                stringbuilder.append((String) component.getClass().getMethod("getString").invoke(component));
             }
         } catch (final Exception e) {
             e.printStackTrace();
@@ -642,37 +493,13 @@ public class Format {
     }
 
     private static void splitComponents(final List<Object> finalList, final Object o, final Class<?> c) throws Exception {
-        if (VersionHandler.is1_7() || VersionHandler.is1_8() || VersionHandler.is1_9() || VersionHandler.is1_10()
-                || VersionHandler.is1_11() || VersionHandler.is1_12() || VersionHandler.is1_13()
-                || (VersionHandler.is1_14() && !VersionHandler.is1_14_4())) {
-            final ArrayList<?> list = (ArrayList<?>) c.getMethod("a").invoke(o, new Object[0]);
-            for (final Object component : list) {
-                final ArrayList<?> innerList = (ArrayList<?>) c.getMethod("a").invoke(component, new Object[0]);
-                if (!innerList.isEmpty()) {
-                    splitComponents(finalList, component, c);
-                } else {
-                    finalList.add(component);
-                }
-            }
-        } else if (VersionHandler.is1_14_4() || VersionHandler.is1_15() || VersionHandler.is1_16() || VersionHandler.is1_17()) {
-            final ArrayList<?> list = (ArrayList<?>) c.getMethod("getSiblings").invoke(o, new Object[0]);
-            for (final Object component : list) {
-                final ArrayList<?> innerList = (ArrayList<?>) c.getMethod("getSiblings").invoke(component, new Object[0]);
-                if (!innerList.isEmpty()) {
-                    splitComponents(finalList, component, c);
-                } else {
-                    finalList.add(component);
-                }
-            }
-        } else {
-            final ArrayList<?> list = (ArrayList<?>) c.getMethod("b").invoke(o, new Object[0]);
-            for (final Object component : list) {
-                final ArrayList<?> innerList = (ArrayList<?>) c.getMethod("b").invoke(component, new Object[0]);
-                if (!innerList.isEmpty()) {
-                    splitComponents(finalList, component, c);
-                } else {
-                    finalList.add(component);
-                }
+        final ArrayList<?> list = (ArrayList<?>) c.getMethod("b").invoke(o, new Object[0]);
+        for (final Object component : list) {
+            final ArrayList<?> innerList = (ArrayList<?>) c.getMethod("b").invoke(component, new Object[0]);
+            if (!innerList.isEmpty()) {
+                splitComponents(finalList, component, c);
+            } else {
+                finalList.add(component);
             }
         }
     }
@@ -844,11 +671,7 @@ public class Format {
 
     public static @NotNull String underlineURLs() {
         final boolean configValue = getInstance().getConfig().getBoolean("underlineurls", true);
-        if (VersionHandler.isAtLeast_1_20_4()) {
-            return String.valueOf(configValue);
-        } else {
-            return "\"" + configValue + "\"";
-        }
+        return String.valueOf(configValue);
     }
 
     public static @NotNull String parseTimeStringFromMillis(long millis) {
@@ -1007,11 +830,11 @@ public class Format {
     }
 
     private static @NotNull Sound getSound(final String soundName) {
-        NamespacedKey soundKey = NamespacedKey.fromString(soundName);
+        final NamespacedKey soundKey = NamespacedKey.fromString(soundName);
         if (soundKey == null) {
             return Sound.ENTITY_EXPERIENCE_ORB_PICKUP; // Default sound
         }
-        var sound = RegistryAccess.registryAccess()
+        final var sound = RegistryAccess.registryAccess()
                 .getRegistry(RegistryKey.SOUND_EVENT)
                 .get(soundKey);
         if (sound != null) {

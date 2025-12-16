@@ -5,12 +5,12 @@
 shadow = "9.0.2"
 runpaper = "2.3.1"
 com-github-milkbowl-vaultapi = "1.7"
-com-github-placeholderapi-placeholderapi = "2.11.6"
+com-github-placeholderapi-placeholderapi = "2.11.7"
 com-googlecode-json-simple-json-simple = "1.1.1"
 com-palmergames-bukkit-towny-towny = "0.101.2.0"
 com-velocitypowered-velocity-api = "3.4.0-SNAPSHOT"
 com-zaxxer-hikaricp = "7.0.2"
-io-papermc-paper-paper-api = "1.21.8-R0.1-SNAPSHOT"
+io-papermc-paper-paper-api = "1.21.10-R0.1-SNAPSHOT"
 junit-junit = "4.13.2"
 net-dmulloy2-protocollib = "5.4.0"
 net-essentialsx-essentialsxdiscord = "2.19.0"
@@ -21,7 +21,7 @@ org-mockito-mockito-core = "5.12.0"
 org-mockito-mockito-inline = "5.2.0"
 org-mockbukkit-mockbukkit = "4.72.8"
 commons-lang = "2.6"
-com-github-retrooper-packetevents-spigot = "2.9.0"
+com-github-retrooper-packetevents-spigot = "2.11.0"
 
 [plugins]
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
@@ -30,7 +30,7 @@ java = { id = "java" }
 
 [libraries]
 com-github-milkbowl-vaultapi = { module = "com.github.MilkBowl:VaultAPI", version.ref = "com-github-milkbowl-vaultapi" }
-com-github-placeholderapi-placeholderapi = { module = "com.github.placeholderapi:placeholderapi", version.ref = "com-github-placeholderapi-placeholderapi" }
+com-github-placeholderapi-placeholderapi = { module = "me.clip:placeholderapi", version.ref = "com-github-placeholderapi-placeholderapi" }
 com-googlecode-json-simple-json-simple = { module = "com.googlecode.json-simple:json-simple", version.ref = "com-googlecode-json-simple-json-simple" }
 com-palmergames-bukkit-towny-towny = { module = "com.palmergames.bukkit.towny:towny", version.ref = "com-palmergames-bukkit-towny-towny" }
 com-velocitypowered-velocity-api = { module = "com.velocitypowered:velocity-api", version.ref = "com-velocitypowered-velocity-api" }

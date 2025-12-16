@@ -12,7 +12,6 @@ import mineverse.Aust1n46.chat.command.mute.MuteContainer;
 import mineverse.Aust1n46.chat.database.Database;
 import mineverse.Aust1n46.chat.database.PlayerData;
 import mineverse.Aust1n46.chat.gui.GuiSlot;
-import mineverse.Aust1n46.chat.hooks.PacketManager;
 import mineverse.Aust1n46.chat.json.JsonFormat;
 import mineverse.Aust1n46.chat.listeners.ChatListener;
 import mineverse.Aust1n46.chat.listeners.CommandListener;
@@ -275,7 +274,6 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 
     @Override
     public void onDisable() {
-        PacketManager.shutdown();
         PlayerData.savePlayerData();
         MineverseChatAPI.clearMineverseChatPlayerMap();
         MineverseChatAPI.clearNameMap();
@@ -334,9 +332,6 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
         pluginManager.registerEvents(new ChatListener(), this);
         pluginManager.registerEvents(new CommandListener(), this);
         pluginManager.registerEvents(new LoginListener(), this);
-        
-        // Initialize packet handling hook (ProtocolLib or PacketEvents)
-        PacketManager.initialize();
     }
 
     private boolean setupPermissions() {
@@ -415,49 +410,8 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
                 if (Database.isEnabled()) {
                     Database.writeVentureChat(senderUUID.toString(), senderName, server, chatchannel, chat.replace("'", "''"), "Chat");
                 }
-
-                for (final MineverseChatPlayer p : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
-                    if (p.isListening(chatChannelObject.getName())) {
-                        if (!p.getBungeeToggle() && MineverseChatAPI.getOnlineMineverseChatPlayer(senderName) == null) {
-                            continue;
-                        }
-
-                        final String json = Format.formatModerationGUI(globalJSON, p.getPlayer(), senderName, chatchannel, hash);
-                        final PacketContainer packet = Format.createPacketPlayOutChat(json);
-
-                        if (getConfig().getBoolean("ignorechat", false)) {
-                            if (!p.getIgnores().contains(senderUUID)) {
-                                // System.out.println("Chat sent");
-                                Format.sendPacketPlayOutChat(p.getPlayer(), packet);
-                            }
-                            continue;
-                        }
-                        Format.sendPacketPlayOutChat(p.getPlayer(), packet);
-                    }
-                }
             }
-            if (subchannel.equals("DiscordSRV")) {
-                final String chatChannel = msgin.readUTF();
-                final String message = msgin.readUTF();
-                if (!ChatChannel.isChannel(chatChannel)) {
-                    return;
-                }
-                final ChatChannel chatChannelObj = ChatChannel.getChannel(chatChannel);
-                if (!chatChannelObj.getBungee()) {
-                    return;
-                }
 
-                final String json = Format.convertPlainTextToJson(message, true);
-                final int hash = (message.replaceAll("([�]([a-z0-9]))", "")).hashCode();
-
-                for (final MineverseChatPlayer p : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
-                    if (p.isListening(chatChannelObj.getName())) {
-                        final String finalJSON = Format.formatModerationGUI(json, p.getPlayer(), "Discord", chatChannelObj.getName(), hash);
-                        final PacketContainer packet = Format.createPacketPlayOutChat(finalJSON);
-                        Format.sendPacketPlayOutChat(p.getPlayer(), packet);
-                    }
-                }
-            }
             if (subchannel.equals("PlayerNames")) {
                 MineverseChatAPI.clearNetworkPlayerNames();
                 final int playerCount = msgin.readInt();

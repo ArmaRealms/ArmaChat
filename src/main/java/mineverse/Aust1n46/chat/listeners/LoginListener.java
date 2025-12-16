@@ -67,7 +67,6 @@ public class LoginListener implements Listener {
     public void onPlayerQuit(final @NotNull PlayerQuitEvent playerQuitEvent) {
         final MineverseChatPlayer mcp = MineverseChatAPI.getOnlineMineverseChatPlayer(playerQuitEvent.getPlayer());
         PlayerData.savePlayerData(mcp);
-        mcp.clearMessages();
         mcp.setOnline(false);
         MineverseChatAPI.removeMineverseChatOnlinePlayerToMap(mcp);
     }

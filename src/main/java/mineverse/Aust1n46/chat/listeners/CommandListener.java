@@ -9,7 +9,6 @@ import mineverse.Aust1n46.chat.database.Database;
 import mineverse.Aust1n46.chat.gui.GuiSlot;
 import mineverse.Aust1n46.chat.localization.LocalizedMessage;
 import mineverse.Aust1n46.chat.utilities.Format;
-import mineverse.Aust1n46.chat.versions.VersionHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -85,18 +84,12 @@ public class CommandListener implements Listener {
         final SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
         final ChatChannel channel = ChatChannel.getChannel(ChatColor.stripColor(Objects.requireNonNull(skullMeta.getLore()).getFirst()).replace("Channel: ", ""));
         final int hash = Integer.parseInt(ChatColor.stripColor(skullMeta.getLore().get(1).replace("Hash: ", "")));
-        if (VersionHandler.is1_7()) {
-            if (item.getType() == Material.BEDROCK) {
-                mcp.getPlayer().closeInventory();
-            }
-        } else {
-            if (item.getType() == Material.BARRIER) {
-                mcp.getPlayer().closeInventory();
-            }
+        if (item.getType() == Material.BARRIER) {
+            mcp.getPlayer().closeInventory();
         }
         for (final GuiSlot g : GuiSlot.getGuiSlots()) {
-            if (g.getIcon() == item.getType() && g.getDurability() == item.getDurability() && g.getSlot() == e.getSlot()) {
-                String command = g.getCommand().replace("{channel}", channel.getName()).replace("{hash}", hash + "");
+            if (g.icon() == item.getType() && g.durability() == item.getDurability() && g.slot() == e.getSlot()) {
+                String command = g.command().replace("{channel}", channel.getName()).replace("{hash}", hash + "");
                 if (target != null) {
                     command = command.replace("{player_name}", target.getName());
                     if (target.isOnline()) {

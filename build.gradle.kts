@@ -18,6 +18,9 @@ repositories {
     maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
     maven { url = uri("https://repo.glaremasters.me/repository/towny/") }
     maven { url = uri("https://repo.maven.apache.org/maven2/") }
+    maven { url = uri("https://repo.codemc.io/repository/maven-releases/") }
+    maven { url = uri("https://repo.codemc.io/repository/maven-snapshot/") }
+    maven { url = uri("https://repo.extendedclip.com/releases/") }
     flatDir { dirs("libs") }
 }
 
@@ -26,8 +29,6 @@ dependencies {
     compileOnly(libs.com.googlecode.json.simple.json.simple)
     compileOnly(libs.commons.lang)
     compileOnly(libs.net.md.v5.bungeecord.api)
-    compileOnly(libs.net.dmulloy2.protocollib)
-    compileOnly(libs.com.github.retrooper.packetevents.spigot)
     compileOnly(libs.io.papermc.paper.paper.api)
     compileOnly(libs.com.github.placeholderapi.placeholderapi)
     compileOnly(libs.com.github.milkbowl.vaultapi)  { isTransitive = false }
