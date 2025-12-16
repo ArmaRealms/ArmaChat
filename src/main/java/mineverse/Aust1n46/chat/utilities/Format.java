@@ -4,7 +4,6 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import com.massivecraft.massivecore.command.type.RegistryType;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -17,10 +16,8 @@ import mineverse.Aust1n46.chat.json.JsonFormat;
 import mineverse.Aust1n46.chat.localization.LocalizedMessage;
 import mineverse.Aust1n46.chat.versions.VersionHandler;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
@@ -981,11 +978,11 @@ public class Format {
     }
 
     private static @NotNull Sound getSound(final String soundName) {
-        NamespacedKey soundKey = NamespacedKey.fromString(soundName);
+        final NamespacedKey soundKey = NamespacedKey.fromString(soundName);
         if (soundKey == null) {
             return Sound.ENTITY_EXPERIENCE_ORB_PICKUP; // Default sound
         }
-        var sound = RegistryAccess.registryAccess()
+        final var sound = RegistryAccess.registryAccess()
                 .getRegistry(RegistryKey.SOUND_EVENT)
                 .get(soundKey);
         if (sound != null) {
