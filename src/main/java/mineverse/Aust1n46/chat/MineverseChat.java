@@ -1,7 +1,5 @@
 package mineverse.Aust1n46.chat;
 
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketContainer;
 import me.clip.placeholderapi.PlaceholderAPI;
 import mineverse.Aust1n46.chat.api.MineverseChatAPI;
 import mineverse.Aust1n46.chat.api.MineverseChatPlayer;
@@ -14,15 +12,14 @@ import mineverse.Aust1n46.chat.command.mute.MuteContainer;
 import mineverse.Aust1n46.chat.database.Database;
 import mineverse.Aust1n46.chat.database.PlayerData;
 import mineverse.Aust1n46.chat.gui.GuiSlot;
+import mineverse.Aust1n46.chat.hooks.PacketManager;
 import mineverse.Aust1n46.chat.json.JsonFormat;
 import mineverse.Aust1n46.chat.listeners.ChatListener;
 import mineverse.Aust1n46.chat.listeners.CommandListener;
 import mineverse.Aust1n46.chat.listeners.LoginListener;
-import mineverse.Aust1n46.chat.listeners.PacketListenerLegacyChat;
 import mineverse.Aust1n46.chat.localization.Localization;
 import mineverse.Aust1n46.chat.localization.LocalizedMessage;
 import mineverse.Aust1n46.chat.utilities.Format;
-import mineverse.Aust1n46.chat.versions.VersionHandler;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
@@ -278,6 +275,7 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 
     @Override
     public void onDisable() {
+        PacketManager.shutdown();
         PlayerData.savePlayerData();
         MineverseChatAPI.clearMineverseChatPlayerMap();
         MineverseChatAPI.clearNameMap();
@@ -336,9 +334,9 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
         pluginManager.registerEvents(new ChatListener(), this);
         pluginManager.registerEvents(new CommandListener(), this);
         pluginManager.registerEvents(new LoginListener(), this);
-        if (VersionHandler.isUnder_1_19()) {
-            ProtocolLibrary.getProtocolManager().addPacketListener(new PacketListenerLegacyChat());
-        }
+        
+        // Initialize packet handling hook (ProtocolLib or PacketEvents)
+        PacketManager.initialize();
     }
 
     private boolean setupPermissions() {

@@ -1,7 +1,6 @@
 package mineverse.Aust1n46.chat.utilities;
 
 import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.massivecraft.massivecore.command.type.RegistryType;
@@ -12,6 +11,7 @@ import mineverse.Aust1n46.chat.ClickAction;
 import mineverse.Aust1n46.chat.MineverseChat;
 import mineverse.Aust1n46.chat.api.MineverseChatAPI;
 import mineverse.Aust1n46.chat.api.MineverseChatPlayer;
+import mineverse.Aust1n46.chat.hooks.PacketManager;
 import mineverse.Aust1n46.chat.json.JsonAttribute;
 import mineverse.Aust1n46.chat.json.JsonFormat;
 import mineverse.Aust1n46.chat.localization.LocalizedMessage;
@@ -511,11 +511,37 @@ public class Format {
         return container;
     }
 
+    /**
+     * Sends a chat packet using the active packet hook (ProtocolLib or PacketEvents).
+     * This is the preferred method for sending chat packets.
+     * 
+     * @param player The player to send the packet to
+     * @param json The JSON string representing the chat message
+     */
+    public static void sendChatPacket(final Player player, final String json) {
+        if (!PacketManager.sendChatPacket(player, json)) {
+            // Fallback: if packet manager fails, log warning
+            getInstance().getLogger().warning("Failed to send chat packet to " + player.getName());
+        }
+    }
+
+    /**
+     * @deprecated Use {@link #sendChatPacket(Player, String)} instead for cross-library compatibility.
+     * This method is kept for backwards compatibility with ProtocolLib-specific code.
+     */
+    @Deprecated
     public static void sendPacketPlayOutChat(final Player player, final PacketContainer packet) {
-        try {
-            ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
-        } catch (final Exception e) {
-            e.printStackTrace();
+        if (PacketManager.isAvailable() && "ProtocolLib".equals(PacketManager.getActiveHookName())) {
+            try {
+                Class.forName("com.comphenix.protocol.ProtocolLibrary");
+                com.comphenix.protocol.ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
+            } catch (final Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            // If using PacketEvents, we need to convert the packet
+            // For now, just log a warning
+            getInstance().getLogger().warning("sendPacketPlayOutChat called with PacketEvents active - use sendChatPacket instead");
         }
     }
 

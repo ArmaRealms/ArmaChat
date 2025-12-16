@@ -21,6 +21,7 @@ org-mockito-mockito-core = "5.12.0"
 org-mockito-mockito-inline = "5.2.0"
 org-mockbukkit-mockbukkit = "4.72.8"
 commons-lang = "2.6"
+com-github-retrooper-packetevents-spigot = "2.9.0"
 
 [plugins]
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
@@ -45,3 +46,4 @@ org-mockito-mockito-core = { module = "org.mockito:mockito-core", version.ref = 
 org-mockito-mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "org-mockito-mockito-inline" }
 org-mockbukkit-mockbukkit = { module = "org.mockbukkit.mockbukkit:mockbukkit-v1.21", version.ref = "org-mockbukkit-mockbukkit" }
 commons-lang = { module= "commons-lang:commons-lang", version.ref = "commons-lang" }
+com-github-retrooper-packetevents-spigot = { module = "com.github.retrooper:packetevents-spigot", version.ref = "com-github-retrooper-packetevents-spigot" }

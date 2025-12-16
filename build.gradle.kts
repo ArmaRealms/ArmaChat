@@ -27,6 +27,7 @@ dependencies {
     compileOnly(libs.commons.lang)
     compileOnly(libs.net.md.v5.bungeecord.api)
     compileOnly(libs.net.dmulloy2.protocollib)
+    compileOnly(libs.com.github.retrooper.packetevents.spigot)
     compileOnly(libs.io.papermc.paper.paper.api)
     compileOnly(libs.com.github.placeholderapi.placeholderapi)
     compileOnly(libs.com.github.milkbowl.vaultapi)  { isTransitive = false }
