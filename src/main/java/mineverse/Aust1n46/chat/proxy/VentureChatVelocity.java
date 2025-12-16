@@ -49,7 +49,7 @@ public class VentureChatVelocity implements VentureChatProxySource {
     private File velocityPlayerDataDirectory;
 
     @Inject
-    public VentureChatVelocity(ProxyServer server, Logger logger) {
+    public VentureChatVelocity(final ProxyServer server, final Logger logger) {
         this.proxyServer = server;
         this.logger = logger;
     }
@@ -59,20 +59,20 @@ public class VentureChatVelocity implements VentureChatProxySource {
     }
 
     @Subscribe
-    public void onInitialize(ProxyInitializeEvent event) {
+    public void onInitialize(final ProxyInitializeEvent event) {
         proxyServer.getChannelRegistrar().register(channelIdentifier);
 
-        File dataFolder = dataPath.toFile();
+        final File dataFolder = dataPath.toFile();
         if (!dataFolder.exists()) {
             dataFolder.mkdir();
         }
-        File config = new File(dataFolder, "velocityconfig.yml");
+        final File config = new File(dataFolder, "velocityconfig.yml");
         try {
             if (!config.exists()) {
                 Files.copy(getClass().getClassLoader().getResourceAsStream("velocityconfig.yml"), config.toPath());
             }
             velocityConfig = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(dataFolder, "velocityconfig.yml"));
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
 
@@ -81,17 +81,17 @@ public class VentureChatVelocity implements VentureChatProxySource {
     }
 
     @Subscribe
-    public void onShutdown(ProxyShutdownEvent event) {
+    public void onShutdown(final ProxyShutdownEvent event) {
         ProxyPlayerData.saveProxyPlayerData(velocityPlayerDataDirectory, this);
     }
 
     @Subscribe
-    public void onPlayerJoin(ServerPostConnectEvent event) {
+    public void onPlayerJoin(final ServerPostConnectEvent event) {
         updatePlayerNames();
     }
 
     @Subscribe
-    public void onPlayerQuit(DisconnectEvent event) {
+    public void onPlayerQuit(final DisconnectEvent event) {
         // Delay sending plugin message to make sure disconnecting player is truly disconnected.
         proxyServer.getScheduler().buildTask(this, () -> {
                     updatePlayerNames();
@@ -102,28 +102,28 @@ public class VentureChatVelocity implements VentureChatProxySource {
 
     private void updatePlayerNames() {
         try {
-            ByteArrayOutputStream outstream = new ByteArrayOutputStream();
-            DataOutputStream out = new DataOutputStream(outstream);
+            final ByteArrayOutputStream outstream = new ByteArrayOutputStream();
+            final DataOutputStream out = new DataOutputStream(outstream);
             out.writeUTF("PlayerNames");
             out.writeInt(proxyServer.getPlayerCount());
-            for (Player player : proxyServer.getAllPlayers()) {
+            for (final Player player : proxyServer.getAllPlayers()) {
                 out.writeUTF(player.getUsername());
             }
             getServers().forEach(send -> {
-                if (!send.isEmpty()) {
-                    sendPluginMessage(send.getName(), outstream.toByteArray());
+                if (!send.empty()) {
+                    sendPluginMessage(send.name(), outstream.toByteArray());
                 }
             });
-        } catch (IllegalStateException e) {
+        } catch (final IllegalStateException e) {
             sendConsoleMessage("Velocity being finicky with DisconnectEvent.");
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         }
     }
 
     @Subscribe
-    public void onPluginMessage(PluginMessageEvent event) {
-        String channelIdentifierId = event.getIdentifier().getId();
+    public void onPluginMessage(final PluginMessageEvent event) {
+        final String channelIdentifierId = event.getIdentifier().getId();
         if (!channelIdentifierId.equals(VentureChatProxy.PLUGIN_MESSAGING_CHANNEL_STRING) && !channelIdentifierId.contains("viaversion:")) {
             return;
         }
@@ -133,13 +133,13 @@ public class VentureChatVelocity implements VentureChatProxySource {
         if (!(event.getSource() instanceof ServerConnection)) {
             return;
         }
-        String serverName = ((ServerConnection) event.getSource()).getServerInfo().getName();
+        final String serverName = ((ServerConnection) event.getSource()).getServerInfo().getName();
         VentureChatProxy.onPluginMessage(event.getData(), serverName, this);
     }
 
     @Override
-    public void sendPluginMessage(String serverName, byte[] data) {
-        Optional<RegisteredServer> server = proxyServer.getServer(serverName);
+    public void sendPluginMessage(final String serverName, final byte[] data) {
+        final Optional<RegisteredServer> server = proxyServer.getServer(serverName);
         if (server.isPresent()) {
             server.get().sendPluginMessage(channelIdentifier, data);
         }
@@ -151,13 +151,13 @@ public class VentureChatVelocity implements VentureChatProxySource {
     }
 
     @Override
-    public VentureChatProxyServer getServer(String serverName) {
-        RegisteredServer server = proxyServer.getServer(serverName).get();
+    public VentureChatProxyServer getServer(final String serverName) {
+        final RegisteredServer server = proxyServer.getServer(serverName).get();
         return new VentureChatProxyServer(serverName, server.getPlayersConnected().isEmpty());
     }
 
     @Override
-    public void sendConsoleMessage(String message) {
+    public void sendConsoleMessage(final String message) {
         logger.info(Format.stripColor(message));
     }
 

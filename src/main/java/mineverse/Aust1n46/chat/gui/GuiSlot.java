@@ -3,77 +3,42 @@ package mineverse.Aust1n46.chat.gui;
 import mineverse.Aust1n46.chat.MineverseChat;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiSlot {
+@NullMarked
+public record GuiSlot(String name, Material icon, int durability, String text, String permission, String command,
+                      int slot) {
     private static final MineverseChat plugin = MineverseChat.getInstance();
-    private static List<GuiSlot> guiSlots;
+    private static final List<GuiSlot> guiSlots = new ArrayList<>();
 
-    private final String text;
-    private final String command;
-    private final String permission;
-    private final Material icon;
-    private final String name;
-    private final int durability;
-    private final int slot;
-
-    public GuiSlot(String name, String icon, int durability, String text, String permission, String command, int slot) {
-        this.name = name;
-        this.text = text;
-        this.command = command;
-        this.permission = "venturechat." + permission;
-        this.icon = Material.valueOf(icon.toUpperCase());
-        this.durability = durability;
-        this.slot = slot;
+    public GuiSlot(final String name, final String icon, final int durability, final String text, final String permission, final String command, final int slot) {
+        this(name, Material.valueOf(icon.toUpperCase()), durability, text, "venturechat." + permission, command, slot);
     }
 
     public static void initialize() {
-        guiSlots = new ArrayList<GuiSlot>();
-        ConfigurationSection cs = plugin.getConfig().getConfigurationSection("venturegui");
-        for (String key : cs.getKeys(false)) {
-            String name = key;
-            String icon = cs.getString(key + ".icon");
-            int durability = cs.getInt(key + ".durability");
-            String text = cs.getString(key + ".text");
-            String permission = cs.getString(key + ".permission");
-            String command = cs.getString(key + ".command");
-            int slot = cs.getInt(key + ".slot");
-            guiSlots.add(new GuiSlot(name, icon, durability, text, permission, command, slot));
+        final ConfigurationSection cs = plugin.getConfig().getConfigurationSection("venturegui");
+        if (cs == null) {
+            return;
+        }
+        for (final String key : cs.getKeys(false)) {
+            final String icon = cs.getString(key + ".icon");
+            final int durability = cs.getInt(key + ".durability");
+            final String text = cs.getString(key + ".text");
+            final String permission = cs.getString(key + ".permission");
+            final String command = cs.getString(key + ".command");
+            final int slot = cs.getInt(key + ".slot");
+            if (icon == null || text == null || permission == null || command == null) {
+                continue;
+            }
+            guiSlots.add(new GuiSlot(key, icon, durability, text, permission, command, slot));
         }
     }
 
     public static List<GuiSlot> getGuiSlots() {
         return guiSlots;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public String getCommand() {
-        return command;
-    }
-
-    public String getPermission() {
-        return permission;
-    }
-
-    public Material getIcon() {
-        return icon;
-    }
-
-    public int getDurability() {
-        return durability;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getSlot() {
-        return slot;
     }
 
     public boolean hasPermission() {
