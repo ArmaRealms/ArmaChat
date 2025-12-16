@@ -12,8 +12,6 @@ Full setup and dependency guide is available here on SpigotMC: https://www.spigo
 
 In short, Install `Vault` (and a compatible permission system), `PlaceholderAPI` (`Player` and `Vault` extensions optional).
 
-The plugin will automatically detect and use whichever library is available, with ProtocolLib taking priority if both are present.
-
 To build, simply run `./gradlew build`.
 
 Requires Java 21.
