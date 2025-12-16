@@ -56,8 +56,9 @@ public class ChatListener implements Listener {
         }
         ChatChannel eventChannel = mcp.getCurrentChannel();
 
+        final Player mcpPlayer = mcp.getPlayer();
         if (mcp.isEditing()) {
-            mcp.getPlayer().sendMessage(Format.FormatStringAll(chat));
+            mcpPlayer.sendMessage(Format.FormatStringAll(chat));
             mcp.setEditing(false);
             return;
         }
@@ -69,8 +70,8 @@ public class ChatListener implements Listener {
         if (mcp.hasConversation() && !mcp.isQuickChat()) {
             final MineverseChatPlayer tp = MineverseChatAPI.getMineverseChatPlayer(mcp.getConversation());
             if (!tp.isOnline()) {
-                mcp.getPlayer().sendMessage(ChatColor.RED + tp.getName() + " is not available.");
-                if (!mcp.getPlayer().hasPermission("venturechat.spy.override")) {
+                mcpPlayer.sendMessage(ChatColor.RED + tp.getName() + " is not available.");
+                if (!mcpPlayer.hasPermission("venturechat.spy.override")) {
                     for (final MineverseChatPlayer p : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
                         if (p.getName().equals(mcp.getName())) {
                             continue;
@@ -85,44 +86,44 @@ public class ChatListener implements Listener {
                 mcp.setConversation(null);
             } else {
                 if (tp.getIgnores().contains(mcp.getUUID())) {
-                    mcp.getPlayer().sendMessage(LocalizedMessage.IGNORING_MESSAGE.toString()
+                    mcpPlayer.sendMessage(LocalizedMessage.IGNORING_MESSAGE.toString()
                             .replace("{player}", tp.getName()));
                     event.setCancelled(true);
                     return;
                 }
                 if (!tp.getMessageToggle()) {
-                    mcp.getPlayer().sendMessage(LocalizedMessage.BLOCKING_MESSAGE.toString()
+                    mcpPlayer.sendMessage(LocalizedMessage.BLOCKING_MESSAGE.toString()
                             .replace("{player}", tp.getName()));
                     event.setCancelled(true);
                     return;
                 }
                 String filtered = chat;
-                String echo = "";
-                String send = "";
-                String spy = "";
+                String echo;
+                String send;
+                String spy;
                 if (mcp.hasFilter()) {
                     filtered = Format.FilterChat(filtered);
                 }
-                if (mcp.getPlayer().hasPermission("venturechat.color.legacy")) {
+                if (mcpPlayer.hasPermission("venturechat.color.legacy")) {
                     filtered = Format.FormatStringLegacyColor(filtered);
                 }
-                if (mcp.getPlayer().hasPermission("venturechat.color")) {
+                if (mcpPlayer.hasPermission("venturechat.color")) {
                     filtered = Format.FormatStringColor(filtered);
                 }
-                if (mcp.getPlayer().hasPermission("venturechat.format")) {
+                if (mcpPlayer.hasPermission("venturechat.format")) {
                     filtered = Format.FormatString(filtered);
                 }
                 filtered = " " + filtered;
 
-                send = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(mcp.getPlayer(), plugin.getConfig().getString("tellformatfrom").replaceAll("sender_", "")));
-                echo = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(mcp.getPlayer(), plugin.getConfig().getString("tellformatto").replaceAll("sender_", "")));
-                spy = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(mcp.getPlayer(), plugin.getConfig().getString("tellformatspy").replaceAll("sender_", "")));
+                send = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(mcpPlayer, plugin.getConfig().getString("tellformatfrom").replaceAll("sender_", "")));
+                echo = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(mcpPlayer, plugin.getConfig().getString("tellformatto").replaceAll("sender_", "")));
+                spy = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(mcpPlayer, plugin.getConfig().getString("tellformatspy").replaceAll("sender_", "")));
 
                 send = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(tp.getPlayer(), send.replaceAll("receiver_", ""))) + filtered;
                 echo = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(tp.getPlayer(), echo.replaceAll("receiver_", ""))) + filtered;
                 spy = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(tp.getPlayer(), spy.replaceAll("receiver_", ""))) + filtered;
 
-                if (!mcp.getPlayer().hasPermission("venturechat.spy.override")) {
+                if (!mcpPlayer.hasPermission("venturechat.spy.override")) {
                     for (final MineverseChatPlayer p : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
                         if (p.getName().equals(mcp.getName()) || p.getName().equals(tp.getName())) {
                             continue;
@@ -133,7 +134,7 @@ public class ChatListener implements Listener {
                     }
                 }
                 tp.getPlayer().sendMessage(send);
-                mcp.getPlayer().sendMessage(echo);
+                mcpPlayer.sendMessage(echo);
                 if (tp.hasNotifications()) {
                     Format.playMessageSound(tp);
                 }
@@ -148,43 +149,14 @@ public class ChatListener implements Listener {
 
         if (mcp.isPartyChat() && !mcp.isQuickChat()) {
             if (mcp.hasParty()) {
-                String partyformat = "";
-                for (final MineverseChatPlayer p : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
-                    if ((p.hasParty() && p.getParty().toString().equals(mcp.getParty().toString()) || p.isSpy())) {
-                        String filtered = chat;
-                        if (mcp.hasFilter()) {
-                            filtered = Format.FilterChat(filtered);
-                        }
-                        if (mcp.getPlayer().hasPermission("venturechat.color.legacy")) {
-                            filtered = Format.FormatStringLegacyColor(filtered);
-                        }
-                        if (mcp.getPlayer().hasPermission("venturechat.color")) {
-                            filtered = Format.FormatStringColor(filtered);
-                        }
-                        if (mcp.getPlayer().hasPermission("venturechat.format")) {
-                            filtered = Format.FormatString(filtered);
-                        }
-                        filtered = " " + filtered;
-                        if (plugin.getConfig().getString("partyformat", "").equalsIgnoreCase("Default")) {
-                            partyformat = ChatColor.GREEN + "[" + MineverseChatAPI.getMineverseChatPlayer(mcp.getParty()).getName() + "'s Party] " + mcp.getName() + ":" + filtered;
-                        } else {
-                            partyformat = Format.FormatStringAll(plugin.getConfig().getString("partyformat").replace("{host}", MineverseChatAPI.getMineverseChatPlayer(mcp.getParty()).getName()).replace("{player}", mcp.getName())) + filtered;
-                        }
-                        p.getPlayer().sendMessage(partyformat);
-                    }
-                }
-                Bukkit.getConsoleSender().sendMessage(partyformat);
-                if (Database.isEnabled()) {
-                    Database.writeVentureChat(mcp.getUUID().toString(), mcp.getName(), "Local", "Party_Component", chat.replace("'", "''"), "Chat");
-                }
                 return;
             }
-            mcp.getPlayer().sendMessage(ChatColor.RED + "You are not in a party.");
+            mcpPlayer.sendMessage(ChatColor.RED + "You are not in a party.");
             return;
         }
 
         Location locreceip;
-        final Location locsender = mcp.getPlayer().getLocation();
+        final Location locsender = mcpPlayer.getLocation();
         Location diff;
         final Boolean filterthis;
         mcp.addListening(eventChannel.getName());
@@ -199,29 +171,25 @@ public class ChatListener implements Listener {
                 }
                 final String timeString = Format.parseTimeStringFromMillis(remainingMuteTime);
                 if (muteContainer.hasReason()) {
-                    mcp.getPlayer()
-                            .sendMessage(LocalizedMessage.CHANNEL_MUTED_TIMED_REASON.toString()
+                    mcpPlayer.sendMessage(LocalizedMessage.CHANNEL_MUTED_TIMED_REASON.toString()
                                     .replace("{channel_color}", eventChannel.getColor())
                                     .replace("{channel_name}", eventChannel.getName())
                                     .replace("{time}", timeString)
                                     .replace("{reason}", muteContainer.getReason()));
                 } else {
-                    mcp.getPlayer()
-                            .sendMessage(LocalizedMessage.CHANNEL_MUTED_TIMED.toString()
+                    mcpPlayer.sendMessage(LocalizedMessage.CHANNEL_MUTED_TIMED.toString()
                                     .replace("{channel_color}", eventChannel.getColor())
                                     .replace("{channel_name}", eventChannel.getName())
                                     .replace("{time}", timeString));
                 }
             } else {
                 if (muteContainer.hasReason()) {
-                    mcp.getPlayer()
-                            .sendMessage(LocalizedMessage.CHANNEL_MUTED_REASON.toString()
+                    mcpPlayer.sendMessage(LocalizedMessage.CHANNEL_MUTED_REASON.toString()
                                     .replace("{channel_color}", eventChannel.getColor())
                                     .replace("{channel_name}", eventChannel.getName())
                                     .replace("{reason}", muteContainer.getReason()));
                 } else {
-                    mcp.getPlayer()
-                            .sendMessage(LocalizedMessage.CHANNEL_MUTED.toString()
+                    mcpPlayer.sendMessage(LocalizedMessage.CHANNEL_MUTED.toString()
                                     .replace("{channel_color}", eventChannel.getColor())
                                     .replace("{channel_name}", eventChannel.getName()));
                 }
@@ -231,15 +199,15 @@ public class ChatListener implements Listener {
         }
         Double chDistance = (double) 0;
         final String curColor;
-        if (eventChannel.hasPermission() && !mcp.getPlayer().hasPermission(eventChannel.getPermission())) {
-            mcp.getPlayer().sendMessage(LocalizedMessage.CHANNEL_NO_PERMISSION.toString());
+        if (eventChannel.hasPermission() && !mcpPlayer.hasPermission(eventChannel.getPermission())) {
+            mcpPlayer.sendMessage(LocalizedMessage.CHANNEL_NO_PERMISSION.toString());
             mcp.setQuickChat(false);
             mcp.removeListening(eventChannel.getName());
             mcp.setCurrentChannel(ChatChannel.getDefaultChannel());
             return;
         }
-        if (eventChannel.hasSpeakPermission() && !mcp.getPlayer().hasPermission(eventChannel.getSpeakPermission())) {
-            mcp.getPlayer().sendMessage(LocalizedMessage.CHANNEL_NO_SPEAK_PERMISSIONS.toString());
+        if (eventChannel.hasSpeakPermission() && !mcpPlayer.hasPermission(eventChannel.getSpeakPermission())) {
+            mcpPlayer.sendMessage(LocalizedMessage.CHANNEL_NO_SPEAK_PERMISSIONS.toString());
             mcp.setQuickChat(false);
             return;
         }
@@ -258,13 +226,13 @@ public class ChatListener implements Listener {
                 if (dateTimeSeconds < cooldownTime) {
                     final long remainingCooldownTime = cooldownTime - dateTimeSeconds;
                     final String cooldownString = Format.parseTimeStringFromMillis(remainingCooldownTime * Format.MILLISECONDS_PER_SECOND);
-                    mcp.getPlayer().sendMessage(LocalizedMessage.CHANNEL_COOLDOWN.toString()
+                    mcpPlayer.sendMessage(LocalizedMessage.CHANNEL_COOLDOWN.toString()
                             .replace("{cooldown}", cooldownString));
                     mcp.setQuickChat(false);
                     return;
                 }
             }
-            if (eventChannel.hasCooldown() && !mcp.getPlayer().hasPermission("venturechat.cooldown.bypass")) {
+            if (eventChannel.hasCooldown() && !mcpPlayer.hasPermission("venturechat.cooldown.bypass")) {
                 mcp.addCooldown(eventChannel, dateTimeSeconds + chCooldown);
             }
 
@@ -273,7 +241,7 @@ public class ChatListener implements Listener {
         }
 
         if (mcp.hasSpam(eventChannel) && plugin.getConfig().getConfigurationSection("antispam").getBoolean("enabled")
-                && !mcp.getPlayer().hasPermission("venturechat.spam.bypass")) {
+                && !mcpPlayer.hasPermission("venturechat.spam.bypass")) {
             final long spamcount = mcp.getSpam().get(eventChannel).get(0);
             final long spamtime = mcp.getSpam().get(eventChannel).get(1);
             long spamtimeconfig = plugin.getConfig().getConfigurationSection("antispam").getLong("spamnumber");
@@ -286,7 +254,7 @@ public class ChatListener implements Listener {
                     if (time > 0) {
                         mcp.addMute(eventChannel.getName(), dateTime + time, LocalizedMessage.SPAM_MUTE_REASON_TEXT.toString());
                         final String timeString = Format.parseTimeStringFromMillis(time);
-                        mcp.getPlayer()
+                        mcpPlayer
                                 .sendMessage(LocalizedMessage.MUTE_PLAYER_PLAYER_TIME_REASON.toString()
                                         .replace("{channel_color}", eventChannel.getColor())
                                         .replace("{channel_name}", eventChannel.getName())
@@ -294,7 +262,7 @@ public class ChatListener implements Listener {
                                         .replace("{reason}", LocalizedMessage.SPAM_MUTE_REASON_TEXT.toString()));
                     } else {
                         mcp.addMute(eventChannel.getName(), LocalizedMessage.SPAM_MUTE_REASON_TEXT.toString());
-                        mcp.getPlayer()
+                        mcpPlayer
                                 .sendMessage(LocalizedMessage.MUTE_PLAYER_PLAYER_REASON.toString()
                                         .replace("{channel_color}", eventChannel.getColor())
                                         .replace("{channel_name}", eventChannel.getName())
@@ -311,7 +279,7 @@ public class ChatListener implements Listener {
                         spamtimeconfig++;
                     }
                     if (spamcount + 1 == spamtimeconfig / 2) {
-                        mcp.getPlayer().sendMessage(LocalizedMessage.SPAM_WARNING.toString());
+                        mcpPlayer.sendMessage(LocalizedMessage.SPAM_WARNING.toString());
                     }
                     mcp.getSpam().get(eventChannel).set(0, spamcount + 1);
                 }
@@ -336,9 +304,8 @@ public class ChatListener implements Listener {
             chat = Format.FilterChat(chat);
         }
 
-        final PluginManager pluginManager = plugin.getServer().getPluginManager();
         for (final MineverseChatPlayer p : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
-            if (p.getPlayer() != mcp.getPlayer()) {
+            if (p.getPlayer() != mcpPlayer) {
                 if (!p.isListening(eventChannel.getName())) {
                     recipients.remove(p.getPlayer());
                     recipientCount--;
@@ -414,14 +381,14 @@ public class ChatListener implements Listener {
 
                 if (chDistance > 0 && !bungee && !p.getRangedSpy()) {
                     locreceip = p.getPlayer().getLocation();
-                    if (locreceip.getWorld() == mcp.getPlayer().getWorld()) {
+                    if (locreceip.getWorld() == mcpPlayer.getWorld()) {
                         diff = locreceip.subtract(locsender);
                         if (Math.abs(diff.getX()) > chDistance || Math.abs(diff.getZ()) > chDistance || Math.abs(diff.getY()) > chDistance) {
                             recipients.remove(p.getPlayer());
                             recipientCount--;
                             continue;
                         }
-                        if (!mcp.getPlayer().canSee(p.getPlayer())) {
+                        if (!mcpPlayer.canSee(p.getPlayer())) {
                             recipientCount--;
                             continue;
                         }
@@ -431,19 +398,19 @@ public class ChatListener implements Listener {
                         continue;
                     }
                 }
-                if (!mcp.getPlayer().canSee(p.getPlayer())) {
+                if (!mcpPlayer.canSee(p.getPlayer())) {
                     recipientCount--;
                 }
             }
         }
 
-        if (mcp.getPlayer().hasPermission("venturechat.color.legacy")) {
+        if (mcpPlayer.hasPermission("venturechat.color.legacy")) {
             chat = Format.FormatStringLegacyColor(chat);
         }
-        if (mcp.getPlayer().hasPermission("venturechat.color")) {
+        if (mcpPlayer.hasPermission("venturechat.color")) {
             chat = Format.FormatStringColor(chat);
         }
-        if (mcp.getPlayer().hasPermission("venturechat.format")) {
+        if (mcpPlayer.hasPermission("venturechat.format")) {
             chat = Format.FormatString(chat);
         }
         if (!mcp.isQuickChat()) {
@@ -451,18 +418,18 @@ public class ChatListener implements Listener {
         }
         if (curColor.equalsIgnoreCase("None")) {
             // Format the placeholders and their color codes to determine the last color code to use for the chat message color
-            chat = Format.getLastCode(Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(mcp.getPlayer(), format))) + chat;
+            chat = Format.getLastCode(Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(mcpPlayer, format))) + chat;
         } else {
             chat = curColor + chat;
         }
 
         final String globalJSON = Format.convertToJson(mcp, format, chat);
-        format = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(mcp.getPlayer(), Format.FormatStringAll(format)));
+        format = Format.FormatStringAll(PlaceholderAPI.setBracketPlaceholders(mcpPlayer, Format.FormatStringAll(format)));
         final String message = Format.stripColor(format + chat); // UTF-8 encoding issues.
         final int hash = message.hashCode();
 
         //Create VentureChatEvent
-        final VentureChatEvent ventureChatEvent = new VentureChatEvent(mcp, mcp.getName(), mcp.getNickname(), MineverseChat.getVaultPermission().getPrimaryGroup(mcp.getPlayer()), eventChannel, recipients, recipientCount, format, chat, globalJSON, hash, bungee);
+        final VentureChatEvent ventureChatEvent = new VentureChatEvent(mcp, mcp.getName(), mcp.getNickname(), MineverseChat.getVaultPermission().getPrimaryGroup(mcpPlayer), eventChannel, recipients, recipientCount, format, chat, globalJSON, hash, bungee);
         //Fire event and wait for other plugin listeners to act on it
         Bukkit.getServer().getPluginManager().callEvent(ventureChatEvent);
         //Call method to send the processed chat
@@ -483,10 +450,11 @@ public class ChatListener implements Listener {
         final int hash = event.getHash();
         final boolean bungee = event.isBungee();
 
+        final Player mcpPlayer = mcp.getPlayer();
         if (essentialsDiscordHook && channel.isDefaultchannel()) {
             final DiscordService discordService = Bukkit.getServicesManager().load(DiscordService.class);
             if (discordService != null) {
-                discordService.sendChatMessage(mcp.getPlayer(), chat);
+                discordService.sendChatMessage(mcpPlayer, chat);
             }
         }
 
@@ -496,7 +464,7 @@ public class ChatListener implements Listener {
             }
 
             if (recipientCount == 1 && !plugin.getConfig().getString("emptychannelalert", "&6No one is listening to you.").equals("")) {
-                mcp.getPlayer().sendMessage(Format.FormatStringAll(plugin.getConfig().getString("emptychannelalert", "&6No one is listening to you.")));
+                mcpPlayer.sendMessage(Format.FormatStringAll(plugin.getConfig().getString("emptychannelalert", "&6No one is listening to you.")));
             }
 
             for (final Player p : recipients) {
@@ -524,9 +492,9 @@ public class ChatListener implements Listener {
                 if (plugin.getConfig().getString("loglevel", "info").equals("debug")) {
                     System.out.println(out.size() + " bytes size with json");
                 }
-                out.writeUTF(MineverseChat.getVaultPermission().getPrimaryGroup(mcp.getPlayer()));
+                out.writeUTF(MineverseChat.getVaultPermission().getPrimaryGroup(mcpPlayer));
                 out.writeUTF(mcp.getNickname());
-                mcp.getPlayer().sendPluginMessage(plugin, MineverseChat.PLUGIN_MESSAGING_CHANNEL, byteOutStream.toByteArray());
+                mcpPlayer.sendPluginMessage(plugin, MineverseChat.PLUGIN_MESSAGING_CHANNEL, byteOutStream.toByteArray());
                 out.close();
             } catch (final Exception e) {
                 e.printStackTrace();
