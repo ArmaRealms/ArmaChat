@@ -41,7 +41,7 @@ dependencies {
 }
 
 group = "mineverse.Aust1n46.chat"
-version = "3.8.0"
+version = "3.9.0"
 description = "VentureChat"
 java.sourceCompatibility = JavaVersion.VERSION_21
 
