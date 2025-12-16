@@ -1,8 +1,5 @@
 package mineverse.Aust1n46.chat.listeners;
 
-import com.massivecraft.factions.entity.MPlayer;
-import com.palmergames.bukkit.towny.TownyUniverse;
-import com.palmergames.bukkit.towny.object.Resident;
 import me.clip.placeholderapi.PlaceholderAPI;
 import mineverse.Aust1n46.chat.MineverseChat;
 import mineverse.Aust1n46.chat.api.MineverseChatAPI;
@@ -24,7 +21,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
@@ -33,6 +29,7 @@ import java.util.Set;
 
 //This class listens to chat through the chat event and handles the bulk of the chat channels and formatting.
 public class ChatListener implements Listener {
+    private final GsonComponentSerializer serializer = GsonComponentSerializer.builder().build();
     private final boolean essentialsDiscordHook = Bukkit.getPluginManager().isPluginEnabled("EssentialsDiscord");
     private final MineverseChat plugin = MineverseChat.getInstance();
 
@@ -405,9 +402,9 @@ public class ChatListener implements Listener {
                 mcpPlayer.sendMessage(Format.FormatStringAll(plugin.getConfig().getString("emptychannelalert", "&6No one is listening to you.")));
             }
 
+            final Component message = serializer.deserialize(globalJSON);
             for (final Player p : recipients) {
-                final Component messsage = GsonComponentSerializer.gson().deserialize(globalJSON);
-                p.sendMessage(messsage);
+                p.sendMessage(message);
             }
 
             Bukkit.getConsoleSender().sendMessage(consoleChat);
