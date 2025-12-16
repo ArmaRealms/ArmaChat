@@ -2,11 +2,8 @@ package mineverse.Aust1n46.chat.hooks;
 
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
-import com.github.retrooper.packetevents.protocol.chat.message.ChatMessage_v1_19_3;
-import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerChatMessage;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerSystemChatMessage;
-import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import mineverse.Aust1n46.chat.MineverseChat;
 import mineverse.Aust1n46.chat.hooks.listeners.PacketEventsLegacyChat;
 import mineverse.Aust1n46.chat.versions.VersionHandler;
