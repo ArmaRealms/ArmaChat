@@ -316,68 +316,6 @@ public class ChatListener implements Listener {
                     recipientCount--;
                     continue;
                 }
-                if (plugin.getConfig().getBoolean("enable_towny_channel") && pluginManager.isPluginEnabled("Towny")) {
-                    try {
-                        final TownyUniverse towny = TownyUniverse.getInstance();
-                        if (eventChannel.getName().equalsIgnoreCase("Town")) {
-                            final Resident r = towny.getResident(p.getName());
-                            final Resident pp = towny.getResident(mcp.getName());
-                            if (!pp.hasTown()) {
-                                recipients.remove(p.getPlayer());
-                                recipientCount--;
-                                continue;
-                            } else if (!r.hasTown()) {
-                                recipients.remove(p.getPlayer());
-                                recipientCount--;
-                                continue;
-                            } else if (!(r.getTown().getName().equals(pp.getTown().getName()))) {
-                                recipients.remove(p.getPlayer());
-                                recipientCount--;
-                                continue;
-                            }
-                        }
-                        if (eventChannel.getName().equalsIgnoreCase("Nation")) {
-                            final Resident r = towny.getResident(p.getName());
-                            final Resident pp = towny.getResident(mcp.getName());
-                            if (!pp.hasNation()) {
-                                recipients.remove(p.getPlayer());
-                                recipientCount--;
-                                continue;
-                            } else if (!r.hasNation()) {
-                                recipients.remove(p.getPlayer());
-                                recipientCount--;
-                                continue;
-                            } else if (!(r.getTown().getNation().getName().equals(pp.getTown().getNation().getName()))) {
-                                recipients.remove(p.getPlayer());
-                                recipientCount--;
-                                continue;
-                            }
-                        }
-                    } catch (final Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-
-                if (plugin.getConfig().getBoolean("enable_factions_channel") && pluginManager.isPluginEnabled("Factions")) {
-                    try {
-                        if (eventChannel.getName().equalsIgnoreCase("Faction")) {
-                            final MPlayer mplayer = MPlayer.get(mcp.getPlayer());
-                            final MPlayer mplayerp = MPlayer.get(p.getPlayer());
-                            if (!mplayer.hasFaction()) {
-                                recipients.remove(p.getPlayer());
-                                recipientCount--;
-                            } else if (!mplayerp.hasFaction()) {
-                                recipients.remove(p.getPlayer());
-                                recipientCount--;
-                            } else if (!(mplayer.getFactionName().equals(mplayerp.getFactionName()))) {
-                                recipients.remove(p.getPlayer());
-                                recipientCount--;
-                            }
-                        }
-                    } catch (final Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
 
                 if (chDistance > 0 && !bungee && !p.getRangedSpy()) {
                     locreceip = p.getPlayer().getLocation();
