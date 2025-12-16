@@ -19,6 +19,7 @@ public record GuiSlot(String name, Material icon, int durability, String text, S
     }
 
     public static void initialize() {
+        guiSlots.clear();
         final ConfigurationSection cs = plugin.getConfig().getConfigurationSection("venturegui");
         if (cs == null) {
             return;
