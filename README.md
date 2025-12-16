@@ -10,12 +10,7 @@ VentureChat Spigot plugin Repo
 
 Full setup and dependency guide is available here on SpigotMC: https://www.spigotmc.org/resources/venturechat.771/
 
-In short, Install `Vault` (and a compatible permission system), `PlaceholderAPI` (`Player` and `Vault` extensions optional), 
-and either `ProtocolLib` or `PacketEvents` for packet handling.
-
-**Packet Handling Libraries (choose one):**
-- `ProtocolLib` (recommended, priority #1)
-- `PacketEvents` (alternative, priority #2)
+In short, Install `Vault` (and a compatible permission system), `PlaceholderAPI` (`Player` and `Vault` extensions optional).
 
 The plugin will automatically detect and use whichever library is available, with ProtocolLib taking priority if both are present.
 

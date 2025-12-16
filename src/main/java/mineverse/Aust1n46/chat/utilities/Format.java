@@ -356,48 +356,25 @@ public class Format {
 
     private static @NotNull String hexidecimalToJsonColorRGB(final @NotNull String c) {
         if (c.length() == 1) {
-            switch (c) {
-                case "0":
-                    return "black";
-                case "1":
-                    return "dark_blue";
-                case "2":
-                    return "dark_green";
-                case "3":
-                    return "dark_aqua";
-                case "4":
-                    return "dark_red";
-                case "5":
-                    return "dark_purple";
-                case "6":
-                    return "gold";
-                case "7":
-                    return "gray";
-                case "8":
-                    return "dark_gray";
-                case "9":
-                    return "blue";
-                case "a":
-                case "A":
-                    return "green";
-                case "b":
-                case "B":
-                    return "aqua";
-                case "c":
-                case "C":
-                    return "red";
-                case "d":
-                case "D":
-                    return "light_purple";
-                case "e":
-                case "E":
-                    return "yellow";
-                case "f":
-                case "F":
-                    return "white";
-                default:
-                    return "white";
-            }
+            return switch (c) {
+                case "0" -> "black";
+                case "1" -> "dark_blue";
+                case "2" -> "dark_green";
+                case "3" -> "dark_aqua";
+                case "4" -> "dark_red";
+                case "5" -> "dark_purple";
+                case "6" -> "gold";
+                case "7" -> "gray";
+                case "8" -> "dark_gray";
+                case "9" -> "blue";
+                case "a", "A" -> "green";
+                case "b", "B" -> "aqua";
+                case "c", "C" -> "red";
+                case "d", "D" -> "light_purple";
+                case "e", "E" -> "yellow";
+                case "f", "F" -> "white";
+                default -> "white";
+            };
         }
         if (isValidHexColor(c)) {
             return c;
