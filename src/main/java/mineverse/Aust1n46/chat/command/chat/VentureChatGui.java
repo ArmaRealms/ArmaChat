@@ -18,6 +18,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ public class VentureChatGui extends Command {
     }
 
     @Override
-    public boolean execute(final CommandSender sender, final String command, final String[] args) {
+    public boolean execute(final @NonNull CommandSender sender, final @NonNull String command, final String @NonNull [] args) {
         if (!(sender instanceof Player)) {
             Bukkit.getServer().getConsoleSender().sendMessage(LocalizedMessage.COMMAND_MUST_BE_RUN_BY_PLAYER.toString());
             return true;
@@ -59,7 +60,9 @@ public class VentureChatGui extends Command {
                     this.openInventoryDiscord(mcp, channel, hash);
                     return true;
                 }
-                this.openInventory(mcp, target, channel, hash);
+                if (target != null) {
+                    this.openInventory(mcp, target, channel, hash);
+                }
                 return true;
             }
             mcp.getPlayer().sendMessage(LocalizedMessage.INVALID_CHANNEL.toString().replace("{args}", args[1]));
@@ -123,15 +126,15 @@ public class VentureChatGui extends Command {
         final ItemStack skull = new ItemStack(Material.PLAYER_HEAD);
 
         final ItemMeta closeMeta = close.getItemMeta();
-        closeMeta.setDisplayName("�oClose GUI");
+        closeMeta.setDisplayName(ChatColor.RED + "" + ChatColor.ITALIC + "Close GUI");
         close.setItemMeta(closeMeta);
 
         final SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
         skullMeta.setOwner("Scarsz");
-        skullMeta.setDisplayName("�bDiscord_Message");
-        final List<String> skullLore = new ArrayList<String>();
-        skullLore.add("�7Channel: " + channel.getColor() + channel.getName());
-        skullLore.add("�7Hash: " + channel.getColor() + hash);
+        skullMeta.setDisplayName(ChatColor.AQUA + "Discord_Message");
+        final List<String> skullLore = new ArrayList<>();
+        skullLore.add(ChatColor.GRAY + "Channel: " + channel.getColor() + channel.getName());
+        skullLore.add(ChatColor.GRAY + "Hash: " + channel.getColor() + hash);
         skullMeta.setLore(skullLore);
         skull.setItemMeta(skullMeta);
         skull.setDurability((short) 3);
@@ -149,7 +152,7 @@ public class VentureChatGui extends Command {
                 final ItemMeta gMeta = gStack.getItemMeta();
                 final String displayName = g.text().replace("{player_name}", "Discord_Message").replace("{channel}", channel.getName()).replace("{hash}", hash + "");
                 gMeta.setDisplayName(Format.FormatStringAll(displayName));
-                final List<String> gLore = new ArrayList<String>();
+                final List<String> gLore = new ArrayList<>();
                 gMeta.setLore(gLore);
                 gStack.setItemMeta(gMeta);
                 inv.setItem(g.slot(), gStack);
