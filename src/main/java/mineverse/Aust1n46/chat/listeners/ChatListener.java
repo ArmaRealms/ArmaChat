@@ -144,14 +144,6 @@ public class ChatListener implements Listener {
             return;
         }
 
-        if (mcp.isPartyChat() && !mcp.isQuickChat()) {
-            if (mcp.hasParty()) {
-                return;
-            }
-            mcpPlayer.sendMessage(ChatColor.RED + "You are not in a party.");
-            return;
-        }
-
         Location locreceip;
         final Location locsender = mcpPlayer.getLocation();
         Location diff;
