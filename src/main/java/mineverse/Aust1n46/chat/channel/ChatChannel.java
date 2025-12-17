@@ -66,9 +66,21 @@ public class ChatChannel {
      * @param prefix          prefix of the chat channel.
      * @param format          format of the chat channel.
      */
-    public ChatChannel(final String name, final String color, final String chatColor, final String permission, final String speakPermission,
-                       final boolean mutable, final boolean filter, final boolean defaultChannel, final String alias, final double distance, final boolean autojoin,
-                       final boolean bungee, final int cooldown, final String prefix, final String format) {
+    public ChatChannel(final String name,
+                       final String color,
+                       final String chatColor,
+                       final String permission,
+                       final String speakPermission,
+                       final boolean mutable,
+                       final boolean filter,
+                       final boolean defaultChannel,
+                       final String alias,
+                       final double distance,
+                       final boolean autojoin,
+                       final boolean bungee,
+                       final int cooldown,
+                       final String prefix,
+                       final String format) {
         this.name = name;
         this.color = color;
         this.chatColor = chatColor;
