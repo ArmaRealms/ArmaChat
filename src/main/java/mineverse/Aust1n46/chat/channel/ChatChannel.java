@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Chat channel object pojo. Class also contains static initialization methods
@@ -49,24 +50,25 @@ public class ChatChannel {
     /**
      * Parameterized constructor a {@link ChatChannel}.
      *
-     * @param name
-     * @param color
-     * @param chatColor
-     * @param permission
-     * @param speakPermission
-     * @param mutable
-     * @param filter
-     * @param defaultChannel
-     * @param alias
-     * @param distance
-     * @param autojoin
-     * @param bungee
-     * @param cooldown
-     * @param format
+     * @param name            name of the chat channel.
+     * @param color           color of the chat channel.
+     * @param chatColor       chat color of the chat channel.
+     * @param permission      permission node required to join the chat channel.
+     * @param speakPermission permission node required to speak in the chat channel.
+     * @param mutable         whether the chat channel allows muting.
+     * @param filter          whether the chat channel has filtering enabled.
+     * @param defaultChannel  whether the chat channel is the default chat channel.
+     * @param alias           alias of the chat channel.
+     * @param distance        distance of the chat channel in blocks.
+     * @param autojoin        whether the chat channel has autojoin enabled.
+     * @param bungee          whether the chat channel is BungeeCord enabled.
+     * @param cooldown        cooldown of the chat channel in seconds.
+     * @param prefix          prefix of the chat channel.
+     * @param format          format of the chat channel.
      */
-    public ChatChannel(String name, String color, String chatColor, String permission, String speakPermission,
-                       boolean mutable, boolean filter, boolean defaultChannel, String alias, double distance, boolean autojoin,
-                       boolean bungee, int cooldown, String prefix, String format) {
+    public ChatChannel(final String name, final String color, final String chatColor, final String permission, final String speakPermission,
+                       final boolean mutable, final boolean filter, final boolean defaultChannel, final String alias, final double distance, final boolean autojoin,
+                       final boolean bungee, final int cooldown, final String prefix, final String format) {
         this.name = name;
         this.color = color;
         this.chatColor = chatColor;
@@ -87,25 +89,36 @@ public class ChatChannel {
     /**
      * Deprecated parameterized constructor a {@link ChatChannel}.
      *
-     * @param name
-     * @param color
-     * @param chatColor
-     * @param permission
-     * @param speakPermission
-     * @param mutable
-     * @param filter
-     * @param defaultChannel
-     * @param alias
-     * @param distance
-     * @param autojoin
-     * @param bungee
-     * @param cooldown
-     * @param format
+     * @param name            name of the chat channel.
+     * @param color           color of the chat channel.
+     * @param chatColor       chat color of the chat channel.
+     * @param permission      permission node required to join the chat channel.
+     * @param speakPermission permission node required to speak in the chat channel.
+     * @param mutable         whether the chat channel allows muting.
+     * @param filter          whether the chat channel has filtering enabled.
+     * @param defaultChannel  whether the chat channel is the default chat channel.
+     * @param alias           alias of the chat channel.
+     * @param distance        distance of the chat channel in blocks.
+     * @param autojoin        whether the chat channel has autojoin enabled.
+     * @param bungee          whether the chat channel is BungeeCord enabled.
+     * @param cooldown        cooldown of the chat channel in seconds.
+     * @param format          format of the chat channel.
      */
     @Deprecated
-    public ChatChannel(String name, String color, String chatColor, String permission, String speakPermission,
-                       Boolean mutable, Boolean filter, Boolean defaultChannel, String alias, Double distance, Boolean autojoin,
-                       Boolean bungee, int cooldown, String format) {
+    public ChatChannel(final String name,
+                       final String color,
+                       final String chatColor,
+                       final String permission,
+                       final String speakPermission,
+                       final Boolean mutable,
+                       final Boolean filter,
+                       final Boolean defaultChannel,
+                       final String alias,
+                       final Double distance,
+                       final Boolean autojoin,
+                       final Boolean bungee,
+                       final int cooldown,
+                       final String format) {
         this.name = name;
         this.color = color;
         this.chatColor = chatColor;
@@ -126,31 +139,30 @@ public class ChatChannel {
      * Read chat channels from config file and initialize channel array.
      */
     public static void initialize() {
-        chatChannels = new HashMap<String, ChatChannel>();
-        ConfigurationSection cs = plugin.getConfig().getConfigurationSection("channels");
-        int len = (cs.getKeys(false)).size();
+        chatChannels = new HashMap<>();
+        final ConfigurationSection cs = plugin.getConfig().getConfigurationSection("channels");
+        final int len = (cs.getKeys(false)).size();
         channels = new ChatChannel[len];
         int counter = 0;
-        for (String key : cs.getKeys(false)) {
-            String color = cs.getString(key + ".color", "white");
-            String chatColor = cs.getString(key + ".chatcolor", "white");
-            String name = key;
-            String permission = cs.getString(key + ".permissions", "None");
-            String speakPermission = cs.getString(key + ".speak_permissions", "None");
-            boolean mutable = cs.getBoolean(key + ".mutable", false);
-            boolean filter = cs.getBoolean(key + ".filter", true);
-            boolean bungee = cs.getBoolean(key + ".bungeecord", false);
-            String format = cs.getString(key + ".format", "Default");
-            boolean defaultChannel = cs.getBoolean(key + ".default", false);
-            String alias = cs.getString(key + ".alias", "None");
-            double distance = cs.getDouble(key + ".distance", 0);
-            int cooldown = cs.getInt(key + ".cooldown", 0);
-            boolean autojoin = cs.getBoolean(key + ".autojoin", false);
-            String prefix = cs.getString(key + ".channel_prefix");
-            ChatChannel chatChannel = new ChatChannel(name, color, chatColor, permission, speakPermission, mutable,
+        for (final String key : cs.getKeys(false)) {
+            final String color = cs.getString(key + ".color", "white");
+            final String chatColor = cs.getString(key + ".chatcolor", "white");
+            final String permission = cs.getString(key + ".permissions", "None");
+            final String speakPermission = cs.getString(key + ".speak_permissions", "None");
+            final boolean mutable = cs.getBoolean(key + ".mutable", false);
+            final boolean filter = cs.getBoolean(key + ".filter", true);
+            final boolean bungee = cs.getBoolean(key + ".bungeecord", false);
+            final String format = cs.getString(key + ".format", "Default");
+            final boolean defaultChannel = cs.getBoolean(key + ".default", false);
+            final String alias = cs.getString(key + ".alias", "None");
+            final double distance = cs.getDouble(key + ".distance", 0);
+            final int cooldown = cs.getInt(key + ".cooldown", 0);
+            final boolean autojoin = cs.getBoolean(key + ".autojoin", false);
+            final String prefix = cs.getString(key + ".channel_prefix");
+            final ChatChannel chatChannel = new ChatChannel(key, color, chatColor, permission, speakPermission, mutable,
                     filter, defaultChannel, alias, distance, autojoin, bungee, cooldown, prefix, format);
             channels[counter++] = chatChannel;
-            chatChannels.put(name.toLowerCase(), chatChannel);
+            chatChannels.put(key.toLowerCase(), chatChannel);
             chatChannels.put(alias.toLowerCase(), chatChannel);
             if (defaultChannel) {
                 defaultChatChannel = chatChannel;
@@ -193,7 +205,7 @@ public class ChatChannel {
      * @param channelName name of channel to get.
      * @return {@link ChatChannel}
      */
-    public static ChatChannel getChannel(String channelName) {
+    public static ChatChannel getChannel(final String channelName) {
         return chatChannels.get(channelName.toLowerCase());
     }
 
@@ -203,7 +215,7 @@ public class ChatChannel {
      * @param channelName name of channel to check.
      * @return true if channel exists, false otherwise.
      */
-    public static boolean isChannel(String channelName) {
+    public static boolean isChannel(final String channelName) {
         return getChannel(channelName) != null;
     }
 
@@ -231,8 +243,8 @@ public class ChatChannel {
      * @return {@link List}&lt{@link ChatChannel}&gt
      */
     public static List<ChatChannel> getAutojoinList() {
-        List<ChatChannel> joinlist = new ArrayList<ChatChannel>();
-        for (ChatChannel c : channels) {
+        final List<ChatChannel> joinlist = new ArrayList<ChatChannel>();
+        for (final ChatChannel c : channels) {
             if (c.getAutojoin()) {
                 joinlist.add(c);
             }
@@ -283,7 +295,7 @@ public class ChatChannel {
      * {@link Boolean#FALSE} otherwise.
      */
     public Boolean getBungee() {
-        return Boolean.valueOf(bungee);
+        return bungee;
     }
 
     /**
@@ -302,7 +314,7 @@ public class ChatChannel {
      * otherwise.
      */
     public Boolean getAutojoin() {
-        return Boolean.valueOf(autojoin);
+        return autojoin;
     }
 
     /**
@@ -312,7 +324,7 @@ public class ChatChannel {
      * otherwise.
      */
     public Boolean isMutable() {
-        return Boolean.valueOf(mutable);
+        return mutable;
     }
 
     /**
@@ -375,7 +387,7 @@ public class ChatChannel {
      * {@link Boolean#FALSE} otherwise.
      */
     public Boolean isDefaultchannel() {
-        return Boolean.valueOf(defaultChannel);
+        return defaultChannel;
     }
 
     /**
@@ -393,7 +405,7 @@ public class ChatChannel {
      * @return {@link Double}
      */
     public Double getDistance() {
-        return Double.valueOf(distance);
+        return distance;
     }
 
     /**
@@ -403,7 +415,7 @@ public class ChatChannel {
      * {@link Boolean#FALSE} otherwise.
      */
     public Boolean hasDistance() {
-        return Boolean.valueOf(distance > 0);
+        return distance > 0;
     }
 
     /**
@@ -413,7 +425,7 @@ public class ChatChannel {
      * {@link Boolean#FALSE} otherwise.
      */
     public Boolean hasCooldown() {
-        return Boolean.valueOf(cooldown > 0);
+        return cooldown > 0;
     }
 
     /**
@@ -423,7 +435,7 @@ public class ChatChannel {
      * {@link ChatChannel#NO_PERMISSIONS}, {@link Boolean#FALSE} otherwise.
      */
     public Boolean hasPermission() {
-        return Boolean.valueOf(!permission.equalsIgnoreCase(NO_PERMISSIONS));
+        return !permission.equalsIgnoreCase(NO_PERMISSIONS);
     }
 
     /**
@@ -452,7 +464,7 @@ public class ChatChannel {
      * {@link Boolean#FALSE} otherwise.
      */
     public Boolean isFiltered() {
-        return Boolean.valueOf(filter);
+        return filter;
     }
 
     /**
@@ -462,7 +474,27 @@ public class ChatChannel {
      * @return true if the objects are equal, false otherwise.
      */
     @Override
-    public boolean equals(Object channel) {
+    public boolean equals(final Object channel) {
         return channel instanceof ChatChannel && this.name.equals(((ChatChannel) channel).getName());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hashCode(getName());
+        result = 31 * result + getPermission().hashCode();
+        result = 31 * result + getSpeakPermission().hashCode();
+        result = 31 * result + Boolean.hashCode(mutable);
+        result = 31 * result + Objects.hashCode(getColor());
+        result = 31 * result + Objects.hashCode(getChatColor());
+        result = 31 * result + Boolean.hashCode(defaultChannel);
+        result = 31 * result + Boolean.hashCode(getAutojoin());
+        result = 31 * result + Objects.hashCode(getAlias());
+        result = 31 * result + Double.hashCode(getDistance());
+        result = 31 * result + Boolean.hashCode(filter);
+        result = 31 * result + Boolean.hashCode(getBungee());
+        result = 31 * result + Objects.hashCode(getFormat());
+        result = 31 * result + getCooldown();
+        result = 31 * result + Objects.hashCode(getPrefix());
+        return result;
     }
 }
