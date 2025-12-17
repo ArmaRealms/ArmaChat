@@ -10,12 +10,11 @@ VentureChat Spigot plugin Repo
 
 Full setup and dependency guide is available here on SpigotMC: https://www.spigotmc.org/resources/venturechat.771/
 
-In short, Install `Vault` (and a compatable permission system), `ProtocolLib`, and `PlaceholderAPI` (`Player` and
-`Vault` extensions optional).
+In short, Install `Vault` (and a compatible permission system), `PlaceholderAPI` (`Player` and `Vault` extensions optional).
 
-To build, simply run `mvn`.
+To build, simply run `./gradlew build`.
 
-Requires Java 8.
+Requires Java 21.
 
 ### Contribution guidelines
 

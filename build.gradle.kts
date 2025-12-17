@@ -18,6 +18,9 @@ repositories {
     maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
     maven { url = uri("https://repo.glaremasters.me/repository/towny/") }
     maven { url = uri("https://repo.maven.apache.org/maven2/") }
+    maven { url = uri("https://repo.codemc.io/repository/maven-releases/") }
+    maven { url = uri("https://repo.codemc.io/repository/maven-snapshot/") }
+    maven { url = uri("https://repo.extendedclip.com/releases/") }
     flatDir { dirs("libs") }
 }
 
@@ -26,7 +29,6 @@ dependencies {
     compileOnly(libs.com.googlecode.json.simple.json.simple)
     compileOnly(libs.commons.lang)
     compileOnly(libs.net.md.v5.bungeecord.api)
-    compileOnly(libs.net.dmulloy2.protocollib)
     compileOnly(libs.io.papermc.paper.paper.api)
     compileOnly(libs.com.github.placeholderapi.placeholderapi)
     compileOnly(libs.com.github.milkbowl.vaultapi)  { isTransitive = false }
@@ -39,7 +41,7 @@ dependencies {
 }
 
 group = "mineverse.Aust1n46.chat"
-version = "3.8.0"
+version = "3.9.0"
 description = "VentureChat"
 java.sourceCompatibility = JavaVersion.VERSION_21
 

@@ -14,7 +14,6 @@ import mineverse.Aust1n46.chat.command.chat.Clearchat;
 import mineverse.Aust1n46.chat.command.chat.Commandblock;
 import mineverse.Aust1n46.chat.command.chat.Commandspy;
 import mineverse.Aust1n46.chat.command.chat.Config;
-import mineverse.Aust1n46.chat.command.chat.Edit;
 import mineverse.Aust1n46.chat.command.chat.Filter;
 import mineverse.Aust1n46.chat.command.chat.Force;
 import mineverse.Aust1n46.chat.command.chat.Forceall;
@@ -23,9 +22,7 @@ import mineverse.Aust1n46.chat.command.chat.Kickchannelall;
 import mineverse.Aust1n46.chat.command.chat.Leave;
 import mineverse.Aust1n46.chat.command.chat.Listen;
 import mineverse.Aust1n46.chat.command.chat.Me;
-import mineverse.Aust1n46.chat.command.chat.Party;
 import mineverse.Aust1n46.chat.command.chat.RangedSpy;
-import mineverse.Aust1n46.chat.command.chat.Removemessage;
 import mineverse.Aust1n46.chat.command.chat.Setchannel;
 import mineverse.Aust1n46.chat.command.chat.Setchannelall;
 import mineverse.Aust1n46.chat.command.chat.VentureChatGui;
@@ -63,6 +60,7 @@ public class VentureCommandExecutor {
 
     private static Map<String, Command> knownCommands;
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void initialize() {
         final Server server = plugin.getServer();
         final File commandsFile = new File(plugin.getDataFolder().getAbsolutePath(), "commands.yml");
@@ -89,7 +87,6 @@ public class VentureCommandExecutor {
         commands.put("commandblock", new Commandblock());
         commands.put("commandspy", new Commandspy());
         commands.put("config", new Config());
-        commands.put("edit", new Edit());
         commands.put("filter", new Filter());
         commands.put("force", new Force());
         commands.put("forceall", new Forceall());
@@ -100,9 +97,7 @@ public class VentureCommandExecutor {
         commands.put("me", new Me());
         commands.put("venturechat", new Venturechat());
         commands.put("notifications", new Notifications());
-        commands.put("party", new Party());
         commands.put("rangedspy", new RangedSpy());
-        commands.put("removemessage", new Removemessage());
         commands.put("setchannel", new Setchannel());
         commands.put("setchannelall", new Setchannelall());
         commands.put("spy", new Spy());
